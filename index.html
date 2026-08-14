@@ -222,7 +222,7 @@ svg.stage-svg{display:block;width:100%;height:auto}
 
   <!-- ============ TRANG 4 · BÁO CÁO QUẢN TRỊ ============ -->
   <section class="page" id="p5">
-    <a class="opencard" id="rpLink" href="https://tbinh-06.github.io/Ecoteck/ecoteck_bao_cao_ngan_sach.html" target="_blank" rel="noopener">
+    <a class="opencard" id="rpLink" href="https://github.com/tbinh-06/Ecoteck/blob/main/ecoteck_bao_cao_ngan_sach.html" target="_blank" rel="noopener">
       <div class="oc-ic">
         <svg viewBox="0 0 44 44" width="44" height="44" aria-hidden="true">
           <path d="M8,36 h28 M13,36 v-11 M22,36 v-19 M31,36 v-8" fill="none" stroke="var(--k-eco)"
@@ -316,12 +316,10 @@ function clearFx(){parts.forEach(p=>p.node.remove());parts=[];}
 
 /* ===================== TRANG 1 · SƠ ĐỒ GIẢI PHÁP ===================== */
 const SRC=[
- {n:'Excel dự toán',   s:'Bản đã duyệt & khoá — dữ liệu gốc', i:'sheet', c:'var(--k-gold)'},
- {n:'Base.vn',         s:'Đề xuất mua · thanh toán · duyệt',   i:'grid',  c:'var(--k-aqua)'},
- {n:'MISA',            s:'Thực chi · hoá đơn · công nợ',       i:'calc',  c:'var(--k-orange)'},
- {n:'Hồ sơ dự án',     s:'BOQ · IPC · hồ sơ thầu phụ',        i:'doc',   c:'var(--k-purple)'},
- {n:'Chấm công & lương',s:'Chi phí nhân sự tại dự án',         i:'users', c:'var(--k-teal)'},
- {n:'Email · Zalo',    s:'Báo giá nhà cung cấp',              i:'chat',  c:'var(--k-pink)'},
+ {n:'Excel dự toán',  s:'Bản đã duyệt & khoá — dữ liệu gốc', i:'sheet', c:'var(--k-gold)'},
+ {n:'Google Sheet',   s:'Bảng theo dõi dùng chung',          i:'cloud', c:'var(--k-cyan)'},
+ {n:'Base.vn',        s:'Đề xuất mua · thanh toán · duyệt',  i:'grid',  c:'var(--k-aqua)'},
+ {n:'MISA',           s:'Thực chi · hoá đơn · công nợ',      i:'calc',  c:'var(--k-orange)'},
 ];
 const PROC=[
  ['Thu thập & làm sạch','n8n · pipeline'],
@@ -372,15 +370,15 @@ function build1(){
 
   /* --- chặng 1: nguồn --- */
   SRC.forEach((s,i)=>{
-    const y=76+i*70;
-    g.appendChild(el('rect',{x:30,y,width:372,height:58,rx:10,fill:'var(--sc)',stroke:s.c,'stroke-width':1.3}));
-    g.appendChild(el('rect',{x:30,y,width:4,height:58,rx:2,fill:s.c}));
-    g.appendChild(el('rect',{x:46,y:y+16,width:26,height:26,rx:8,fill:s.c,opacity:.16}));
-    g.appendChild(ic(s.i,59,y+29,s.c,.88));
-    g.appendChild(T(82,y+26,s.n,'var(--st1)',12.8,700));
-    g.appendChild(T(82,y+42,s.s,'var(--st3)',9.6,500));
+    const y=86+i*98;
+    g.appendChild(el('rect',{x:30,y,width:372,height:80,rx:11,fill:'var(--sc)',stroke:s.c,'stroke-width':1.3}));
+    g.appendChild(el('rect',{x:30,y,width:4,height:80,rx:2,fill:s.c}));
+    g.appendChild(el('rect',{x:48,y:y+25,width:32,height:32,rx:9,fill:s.c,opacity:.16}));
+    g.appendChild(ic(s.i,64,y+41,s.c,1.05));
+    g.appendChild(T(92,y+37,s.n,'var(--st1)',14,700));
+    g.appendChild(T(92,y+55,s.s,'var(--st3)',10.2,500));
   });
-  g.appendChild(T(30,520,'Đúng hệ thống Ecoteck đang dùng — không bắt đổi cách làm',
+  g.appendChild(T(30,494,'Đúng hệ thống Ecoteck đang dùng — không bắt đổi cách làm',
     'var(--st3)',10.6,600));
 
   /* --- chặng 2: xử lý & lưu trữ --- */
@@ -447,8 +445,8 @@ function build1(){
 
   /* --- dây --- */
   const W1=(id,d,col,o)=>wire(id,d,Object.assign({},O,{stroke:col,o:o||.4,w:1.4,dash:'5 6'}));
-  SRC.forEach((s,i)=>{const yy=76+i*70+29;
-    W1('s'+i,`M402,${yy} C416,${yy} 420,${132+i*2} 428,${138+i*2}`,s.c);});
+  SRC.forEach((s,i)=>{const yy=86+i*98+40;
+    W1('s'+i,`M402,${yy} C416,${yy} 420,${134+i*3} 428,${140+i*3}`,s.c);});
   W1('a2b','M500,176 C500,206 500,216 500,246','var(--k-eco)',.55);
   W1('etl','M636,290 H684','var(--k-eco)',.75);
   MARTS.forEach((m,i)=>{const my=106+i*100+42;
@@ -484,7 +482,7 @@ function flow1Tick(){
       if(pick) flashBox(pick.box,pick.c);},4.2); }
 }
 const CAPS=[
- ['1|nguồn dữ liệu','<b>Excel dự toán · Base · MISA · hồ sơ dự án · chấm công · email</b> — kết nối về một chỗ, <i>khách không phải đổi cách làm</i>.'],
+ ['1|nguồn dữ liệu','<b>Excel dự toán · Google Sheet · Base · MISA</b> — kết nối về một chỗ, <i>khách không phải đổi cách làm</i>.'],
  ['2|xử lý & lưu trữ','Làm sạch và <b>kiểm tra chất lượng</b> trước khi vào kho: chặn #REF!, đề xuất trùng, dự toán chưa duyệt. Lưu trên <i>Google BigQuery</i>.'],
  ['3|phân phối','<b>5 Data Mart</b> theo đúng nhóm nghiệp vụ: dự toán–dự chi–thực chi · mua hàng · vật tư · tài chính · nhân sự & tiến độ.'],
  ['4|sử dụng','<b>12 use-case</b>: báo cáo điều hành, cảnh báo vượt dự toán, bản duyệt trên điện thoại, AI hỏi đáp số liệu.'],
