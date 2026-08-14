@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Báo cáo Dự toán — Dự chi — Thực chi | ECO TECK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+:root{
+  --ink:#0A2430; --ink-2:#123644; --slate:#5B7683; --slate-2:#8AA2AC;
+  --line:#DFE8EA; --line-2:#EEF3F4;
+  --bg:#F4F7F7; --card:#FFFFFF;
+  --teal:#0E7C86; --aqua:#35B9C7; --deep:#0B4A57;
+  --amber:#D98A16; --amber-soft:#FCEFD8;
+  --red:#C0392B; --red-soft:#FBE6E3;
+  --green:#1F8A5F; --green-soft:#DDF2E9;
+  --violet:#6B5BD2;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.num{font-variant-numeric:tabular-nums}
+
+.topbar{position:sticky;top:0;z-index:60;background:var(--ink);color:#fff}
+.topbar-in{max-width:1520px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.1em;font-size:13px}
+.brand .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(140deg,var(--aqua),var(--teal));display:grid;place-items:center;font-size:17px;color:#04222a}
+.brand small{display:block;font-weight:400;letter-spacing:.04em;font-size:10px;color:var(--aqua);margin-top:2px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:12px;color:#A9C6CD;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:7px;background:var(--aqua);color:#04222a;border:0;border-radius:9px;padding:8px 14px;font:500 12.5px Inter;cursor:pointer}
+.btn:hover{background:#4ecad7}
+.btn.ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.22)}
+.btn.ghost:hover{background:rgba(255,255,255,.18)}
+
+.hero{background:linear-gradient(135deg,#0B3441 0%,#0E5765 60%,#0E7C86 100%);color:#fff;padding:24px 24px 0}
+.hero-in{max-width:1520px;margin:0 auto}
+.hero h1{font-size:20px;font-weight:600;letter-spacing:-.1px;line-height:1.35}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{font-size:11.5px;padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--aqua);color:#04222a;border-color:transparent;font-weight:600}
+.chip.lock{background:rgba(31,138,95,.9);border-color:transparent;font-weight:600}
+.tabs{display:flex;gap:2px;margin-top:20px;overflow-x:auto}
+.tab{padding:11px 18px;font-size:12.5px;font-weight:500;color:#B7D5DB;border:0;background:transparent;cursor:pointer;border-radius:10px 10px 0 0;white-space:nowrap;display:flex;align-items:center;gap:7px}
+.tab:hover{color:#fff}
+.tab.active{background:var(--bg);color:var(--teal);font-weight:600}
+
+.wrap{max-width:1520px;margin:0 auto;padding:22px 24px 60px}
+.page{display:none}.page.active{display:block}
+.grid{display:grid;gap:16px}
+.g5{grid-template-columns:repeat(5,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g23{grid-template-columns:2fr 1fr}
+.g3a{grid-template-columns:1.25fr 1fr 1.25fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.card-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.card-h h3{font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px}
+.card-h h3 i{color:var(--teal);font-size:17px}
+.card-h p{font-size:11px;color:var(--slate-2);margin-top:4px;font-weight:400;line-height:1.5}
+
+.filterbar{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:13px 16px;margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.filterbar .fl{font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--slate-2);margin-right:2px}
+.inp{display:flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:9px;padding:7px 11px;background:#fff;font-size:12.5px;color:var(--slate)}
+.inp i{color:var(--teal)}
+.inp input,.inp select{border:0;outline:none;font:inherit;color:var(--ink);background:transparent;min-width:104px;cursor:pointer}
+.inp input[type=date]{font-size:12px}
+.pill{border:1px solid var(--line);background:#fff;border-radius:99px;padding:6px 13px;font:500 12px Inter;color:var(--slate);cursor:pointer}
+.pill:hover{border-color:var(--aqua);color:var(--teal)}
+.pill.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.scope{margin-left:auto;font-size:11.5px;color:var(--slate)}
+.scope b{color:var(--teal)}
+
+.fchips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px;font-size:11.5px;color:var(--slate)}
+.fchips:empty{display:none}
+.fchips .fc{display:inline-flex;align-items:center;gap:6px;background:var(--aqua-soft,#D8F0F3);color:var(--deep);
+  border:1px solid #B7E2E8;border-radius:99px;padding:4px 10px;font-weight:500}
+.fchips .fc i{cursor:pointer;font-size:14px;color:var(--teal)}
+.fchips .fc i:hover{color:var(--red)}
+.fchips .hint{color:var(--slate-2)}
+tr.hl td{background:#FFF6E5!important;box-shadow:inset 3px 0 0 var(--amber)}
+.src{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--slate);
+  background:#EEF6F6;border:1px solid var(--line);border-radius:11px;padding:10px 14px;margin-bottom:16px}
+.src span{display:inline-flex;align-items:center;gap:6px}
+.src i{color:var(--teal);font-size:15px}
+.src b{color:var(--ink-2)}
+
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 17px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--teal)}
+.kpi.k-green::before{background:var(--green)}.kpi.k-amber::before{background:var(--amber)}
+.kpi.k-red::before{background:var(--red)}.kpi.k-violet::before{background:var(--violet)}
+.kpi .lbl{font-size:10.5px;color:var(--slate);font-weight:500;text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:5px}
+.kpi .val{font-size:22px;font-weight:600;margin-top:8px;line-height:1.15;color:var(--deep);font-variant-numeric:tabular-nums}
+.kpi .val span{font-size:12px;font-weight:500;color:var(--slate)}
+.kpi .sub{font-size:11px;color:var(--slate);margin-top:7px;line-height:1.55}
+.delta{font-weight:600;font-size:11px;padding:2px 7px;border-radius:6px}
+.d-up{background:var(--green-soft);color:var(--green)}
+.d-down{background:var(--red-soft);color:var(--red)}
+.d-warn{background:var(--amber-soft);color:var(--amber)}
+
+.flow{display:flex;align-items:stretch;flex-wrap:wrap;margin-bottom:12px}
+.fstep{flex:1;min-width:158px;position:relative;padding:14px 16px 14px 28px;background:#fff;border:1px solid var(--line);border-right:0}
+.fstep:first-child{border-radius:12px 0 0 12px;padding-left:16px}
+.fstep:last-child{border-radius:0 12px 12px 0;border-right:1px solid var(--line)}
+.fstep::after{content:"";position:absolute;right:-11px;top:50%;transform:translateY(-50%) rotate(45deg);width:20px;height:20px;background:#fff;border-top:1px solid var(--line);border-right:1px solid var(--line);z-index:2}
+.fstep:last-child::after{display:none}
+.fstep .n{font:600 10px Inter;color:var(--aqua);letter-spacing:.1em}
+.fstep .t{font-size:12.5px;font-weight:600;margin-top:5px}
+.fstep .v{font:600 19px Inter;margin-top:7px;color:var(--deep);font-variant-numeric:tabular-nums}
+.fstep .d{font-size:11px;color:var(--slate-2);margin-top:5px;line-height:1.55}
+.fstep.f-branch{background:#FBFDFD}
+.branch{display:flex;gap:12px;align-items:flex-start;background:#FFFBF2;border:1px dashed var(--amber);border-radius:12px;padding:12px 16px;font-size:12px;color:var(--ink-2)}
+.branch>i{color:var(--amber);font-size:19px;margin-top:1px}
+.branch b{color:var(--amber)}
+.branch .bx{display:flex;gap:20px;flex-wrap:wrap;margin-top:6px;color:var(--slate);font-size:11.5px}
+
+.tbl-scroll{overflow:auto;border-radius:10px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:#F0F5F6;color:var(--slate);font-weight:500;text-align:right;padding:9px 10px;position:sticky;top:0;white-space:nowrap;border-bottom:1px solid var(--line);font-size:11px;z-index:3}
+thead th:first-child,thead th.l{text-align:left}
+thead th.gA{background:#E4EFF0}thead th.gB{background:#FBF1DE}thead th.gC{background:#E9E6FA}
+tbody td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line-2);white-space:nowrap;font-variant-numeric:tabular-nums}
+tbody td:first-child,tbody td.l{text-align:left;white-space:normal}
+tbody tr:hover{background:#F7FBFB}
+tr.lv1 td{background:#E7F1F2;font-weight:600;color:var(--deep)}
+tr.lv2 td{background:#F7FBFB;font-weight:500}
+tr.tot td{background:var(--ink);color:#fff;font-weight:600;border:0}
+tr.rev td{background:#123644;color:#fff;font-weight:600;border:0}
+tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
+.tg{cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:6px}
+.tg i{font-size:14px;color:var(--teal);transition:transform .18s}
+.tg.open i{transform:rotate(90deg)}
+.ind{display:inline-block;width:18px}
+.code{font-size:11.5px;color:var(--slate);font-weight:500;letter-spacing:.02em}
+.tag{font-size:10.5px;font-weight:500;padding:3px 9px;border-radius:6px;display:inline-block;white-space:nowrap}
+.t-ok{background:var(--green-soft);color:var(--green)}
+.t-warn{background:var(--amber-soft);color:var(--amber)}
+.t-bad{background:var(--red-soft);color:var(--red)}
+.t-idle{background:#EEF3F4;color:var(--slate)}
+.mini{width:56px;height:6px;border-radius:3px;background:var(--line);overflow:hidden;display:inline-block;vertical-align:middle}
+.mini i{display:block;height:100%;border-radius:3px;background:var(--teal)}
+.mini i.hi{background:var(--amber)}.mini i.max{background:var(--red)}
+.bar-cell{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.lnk{color:var(--teal);font-size:11.5px;font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.lnk:hover{text-decoration:underline}
+.bbtn{display:inline-flex;align-items:center;gap:5px;background:var(--teal);color:#fff;border-radius:7px;padding:5px 10px;font:500 11px Inter;text-decoration:none}
+.bbtn:hover{background:#0a656d}
+.dotstat{width:6px;height:6px;border-radius:99px;display:inline-block;margin-right:5px;vertical-align:middle}
+.chart{width:100%;height:300px}.chart.tall{height:380px}.chart.xtall{height:440px}
+.note{font-size:11.5px;color:var(--slate);margin-top:11px;line-height:1.6}
+.foot{max-width:1520px;margin:0 auto;padding:16px 24px 34px;font-size:11px;color:var(--slate-2);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+
+/* chế độ rút gọn: dùng để nhúng XSpace/XPay hoặc xem trên điện thoại */
+body.compact .hide-c{display:none!important}
+body.compact .g5{grid-template-columns:repeat(2,1fr)}
+body.compact .wrap{padding:16px 14px 40px}
+body.compact .hero{padding:18px 14px 0}
+body.compact .hero h1{font-size:18px}
+.cbadge{display:none;background:var(--amber);color:#fff;border-radius:99px;padding:2px 9px;font:500 10.5px Inter}
+body.compact .cbadge{display:inline-block}
+
+@media(max-width:1280px){.g5{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1380px){.g3a{grid-template-columns:1fr 1fr}}
+@media(max-width:1180px){.g4{grid-template-columns:repeat(2,1fr)}.g23,.g2,.g3,.g3a{grid-template-columns:1fr}}
+@media(max-width:720px){.g5,.g4{grid-template-columns:1fr}.hero h1{font-size:18px}
+  .fstep{border-right:1px solid var(--line);border-radius:12px!important;margin-bottom:8px}.fstep::after{display:none}
+  .scope{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand"><div class="mark"><i class="ti ti-droplet"></i></div><div>ECO TECK<small>QUẢN TRỊ CHI PHÍ DỰ ÁN</small></div></div>
+    <div class="topbar-right">
+      <span class="cbadge">Chế độ rút gọn</span>
+      <span><i class="ti ti-refresh"></i> Cập nhật 19/05/2025 08:15</span>
+      <button class="btn ghost" id="btnCompact"><i class="ti ti-device-mobile"></i> Chế độ rút gọn</button>
+      <button class="btn"><i class="ti ti-file-spreadsheet"></i> Xuất Excel</button>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-in">
+    <h1>Báo cáo Dự toán — Dự chi — Thực chi</h1>
+    <div class="meta">
+      <span class="chip"><i class="ti ti-git-branch"></i> Đề xuất → đối chiếu dự toán → duyệt chi → thực chi</span>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-p="p1"><i class="ti ti-layout-dashboard"></i> Tổng quan</button>
+      <button class="tab" data-p="p2"><i class="ti ti-list-tree"></i> Chi tiết hạng mục</button>
+      <button class="tab" data-p="p4"><i class="ti ti-history"></i> Điều chỉnh dự toán</button>
+      <button class="tab" data-p="p3"><i class="ti ti-file-check"></i> Đề xuất &amp; phê duyệt <span style="background:#D98A16;color:#fff;border-radius:99px;padding:1px 7px;font-size:10.5px">41</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="filterbar hide-c">
+    <span class="fl">Bộ lọc</span>
+    <div class="inp"><i class="ti ti-building-factory-2"></i>
+      <select id="fProj">
+        <option value="all">Tất cả dự án</option>
+        <option value="KD">CCN Kim Động — 2.600 m³/ngđ</option>
+        <option value="DH">CCN Đồng Hướng — 1.500 m³/ngđ</option>
+        <option value="PH">KCN Phú Hà — 5.000 m³/ngđ</option>
+        <option value="TH">KCN Thái Hà GĐ1 — 1.200 m³/ngđ</option>
+      </select>
+    </div>
+    <div class="inp"><i class="ti ti-category"></i>
+      <select id="fCost">
+        <option value="all">Tất cả loại chi phí</option>
+        <option value="VT">Vật tư &amp; thiết bị</option>
+        <option value="NC">Nhân công &amp; thầu phụ</option>
+        <option value="CT">Chi phí quản lý tại dự án</option>
+        <option value="QL">Chi phí bán hàng &amp; QLDN</option>
+        <option value="DV">Dịch vụ, bảo hành &amp; dự phòng</option>
+      </select>
+    </div>
+    <div class="inp"><i class="ti ti-calendar-event"></i><input type="date" id="fFrom" value="2024-12-01"></div>
+    <div class="inp"><i class="ti ti-arrow-right"></i><input type="date" id="fTo" value="2025-05-19"></div>
+    <button class="pill on" data-r="all">Từ đầu dự án</button>
+    <button class="pill" data-r="q">Quý này</button>
+    <button class="pill" data-r="m">Tháng này</button>
+    <button class="pill" id="fReset"><i class="ti ti-rotate"></i> Đặt lại</button>
+  </div>
+
+
+<!-- ================= P1 ================= -->
+<div class="page active" id="p1">
+  <div class="grid g5" style="margin-bottom:16px">
+    <div class="kpi">
+      <div class="lbl"><i class="ti ti-target"></i> Dự toán hiện hành</div>
+      <div class="val" id="k1">—</div><div class="sub" id="k1s">—</div>
+    </div>
+    <div class="kpi k-amber">
+      <div class="lbl"><i class="ti ti-stamp"></i> Dự chi đã duyệt</div>
+      <div class="val" id="k2">—</div><div class="sub" id="k2s">—</div>
+    </div>
+    <div class="kpi k-green">
+      <div class="lbl"><i class="ti ti-cash"></i> Thực chi</div>
+      <div class="val" id="k3">—</div><div class="sub" id="k3s">—</div>
+    </div>
+    <div class="kpi k-violet">
+      <div class="lbl"><i class="ti ti-sum"></i> Tổng chi phí dự kiến</div>
+      <div class="val" id="k4">—</div><div class="sub" id="k4s">—</div>
+    </div>
+    <div class="kpi k-red">
+      <div class="lbl"><i class="ti ti-trending-up"></i> Lãi/lỗ dự kiến</div>
+      <div class="val" id="k5">—</div><div class="sub" id="k5s">—</div>
+    </div>
+  </div>
+
+  <div class="grid g3a hide-c" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-h"><div><h3><i class="ti ti-chart-bar"></i> Ba lớp chi phí theo dự án</h3><p id="projNote">—</p></div></div>
+      <div id="byProj" class="chart tall"></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><h3><i class="ti ti-chart-donut-3"></i> Dự toán theo loại chi phí</h3><p id="costNote">—</p></div></div>
+      <div id="byCost" class="chart tall"></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><h3><i class="ti ti-scale-outline"></i> Lãi/lỗ dự kiến so với mục tiêu</h3><p>Từng dự án — tỷ đồng và %</p></div></div>
+      <div id="pnlChart" class="chart tall"></div>
+    </div>
+  </div>
+
+  <div class="card hide-c">
+    <div class="card-h"><div><h3><i class="ti ti-grid-dots"></i> Bản đồ nhiệt sử dụng dự toán</h3><p>Dự án × loại chi phí · màu theo tỷ lệ dự toán đã dự chi · bấm vào ô để lọc</p></div>
+      <span class="tag t-idle">Bấm ô để lọc theo dự án và loại chi phí</span></div>
+    <div id="heatmap" class="chart" style="height:340px"></div>
+  </div>
+</div>
+
+<!-- ================= P2 ================= -->
+<div class="page" id="p2">
+  <div class="grid g4" style="margin-bottom:16px">
+    <div class="kpi"><div class="lbl"><i class="ti ti-list-check"></i> Mã dự toán theo dõi</div><div class="val" id="m1">—</div><div class="sub">2 nhóm · 8 hạng mục · 15 mã chi tiết</div></div>
+    <div class="kpi k-red"><div class="lbl"><i class="ti ti-arrow-bear-right"></i> Mã vượt dự toán</div><div class="val" id="m2">—</div><div class="sub" id="m2s">—</div></div>
+    <div class="kpi k-amber"><div class="lbl"><i class="ti ti-battery-1"></i> Mã sắp cạn (≥90%)</div><div class="val" id="m3">—</div><div class="sub" id="m3s">—</div></div>
+    <div class="kpi k-green"><div class="lbl"><i class="ti ti-wallet"></i> Dự toán còn lại</div><div class="val" id="m4">—</div><div class="sub" id="m4s">—</div></div>
+  </div>
+
+  <div class="grid g2 hide-c" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-h"><div><h3><i class="ti ti-chart-arrows"></i> Dự toán · dự chi · thực chi theo hạng mục</h3><p>Thanh nền là dự toán, thanh giữa là dự chi, thanh trong cùng là thực chi — triệu đồng</p></div>
+        <span class="tag t-idle">Thanh lồng</span></div>
+      <div id="ctrlMatrix" class="chart xtall"></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><h3><i class="ti ti-chart-bar-popular"></i> Cấu trúc sử dụng dự toán từng hạng mục</h3><p>Tỷ lệ %: thực chi · dự chi chưa thực chi · chưa dự chi</p></div>
+        <span class="tag t-idle">Thanh chồng 100%</span></div>
+      <div id="compo" class="chart xtall"></div>
+      <p class="note">Dải cam là tiền đã duyệt chi nhưng chưa giải ngân — nơi dòng tiền sắp phải ra.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h">
+      <div><h3><i class="ti ti-table"></i> Bảng dự toán — dự chi — thực chi</h3><p>Theo khung báo cáo hệ số dự án. Bấm mũi tên để mở: nhóm → hạng mục → mã chi tiết</p></div>
+      <div style="display:flex;gap:8px">
+        <button class="pill" id="expandAll"><i class="ti ti-chevrons-down"></i> Mở tất cả</button>
+        <button class="pill" id="collapseAll"><i class="ti ti-chevrons-up"></i> Thu gọn</button>
+      </div>
+    </div>
+    <div class="tbl-scroll" style="max-height:680px">
+      <table>
+        <thead>
+          <tr>
+            <th class="l" rowspan="2">Mã</th><th class="l" rowspan="2">Hạng mục</th>
+            <th class="gA" colspan="3">DỰ TOÁN</th>
+            <th class="gB" colspan="2">DỰ CHI &amp; THỰC CHI</th>
+            <th class="gC" colspan="4">DỰ KIẾN HOÀN THÀNH</th>
+            <th class="l" rowspan="2">Trạng thái</th>
+          </tr>
+          <tr>
+            <th class="gA">Ban đầu</th><th class="gA">Điều chỉnh</th><th class="gA">Hiện hành</th>
+            <th class="gB">Dự chi đã duyệt</th><th class="gB">Thực chi</th>
+            <th class="gC">Tổng CP dự kiến</th><th class="gC">Còn lại</th><th class="gC">Vượt dự toán</th><th class="gC">% sử dụng</th>
+          </tr>
+        </thead>
+        <tbody id="treeBody"></tbody>
+      </table>
+    </div>
+    <p class="note" id="treeNote"></p>
+  </div>
+</div>
+
+<!-- ================= P3 ================= -->
+<div class="page" id="p3">
+  <div class="grid g5" style="margin-bottom:16px">
+    <div class="kpi k-amber"><div class="lbl"><i class="ti ti-clock-hour-4"></i> Đang chờ duyệt</div><div class="val" id="q1">—</div><div class="sub" id="q1s">—</div></div>
+    <div class="kpi k-red"><div class="lbl"><i class="ti ti-alert-triangle"></i> Chờ duyệt sẽ vượt dự toán</div><div class="val" id="q2">—</div><div class="sub" id="q2s">—</div></div>
+    <div class="kpi"><div class="lbl"><i class="ti ti-file-stack"></i> Tổng phiếu trong kỳ</div><div class="val" id="q3">—</div><div class="sub" id="q3s">—</div></div>
+    <div class="kpi k-green"><div class="lbl"><i class="ti ti-circle-check"></i> Đã duyệt chi</div><div class="val" id="q4">—</div><div class="sub" id="q4s">—</div></div>
+    <div class="kpi k-violet"><div class="lbl"><i class="ti ti-adjustments-alt"></i> Xin điều chỉnh dự toán</div><div class="val" id="q5">—</div><div class="sub" id="q5s">—</div></div>
+  </div>
+
+  <div class="card hide-c" style="margin-bottom:16px">
+    <div class="card-h"><div><h3><i class="ti ti-git-branch"></i> Luồng đề xuất — đối chiếu dự toán — duyệt chi</h3><p>Số phiếu đi qua từng bước trong kỳ báo cáo · bấm vào thanh để lọc danh sách phiếu bên dưới</p></div>
+      <span class="tag t-idle" id="stepTag">—</span></div>
+    <div id="stepBar" class="chart" style="height:250px"></div>
+  </div>
+
+  <div class="grid g23 hide-c" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-h"><div><h3><i class="ti ti-chart-histogram"></i> Số phiếu theo tháng</h3><p>Phân tách theo kết quả xử lý</p></div>
+        <span class="tag t-idle">Cột chồng</span></div>
+      <div id="phieuMonth" class="chart tall"></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><h3><i class="ti ti-checkbox"></i> Kết quả đối chiếu dự toán</h3><p>Bước 2 — tự động khớp mã dự toán</p></div></div>
+      <div id="checkPie" class="chart tall"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-h">
+      <div><h3><i class="ti ti-gavel"></i> Đề xuất đang chờ duyệt — đối chiếu dự toán</h3><p>Số còn lại sau duyệt được tính tự động; bấm nút để về Base duyệt hoặc từ chối</p></div>
+      <span class="tag t-bad">3 đề xuất sẽ làm vượt dự toán</span>
+    </div>
+    <div class="tbl-scroll" style="max-height:520px">
+      <table>
+        <thead><tr>
+          <th class="l">Mã phiếu</th><th class="l">Nội dung</th><th class="l">Dự án</th><th class="l">Mã dự toán</th>
+          <th>Dự toán hiện hành</th><th>Đã dự chi</th><th>Còn lại</th><th>Số tiền đề xuất</th><th>Còn lại sau duyệt</th>
+          <th class="l">Kết luận</th><th class="l">Hành động</th>
+        </tr></thead>
+        <tbody id="pendBody"></tbody>
+      </table>
+    </div>
+    <p class="note">Còn lại = Dự toán hiện hành − Dự chi đã duyệt. Phiếu làm số còn lại chuyển âm sẽ được đánh dấu đỏ: lãnh đạo có thể từ chối, hoặc duyệt kèm phiếu điều chỉnh dự toán.</p>
+  </div>
+
+  <div class="card hide-c">
+    <div class="card-h">
+      <div><h3><i class="ti ti-table-options"></i> Toàn bộ danh sách phiếu</h3><p>Bấm mã phiếu để mở trên Base Service</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button class="pill on" data-s="all">Tất cả</button>
+        <button class="pill" data-s="ok">Đã duyệt</button>
+        <button class="pill" data-s="wait">Chờ duyệt</button>
+        <button class="pill" data-s="adj">Xin điều chỉnh</button>
+        <button class="pill" data-s="no">Từ chối</button>
+        <div class="inp"><i class="ti ti-search"></i><input id="qp" placeholder="Tìm nội dung…"></div>
+      </div>
+    </div>
+    <div class="tbl-scroll" style="max-height:560px">
+      <table>
+        <thead><tr>
+          <th class="l">Mã phiếu</th><th class="l">Nội dung</th><th class="l">Dự án</th><th class="l">Mã dự toán</th>
+          <th class="l">Loại chi phí</th><th class="l">Nhà cung cấp</th><th class="l">Tháng</th><th>Số tiền</th><th class="l">Kết quả</th>
+        </tr></thead>
+        <tbody id="phieuBody"></tbody>
+      </table>
+    </div>
+    <p class="note" id="phieuCount"></p>
+  </div>
+</div>
+
+<!-- ================= P4 ================= -->
+<div class="page" id="p4">
+  <div class="grid g4" style="margin-bottom:16px">
+    <div class="kpi"><div class="lbl"><i class="ti ti-lock"></i> Phiên bản dự toán</div><div class="val" id="v1">—</div><div class="sub" id="v1s">—</div></div>
+    <div class="kpi k-violet"><div class="lbl"><i class="ti ti-adjustments-alt"></i> Tổng điều chỉnh đã duyệt</div><div class="val" id="v2">—</div><div class="sub" id="v2s">—</div></div>
+    <div class="kpi k-amber"><div class="lbl"><i class="ti ti-percentage"></i> Lãi dự kiến sau điều chỉnh</div><div class="val" id="v3">—</div><div class="sub" id="v3s">—</div></div>
+    <div class="kpi k-red"><div class="lbl"><i class="ti ti-alert-hexagon"></i> So với ngưỡng sàn 12%</div><div class="val" id="v4">—</div><div class="sub" id="v4s">—</div></div>
+  </div>
+
+  <div class="grid g23 hide-c" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-h"><div><h3><i class="ti ti-chart-line"></i> Lãi dự kiến qua các phiên bản dự toán</h3><p>Mỗi lần điều chỉnh làm mỏng biên lợi nhuận</p></div></div>
+      <div id="marginTrend" class="chart tall"></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><h3><i class="ti ti-chart-pie-2"></i> Nguyên nhân điều chỉnh</h3><p>Theo giá trị, tr đ</p></div></div>
+      <div id="reasonPie" class="chart tall"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><div><h3><i class="ti ti-history"></i> Lịch sử điều chỉnh dự toán</h3><p>Mỗi thay đổi đều gắn phiếu đề xuất, người duyệt và ảnh hưởng tới lãi dự kiến</p></div>
+      <span class="tag t-idle">Dự toán chỉ đổi qua phiếu được duyệt</span></div>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr>
+          <th class="l">Phiên bản</th><th class="l">Phiếu điều chỉnh</th><th class="l">Ngày duyệt</th><th class="l">Dự án</th>
+          <th class="l">Mã dự toán</th><th class="l">Lý do</th><th>Giá trị</th><th>Dự toán sau ĐC</th><th>Lãi trước</th><th>Lãi sau</th><th class="l">Người duyệt</th>
+        </tr></thead>
+        <tbody id="adjBody"></tbody>
+      </table>
+    </div>
+    <p class="note">Nguyên tắc kiểm soát: nếu lãi dự kiến sau điều chỉnh xuống dưới ngưỡng sàn của công ty (12,00%), phiếu điều chỉnh phải do Ban giám đốc duyệt và kèm phương án bù từ hạng mục khác.</p>
+  </div>
+</div>
+
+</div>
+
+<div class="foot">
+  <span>ECO TECK · Báo cáo dự toán — dự chi — thực chi. Bản demo dựng theo khung "Báo cáo hệ số dự án thi công nước thải" của khách; số dự chi và thực chi là dữ liệu mô phỏng.</span>
+  <span>Lập: Nguyễn Thị Bình · Kiểm: Vũ Thị Thuỷ · Duyệt: Nguyễn Quang Kiên</span>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var T={ink:'#0A2430',teal:'#0E7C86',aqua:'#35B9C7',deep:'#0B4A57',slate:'#5B7683',slate2:'#8AA2AC',
+         line:'#DFE8EA',amber:'#D98A16',red:'#C0392B',green:'#1F8A5F',violet:'#6B5BD2'};
+  var FONT='Inter, sans-serif';
+  var charts={},pickLock=0;
+  /* mk(id, option, onPick, cats, mode)
+     mode: 'x' | 'y' | 'xy' | 'pts' — cho phép bấm bất kỳ đâu trong vùng grid, không cần trúng cột */
+  function mk(id,opt,onPick,cats,mode){
+    var el=document.getElementById(id);if(!el)return null;
+    var c=charts[id];
+    if(!c){c=echarts.init(el);charts[id]=c;}
+    c.setOption(opt,true);
+    c.off('click'); el.onclick=null; el.style.cursor='';
+    if(!onPick) return c;
+    el.style.cursor='pointer';
+
+    /* Một cú bấm chỉ được xử lý một lần: ECharts bắt trước, sau đó event nổi bọt
+       lên container nên phải chặn lần thứ hai, nếu không lọc xong lại tự bỏ lọc. */
+    function fire(i,d,xy){
+      var now=Date.now();
+      if(now<pickLock) return;
+      pickLock=now+500;
+      onPick(i,d,xy);
+    }
+
+    /* 1) bấm trúng phần tử hoặc nhãn trục */
+    c.on('click',function(e){
+      var i=-1;
+      if(e.componentType==='series') i=e.dataIndex;
+      else if(cats&&cats.length&&e.value!==undefined) i=cats.indexOf(e.value);
+      if(i>=0||e.data) fire(i,e.data,null);
+    });
+
+    /* 2) dự phòng: bấm bất kỳ đâu trong vùng grid -> suy ra ô/cột gần nhất */
+    if(mode){
+      el.onclick=function(ev){
+        try{
+          var r=el.getBoundingClientRect();
+          var px=[ev.clientX-r.left,ev.clientY-r.top];
+          if(!c.containPixel({gridIndex:0},px)) return;
+          var g=c.convertFromPixel({gridIndex:0},px);
+          if(!g) return;
+          if(mode==='x'){var xi=Math.round(g[0]);if(xi>=0&&xi<(cats?cats.length:0))fire(xi,null,null);}
+          else if(mode==='y'){var yi=Math.round(g[1]);if(yi>=0&&yi<(cats?cats.length:0))fire(yi,null,null);}
+          else if(mode==='xy'){fire(-1,null,[Math.round(g[0]),Math.round(g[1])]);}
+          else if(mode==='pts'){
+            var best=-1,bd=1e9;
+            for(var k=0;k<(cats||[]).length;k++){
+              var v=cats[k];
+              var d=Math.pow(v[0]-g[0],2)+Math.pow(v[1]-g[1],2);
+              if(d<bd){bd=d;best=k;}
+            }
+            if(best>=0&&bd<900) fire(best,null,null);
+          }
+        }catch(err){}
+      };
+    }
+    return c;}
+  function resizeAll(){for(var k in charts){if(charts[k])charts[k].resize();}}
+  function fm(v){return Math.round(v||0).toLocaleString('vi-VN');}
+  function fb(v){return ((v||0)/1000).toLocaleString('vi-VN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function fp(v,d){return (v||0).toLocaleString('vi-VN',{minimumFractionDigits:d,maximumFractionDigits:d});}
+  var axis={axisLine:{lineStyle:{color:T.line}},axisTick:{show:false},
+            axisLabel:{color:T.slate,fontFamily:FONT,fontSize:11.5},
+            splitLine:{lineStyle:{color:'#EEF3F4'}}};
+  var tip={trigger:'axis',backgroundColor:'#0A2430',borderWidth:0,
+           textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},axisPointer:{type:'shadow'}};
+  function setTxt(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+  function setHtml(id,v){var e=document.getElementById(id);if(e)e.innerHTML=v;}
+
+  /* ===== DỮ LIỆU (triệu đồng) — mã, tên, dự toán ban đầu, điều chỉnh, dự chi đã duyệt, thực chi ===== */
+  var LEAF=[
+    ['A1.1','Cọc, móng và công trình tạm',4286,100,4210,3860],
+    ['A1.2','Cụm bể xử lý',18642,350,13100,10800],
+    ['A1.3','Cụm nhà và hạng mục phụ trợ',6428,0,3728,3085],
+    ['A1.4','Hạ tầng trong trạm, hồ sự cố',6960,0,3619,2923],
+    ['A2.1','Mua vật tư thiết bị (VTTB)',15842,400,12241,8285],
+    ['A2.2','Nhân công thi công lắp đặt VTTB',5142,0,2262,1645],
+    ['A2.3','Chi phí vận chuyển VTTB',878,0,922,527],
+    ['A3.1','Hồ sơ thiết kế',428,0,428,428],
+    ['A3.2','Giấy phép môi trường, PCCC',486,0,486,389],
+    ['A3.3','Vận hành thử nghiệm, chuyển giao',1084,0,304,152],
+    ['B1.1','Chi phí quản lý tại dự án (lương DA, container, VPP)',3194,0,2172,1980],
+    ['B2.1','Chi phí bán hàng (sale, marketing, quà tặng)',1069,0,791,748],
+    ['B3.1','Chi phí bảo hành, dịch vụ sau bán',791,0,95,0],
+    ['B4.1','Chi phí quản lý doanh nghiệp',3415,0,1981,1981],
+    ['B5.1','Dự phòng phí',785,0,849,475]
+  ];
+  var GN={A:'A. GIÁ GỐC',B:'B. CHI PHÍ CHUNG VÀ QUẢN LÝ',
+    A1:'Chi phí xây dựng (vật tư + nhân công)',A2:'Chi phí cơ điện (ME)',A3:'Chi phí khác',
+    B1:'Chi phí quản lý tại dự án',B2:'Chi phí bán hàng',B3:'Chi phí bảo hành, sau bán',
+    B4:'Chi phí quản lý doanh nghiệp',B5:'Dự phòng phí'};
+
+  /* doanh thu = giá ký hợp đồng với chủ đầu tư */
+  var PROJ={
+    KD:{n:'Kim Động',rev:32100,g:27810,dc:400,du:19846,tc:16124,ov:60},
+    DH:{n:'Đồng Hướng',rev:16450,g:14260,dc:180,du:10286,tc:8462,ov:0},
+    PH:{n:'Phú Hà',rev:21700,g:18920,dc:200,du:12684,tc:9846,ov:48},
+    TH:{n:'Thái Hà GĐ1',rev:9650,g:8440,dc:70,du:4372,tc:2846,ov:0}};
+  var COST={
+    VT:{n:'Vật tư & thiết bị',ns:39180,du:27957,tc:21213},
+    NC:{n:'Nhân công & thầu phụ',ns:19848,du:12125,tc:9912},
+    CT:{n:'Chi phí quản lý tại dự án',ns:3194,du:2172,tc:1980},
+    QL:{n:'Chi phí bán hàng & QLDN',ns:4484,du:2772,tc:2729},
+    DV:{n:'Dịch vụ, bảo hành & dự phòng',ns:3574,du:2162,tc:1444}};
+  var TOT={rev:79900,g:69430,dc:850,ns:70280,du:47188,tc:37278,eac:70388};
+  var TARGET_PCT=13.10, FLOOR_PCT=12.00;
+
+  /* dữ liệu theo tháng — dùng cho bộ lọc thời gian */
+  var MO=[{lb:'T12/24',k:'12/2024'},{lb:'T01/25',k:'01/2025'},{lb:'T02/25',k:'02/2025'},
+          {lb:'T03/25',k:'03/2025'},{lb:'T04/25',k:'04/2025'},{lb:'T05/25',k:'05/2025'}];
+  var CUM={ns:[8200,16400,25800,34600,44200,52400],
+           du:[7400,14800,23600,32400,41200,47188],
+           tc:[5200,10800,18400,26200,32800,37278]};
+  var PMO={ok:[48,62,78,86,84,70],wait:[3,5,6,8,9,10],adj:[1,2,3,4,4,4],no:[3,4,5,5,4,4]};
+  var MFROM=['2024-12-01','2025-01-01','2025-02-01','2025-03-01','2025-04-01','2025-05-01'];
+  var MTO=['2024-12-31','2025-01-31','2025-02-28','2025-03-31','2025-04-30','2025-05-19'];
+
+  var ST={proj:'all',cost:'all',m0:0,m1:5,pst:'all',pq:''};
+  /* hệ số thời gian: dự chi và thực chi tính lũy kế đến hết tháng cuối của khoảng lọc */
+  function tShare(f){
+    if(f!=='du'&&f!=='tc') return 1;
+    return CUM[f][ST.m1]/CUM[f][5];
+  }
+  function shP(f){return ST.proj==='all'?1:PROJ[ST.proj][f]/TOT[f==='ns'?'ns':f];}
+  function pShare(f){
+    if(ST.proj==='all') return 1;
+    var p=PROJ[ST.proj];
+    if(f==='ns') return (p.g+p.dc)/TOT.ns;
+    if(f==='du') return p.du/TOT.du;
+    if(f==='tc') return p.tc/TOT.tc;
+    if(f==='rev')return p.rev/TOT.rev;
+    if(f==='dc') return p.dc/TOT.dc;
+    return 1;
+  }
+  function cShare(f){
+    if(ST.cost==='all') return 1;
+    var c=COST[ST.cost];
+    if(f==='ns') return c.ns/TOT.ns;
+    if(f==='du') return c.du/TOT.du;
+    if(f==='tc') return c.tc/TOT.tc;
+    if(f==='rev')return c.ns/TOT.ns;
+    if(f==='dc') return c.ns/TOT.ns;
+    return 1;
+  }
+  /* hệ số nhân cho từng lớp — dùng chung cho KPI, cây dự toán và mọi chart */
+  function fG(){return (ST.proj==='all'?1:PROJ[ST.proj].g/TOT.g)*cShare('ns');}
+  function fDC(){return (ST.proj==='all'?1:PROJ[ST.proj].dc/TOT.dc)*cShare('ns');}
+  function fN(){return pShare('ns')*cShare('ns');}
+  function fD(){return pShare('du')*cShare('du')*tShare('du');}
+  function fT(){return pShare('tc')*cShare('tc')*tShare('tc');}
+  function fCount(){return pShare('du')*cShare('du');}
+  /* chart so sánh giữ đủ hạng mục nhưng làm mờ phần không nằm trong bộ lọc,
+     để vừa thấy đang lọc gì vừa bấm chuyển trực tiếp sang mục khác được */
+  function dimP(k){return (ST.proj==='all'||ST.proj===k)?1:0.18;}
+  function dimC(k){return (ST.cost==='all'||ST.cost===k)?1:0.18;}
+  function agg(){
+    var g=TOT.g*fG(), dc=TOT.dc*fDC(), ns=g+dc;
+    var du=TOT.du*fD(), tc=TOT.tc*fT();
+    var rev=TOT.rev*(ST.proj==='all'?1:PROJ[ST.proj].rev/TOT.rev)*cShare('ns');
+    var over=(TOT.eac-TOT.ns)*(pShare('du')*cShare('du'));
+    return {ns:ns,du:du,tc:tc,dc:dc,rev:rev,eac:ns+over,over:over,g:g};
+  }
+
+  /* ===== TRANG 1 ===== */
+  function renderP1(){
+    var a=agg();
+    setHtml('k1',fb(a.ns)+' <span>tỷ đ</span>');
+    setHtml('k1s','Gốc '+fb(a.g)+' tỷ · ĐC <b style="color:'+T.violet+'">+'+fm(a.dc)+' tr</b>');
+    setHtml('k2',fb(a.du)+' <span>tỷ đ</span>');
+    setHtml('k2s','<span class="delta d-warn">'+fp(a.du/a.ns*100,1)+'%</span> · còn '+fb(a.ns-a.du)+' tỷ');
+    setHtml('k3',fb(a.tc)+' <span>tỷ đ</span>');
+    setHtml('k3s','<span class="delta d-up">'+fp(a.tc/a.ns*100,1)+'%</span> · chưa trả '+fb(a.du-a.tc)+' tỷ');
+    setHtml('k4',fb(a.eac)+' <span>tỷ đ</span>');
+    setHtml('k4s','Vượt dự toán <b style="color:'+T.red+'">'+fm(a.over)+' tr</b>');
+    var pnl=a.rev-a.eac, pct=pnl/a.rev*100, tgt=a.rev-a.g, tpct=tgt/a.rev*100;
+    setHtml('k5',fb(pnl)+' <span>tỷ đ</span>');
+    setHtml('k5s','<b>'+fp(pct,2)+'%</b> · mục tiêu '+fp(tpct,2)+'% <span class="delta d-down">'+fp(pct-tpct,2)+'</span>');
+
+    var pk=['KD','DH','PH','TH'];
+    var cn=cShare('ns'),cd=cShare('du')*tShare('du'),ct=cShare('tc')*tShare('tc');
+    setTxt('projNote','Đơn vị: tỷ đồng · '+(ST.cost==='all'?'toàn bộ loại chi phí':'chỉ '+COST[ST.cost].n));
+    mk('byProj',{
+      tooltip:tip,legend:{data:['Dự toán hiện hành','Dự chi đã duyệt','Thực chi'],bottom:0,itemWidth:11,itemHeight:11,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
+      grid:{left:8,right:16,top:22,bottom:46,containLabel:true},
+      xAxis:{type:'category',data:pk.map(function(k){return PROJ[k].n;}),
+        axisLine:{lineStyle:{color:T.line}},axisTick:{show:false},
+        axisLabel:{color:T.slate,fontSize:11.5,interval:0,fontFamily:FONT,triggerEvent:true}},
+      yAxis:Object.assign({type:'value',name:'tỷ đ',nameTextStyle:{color:T.slate2,fontSize:11}},axis),
+      series:[
+        {name:'Dự toán hiện hành',type:'bar',barGap:'-100%',barWidth:'62%',
+         data:pk.map(function(k){return {value:+((PROJ[k].g+PROJ[k].dc)*cn/1000).toFixed(2),
+           itemStyle:{color:'#E3EDEF',opacity:dimP(k),borderRadius:[3,3,0,0]}};})},
+        {name:'Dự chi đã duyệt',type:'bar',barGap:'-100%',barWidth:'62%',
+         data:pk.map(function(k){return {value:+(PROJ[k].du*cd/1000).toFixed(2),
+           itemStyle:{color:T.amber,opacity:dimP(k),borderRadius:[3,3,0,0]}};})},
+        {name:'Thực chi',type:'bar',barWidth:'32%',
+         data:pk.map(function(k){return {value:+(PROJ[k].tc*ct/1000).toFixed(2),
+           itemStyle:{color:T.deep,opacity:dimP(k),borderRadius:[3,3,0,0]}};})}
+      ]},function(i){setFilter('proj',pk[i]);},pk.map(function(k){return PROJ[k].n;}),'x');
+
+    var pf=pShare('ns');
+    setTxt('costNote','Tổng '+fb(TOT.ns*pf)+' tỷ đ · '+(ST.proj==='all'?'toàn bộ 4 dự án':'dự án '+PROJ[ST.proj].n));
+    var ck=['VT','NC','CT','QL','DV'],cc=[T.deep,T.aqua,T.teal,T.violet,T.amber];
+    mk('byCost',{
+      tooltip:{trigger:'item',backgroundColor:'#0A2430',borderWidth:0,textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
+        formatter:function(p){return p.name+'<br/><b>'+fb(p.value)+' tỷ đ</b> · '+p.percent+'%';}},
+      legend:{bottom:0,itemWidth:10,itemHeight:10,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
+      series:[{type:'pie',radius:['46%','72%'],center:['50%','44%'],itemStyle:{borderColor:'#fff',borderWidth:2},label:{show:false},
+        data:ck.map(function(k,i){return {name:COST[k].n,value:Math.round(COST[k].ns*pf),itemStyle:{color:cc[i],opacity:dimC(k)}};})}]},
+      function(i){setFilter('cost',ck[i]);},ck.map(function(k){return COST[k].n;}));
+
+    /* ---- bản đồ nhiệt: dự án x loại chi phí ---- */
+    var HP=['KD','DH','PH','TH'], HC=['VT','NC','CT','QL','DV'];
+    var cells=[],maxPct=0,minPct=999;
+    for(var yi=0;yi<HC.length;yi++){
+      for(var xi=0;xi<HP.length;xi++){
+        var pr=PROJ[HP[xi]], co=COST[HC[yi]];
+        var cns=(pr.g+pr.dc)*co.ns/TOT.ns;
+        var cdu=pr.du*co.du/TOT.du*tShare('du');
+        var ctc=pr.tc*co.tc/TOT.tc*tShare('tc');
+        var pc2=cns?+(cdu/cns*100).toFixed(1):0;
+        if(pc2>maxPct)maxPct=pc2;
+        if(pc2<minPct)minPct=pc2;
+        cells.push({value:[xi,yi,pc2],ns:cns,du:cdu,tc:ctc,pj:HP[xi],ct:HC[yi],
+          itemStyle:{opacity:Math.min(dimP(HP[xi]),dimC(HC[yi]))===1?1:0.22}});
+      }
+    }
+    mk('heatmap',{
+      tooltip:{backgroundColor:'#0A2430',borderWidth:0,textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
+        formatter:function(p){var d=p.data;
+          return '<b>'+PROJ[d.pj].n+' — '+COST[d.ct].n+'</b><br/>Dự toán: '+fm(d.ns)+' tr đ<br/>Dự chi: '+fm(d.du)+' tr ('+d.value[2]+'%)<br/>Thực chi: '+fm(d.tc)+' tr đ';}},
+      grid:{left:10,right:16,top:42,bottom:58,containLabel:true},
+      xAxis:{type:'category',position:'top',data:HP.map(function(k){return PROJ[k].n;}),splitArea:{show:true},
+        axisLine:{show:false},axisTick:{show:false},
+        axisLabel:{color:T.ink,fontSize:12,fontWeight:600,fontFamily:FONT,margin:10,triggerEvent:true}},
+      yAxis:{type:'category',data:HC.map(function(k){return COST[k].n;}),splitArea:{show:true},
+        axisLine:{lineStyle:{color:T.line}},axisTick:{show:false},
+        axisLabel:{color:T.ink,fontSize:11.5,fontFamily:FONT,triggerEvent:true}},
+      visualMap:{min:Math.floor(minPct),max:Math.max(Math.ceil(maxPct),Math.floor(minPct)+1),calculable:false,orient:'horizontal',left:'center',bottom:6,itemWidth:12,itemHeight:120,
+        text:['% cao','% thấp'],textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate},
+        inRange:{color:['#EAF6F7','#9FDAE1','#35B9C7','#0E7C86','#0B4A57']}},
+      series:[{type:'heatmap',data:cells,
+        label:{show:true,fontFamily:FONT,fontSize:12,fontWeight:600,
+          formatter:function(p){return p.data.value[2]+'%';},
+          color:'#fff',textBorderColor:'rgba(0,0,0,.25)',textBorderWidth:2},
+        itemStyle:{borderColor:'#fff',borderWidth:3},
+        emphasis:{itemStyle:{borderColor:T.amber,borderWidth:3}}}]
+    },function(i,d,xy){
+      var pj=null,ct=null;
+      if(d&&d.pj){pj=d.pj;ct=d.ct;}
+      else if(xy&&xy.length&&xy[0]>=0&&xy[0]<HP.length&&xy[1]>=0&&xy[1]<HC.length){pj=HP[xy[0]];ct=HC[xy[1]];}
+      else if(i>=0&&i<HP.length){setFilter('proj',HP[i]);return;}
+      if(!pj) return;
+      if(ST.proj===pj&&ST.cost===ct){ST.proj='all';ST.cost='all';}
+      else {ST.proj=pj;ST.cost=ct;}
+      document.getElementById('fProj').value=ST.proj;
+      document.getElementById('fCost').value=ST.cost;
+      renderAll();
+    },HP.map(function(k){return PROJ[k].n;}),'xy');
+
+    /* lãi/lỗ dự kiến vs mục tiêu theo dự án */
+    var tgt=pk.map(function(k){return +((PROJ[k].rev-PROJ[k].g)/1000).toFixed(2);});
+    var now=pk.map(function(k){return +((PROJ[k].rev-(PROJ[k].g+PROJ[k].dc+PROJ[k].ov))/1000).toFixed(2);});
+    var pctNow=pk.map(function(k){return +((PROJ[k].rev-(PROJ[k].g+PROJ[k].dc+PROJ[k].ov))/PROJ[k].rev*100).toFixed(2);});
+    mk('pnlChart',{
+      tooltip:{trigger:'axis',backgroundColor:'#0A2430',borderWidth:0,textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},axisPointer:{type:'shadow'}},
+      legend:{data:['Lãi mục tiêu ban đầu','Lãi dự kiến hiện tại','Tỷ lệ lãi dự kiến (%)'],bottom:0,itemWidth:12,itemHeight:10,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
+      grid:{left:8,right:40,top:22,bottom:46,containLabel:true},
+      xAxis:{type:'category',data:pk.map(function(k){return PROJ[k].n;}),
+        axisLine:{lineStyle:{color:T.line}},axisTick:{show:false},
+        axisLabel:{color:T.slate,fontSize:11.5,fontFamily:FONT,triggerEvent:true}},
+      yAxis:[Object.assign({type:'value',name:'tỷ đ',nameTextStyle:{color:T.slate2,fontSize:11}},axis),
+             Object.assign({type:'value',name:'%',min:8,max:16,nameTextStyle:{color:T.slate2,fontSize:11},splitLine:{show:false}},axis)],
+      series:[
+        {name:'Lãi mục tiêu ban đầu',type:'bar',barWidth:'26%',
+         data:tgt.map(function(v,ix){return {value:v,itemStyle:{color:'#E3EDEF',opacity:dimP(pk[ix]),borderRadius:[3,3,0,0]}};})},
+        {name:'Lãi dự kiến hiện tại',type:'bar',barWidth:'26%',
+         data:now.map(function(v,ix){return {value:v,itemStyle:{color:T.teal,opacity:dimP(pk[ix]),borderRadius:[3,3,0,0]}};})},
+        {name:'Tỷ lệ lãi dự kiến (%)',type:'line',yAxisIndex:1,symbol:'circle',symbolSize:8,lineStyle:{width:2.5,color:T.red},itemStyle:{color:T.red},
+         data:pctNow,
+         markLine:{silent:true,symbol:'none',animation:false,
+           lineStyle:{color:T.amber,type:'dashed',width:1.5},
+           label:{position:'insideStartTop',color:T.amber,fontSize:11,fontFamily:FONT},
+           data:[{yAxis:FLOOR_PCT,label:{formatter:'Sàn 12%'}}]}}
+      ]},function(i){setFilter('proj',pk[i]);},pk.map(function(k){return PROJ[k].n;}),'x');
+  }
+
+  /* ===== TRANG 2: cây dự toán ===== */
+  var TREE=(function(){
+    var g2={},g1={},ord2=[];
+    LEAF.forEach(function(r){
+      var k2=r[0].split('.')[0],k1=k2.charAt(0);
+      var a2=g2[k2];
+      if(!a2){a2=g2[k2]={g:0,dc:0,du:0,tc:0,kids:[]};ord2.push(k2);}
+      var a1=g1[k1]||(g1[k1]={g:0,dc:0,du:0,tc:0,kids:[]});
+      a2.g+=r[2];a2.dc+=r[3];a2.du+=r[4];a2.tc+=r[5];a2.kids.push(r);
+      a1.g+=r[2];a1.dc+=r[3];a1.du+=r[4];a1.tc+=r[5];
+      if(a1.kids.indexOf(k2)<0)a1.kids.push(k2);
+    });
+    return {g1:g1,g2:g2,ord2:ord2};
+  })();
+  var openSet={A:true,B:true};
+  TREE.ord2.forEach(function(k){openSet[k]=false;});
+
+  function statusOf(ns,du){
+    if(du>ns) return ['t-bad','Vượt dự toán'];
+    if(ns>0&&du/ns>=0.9) return ['t-warn','Sắp cạn'];
+    if(du===0) return ['t-idle','Chưa dùng'];
+    return ['t-ok','Trong dự toán'];
+  }
+  function rowHtml(cls,code,name,g,dc,du,tc,tgKey,ind){
+    var ns=g+dc, eac=Math.max(ns,du), over=Math.max(du-ns,0);
+    var pct=ns?Math.round(du/ns*100):0, st=statusOf(ns,du);
+    var mc=du>ns?'max':(ns&&du/ns>=0.9?'hi':'');
+    var label=tgKey?('<span class="tg" data-tg="'+tgKey+'"><i class="ti ti-chevron-right"></i>'+name+'</span>')
+                   :(ind?'<span class="ind"></span>'+name:name);
+    return '<tr class="'+cls+'">'+
+      '<td class="l code">'+code+'</td><td class="l">'+label+'</td>'+
+      '<td class="num">'+fm(g)+'</td>'+
+      '<td class="num" style="color:'+(dc>0?T.violet:T.slate2)+'">'+(dc>0?'+'+fm(dc):'—')+'</td>'+
+      '<td class="num"><b>'+fm(ns)+'</b></td>'+
+      '<td class="num">'+fm(du)+'</td><td class="num">'+fm(tc)+'</td>'+
+      '<td class="num"><b>'+fm(eac)+'</b></td>'+
+      '<td class="num" style="color:'+(ns-du<0?T.red:T.ink)+'">'+fm(ns-du)+'</td>'+
+      '<td class="num" style="color:'+(over>0?T.red:T.slate2)+';font-weight:'+(over>0?700:400)+'">'+(over>0?fm(over):'—')+'</td>'+
+      '<td class="num"><div class="bar-cell"><span>'+pct+'%</span><span class="mini"><i class="'+mc+'" style="width:'+Math.min(pct,100)+'%"></i></span></div></td>'+
+      '<td class="l"><span class="tag '+st[0]+'">'+st[1]+'</span></td></tr>';
+  }
+  function renderTree(){
+    var kG=fG(),kDC=fDC(),kD=fD(),kT=fT();
+    var h='',over=0,near=0,overSum=0,g0=0,d0=0,u0=0,t0=0,e0=0;
+    ['A','B'].forEach(function(k1){
+      var a=TREE.g1[k1];
+      h+=rowHtml('lv1',k1,GN[k1],a.g*kG,a.dc*kDC,a.du*kD,a.tc*kT,'g'+k1,false);
+      a.kids.forEach(function(k2){
+        var b=TREE.g2[k2];
+        h+=rowHtml('lv2 c-'+k1,k2,GN[k2]||k2,b.g*kG,b.dc*kDC,b.du*kD,b.tc*kT,'g'+k2,false);
+        b.kids.forEach(function(r){
+          h+=rowHtml('lv3 c-'+k1+' c-'+k2,r[0],r[1],r[2]*kG,r[3]*kDC,r[4]*kD,r[5]*kT,null,true);
+          var ns=r[2]*kG+r[3]*kDC, du=r[4]*kD;
+          if(ns>0&&du>ns){over++;overSum+=du-ns;}
+          else if(ns>0&&du/ns>=0.9) near++;
+          g0+=r[2]*kG;d0+=r[3]*kDC;u0+=r[4]*kD;t0+=r[5]*kT;e0+=Math.max(ns,du);
+        });
+      });
+    });
+    var ns0=g0+d0;
+    h+='<tr class="tot"><td class="l">C</td><td class="l">GIÁ THÀNH (A + B)</td><td class="num">'+fm(g0)+'</td><td class="num">+'+fm(d0)+'</td>'+
+       '<td class="num">'+fm(ns0)+'</td><td class="num">'+fm(u0)+'</td><td class="num">'+fm(t0)+'</td><td class="num">'+fm(e0)+'</td>'+
+       '<td class="num">'+fm(ns0-u0)+'</td><td class="num">'+fm(e0-ns0)+'</td><td class="num">'+Math.round(u0/ns0*100)+'%</td><td class="l">—</td></tr>';
+    var rev=agg().rev;
+    h+='<tr class="rev"><td class="l">D</td><td class="l">GIÁ KÝ HỢP ĐỒNG (doanh thu)</td><td class="num">'+fm(rev)+'</td><td class="num">—</td>'+
+       '<td class="num">'+fm(rev)+'</td><td class="num">—</td><td class="num">—</td><td class="num">'+fm(rev)+'</td>'+
+       '<td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="l">—</td></tr>';
+    var pnlT=rev-g0, pnlE=rev-e0;
+    h+='<tr class="pnl"><td class="l">E</td><td class="l">LÃI/LỖ — mục tiêu vs dự kiến</td><td class="num">'+fm(pnlT)+'</td><td class="num">−'+fm(d0)+'</td>'+
+       '<td class="num">'+fm(rev-ns0)+'</td><td class="num">—</td><td class="num">—</td><td class="num">'+fm(pnlE)+'</td>'+
+       '<td class="num">—</td><td class="num">−'+fm(e0-ns0)+'</td><td class="num">'+fp(pnlE/rev*100,2)+'%</td>'+
+       '<td class="l"><span class="tag '+(pnlE/rev*100<FLOOR_PCT?'t-bad':'t-ok')+'">'+(pnlE/rev*100<FLOOR_PCT?'Dưới ngưỡng sàn':'Đạt ngưỡng')+'</span></td></tr>';
+    document.getElementById('treeBody').innerHTML=h;
+
+    setTxt('m1','15');
+    setTxt('m2',String(over));
+    setHtml('m2s','Dự chi vượt <b style="color:'+T.red+'">'+fm(overSum)+' tr đ</b> — cần phiếu điều chỉnh dự toán');
+    setTxt('m3',String(near));
+    setTxt('m3s','Dự chi đã dùng ≥ 90% dự toán, dư địa rất mỏng');
+    setHtml('m4',fb(ns0-u0)+' <span>tỷ đ</span>');
+    setTxt('m4s','Chiếm '+Math.round((ns0-u0)/ns0*100)+'% dự toán hiện hành');
+    setTxt('treeNote','Tổng CP dự kiến = Thực chi + phần dự chi đã duyệt chưa thực chi + dự toán của phần chưa có dự chi (bằng MAX của dự toán và dự chi). '+
+      (ST.proj==='all'?'Đang xem tổng hợp 4 dự án.':'Đang xem dự án '+PROJ[ST.proj].n+' — cấp mã chi tiết chưa lọc theo loại chi phí trong bản demo.'));
+    bindToggles();applyCollapse();
+  }
+  function bindToggles(){
+    var tgs=document.querySelectorAll('#treeBody .tg');
+    for(var i=0;i<tgs.length;i++){
+      tgs[i].onclick=function(){
+        var k=this.getAttribute('data-tg').substring(1);
+        openSet[k]=!openSet[k];applyCollapse();
+      };
+    }
+  }
+  function applyCollapse(){
+    var tgs=document.querySelectorAll('#treeBody .tg');
+    for(var i=0;i<tgs.length;i++){
+      var k=tgs[i].getAttribute('data-tg').substring(1);
+      if(openSet[k])tgs[i].classList.add('open');else tgs[i].classList.remove('open');
+    }
+    var rows=document.querySelectorAll('#treeBody tr');
+    for(var j=0;j<rows.length;j++){
+      var m=(rows[j].className||'').match(/c-([AB][0-9]?)/g),show=true;
+      if(m){for(var x=0;x<m.length;x++){if(!openSet[m[x].substring(2)]){show=false;break;}}}
+      rows[j].style.display=show?'':'none';
+    }
+  }
+  function renderP2Charts(){
+    var keys=TREE.ord2, kG=fG(),kDC=fDC(),kD=fD(),kT=fT();
+    var nsOf=function(b){return b.g*kG+b.dc*kDC;};
+    function colorFor(p){
+      if(p>=80)return T.deep;
+      if(p>=65)return T.teal;
+      if(p>=50)return T.aqua;
+      if(p>=30)return '#9FDAE1';
+      return '#D6EDF0';
+    }
+    var ordB=keys.slice().sort(function(a,b){return nsOf(TREE.g2[a])-nsOf(TREE.g2[b]);});
+    var bNS=[],bDU=[],bTC=[],bLB=[];
+    ordB.forEach(function(k){
+      var b=TREE.g2[k],ns=nsOf(b),du=b.du*kD,tc=b.tc*kT;
+      bLB.push(GN[k]||k);bNS.push(Math.round(ns));bDU.push(Math.round(du));bTC.push(Math.round(tc));
+    });
+    mk('ctrlMatrix',{
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#0A2430',borderWidth:0,
+        textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
+        formatter:function(ps){
+          var i2=ps[0].dataIndex,ns=bNS[i2],du=bDU[i2],tc=bTC[i2];
+          return '<b>'+bLB[i2]+'</b><br/>Dự toán: '+fm(ns)+' tr đ<br/>Dự chi: '+fm(du)+' tr ('+Math.round(du/ns*100)+'%)'+
+                 '<br/>Thực chi: '+fm(tc)+' tr ('+Math.round(tc/ns*100)+'%)'+
+                 (du>ns?'<br/><span style="color:#FF9E9E">Vượt dự toán '+fm(du-ns)+' tr</span>':'');}},
+      legend:{data:['Dự toán','Dự chi đã duyệt','Thực chi'],bottom:0,itemWidth:11,itemHeight:11,
+        textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
+      grid:{left:8,right:46,top:14,bottom:46,containLabel:true},
+      xAxis:Object.assign({type:'value',name:'tr đ',nameTextStyle:{color:T.slate2,fontSize:11}},axis),
+      yAxis:Object.assign({type:'category',data:bLB,
+        axisLabel:{fontSize:11,color:T.ink,fontFamily:FONT,triggerEvent:true}},axis),
+      series:[
+        {name:'Dự toán',type:'bar',barWidth:'64%',itemStyle:{color:'#E7EEF0',borderRadius:[0,3,3,0]},data:bNS,
+         label:{show:true,position:'right',fontFamily:FONT,fontSize:11,color:T.slate2,
+           formatter:function(pp){return fm(bNS[pp.dataIndex]);}}},
+        {name:'Dự chi đã duyệt',type:'bar',barWidth:'34%',barGap:'-49%',
+         data:bDU.map(function(v,ix){return {value:v,itemStyle:{color:v>bNS[ix]?T.red:T.amber,borderRadius:[0,2,2,0]}};})},
+        {name:'Thực chi',type:'bar',barWidth:'12%',barGap:'-23%',
+         itemStyle:{color:T.deep,borderRadius:[0,2,2,0]},data:bTC}
+      ]},function(i2){focusGroup(ordB[i2]);},bLB,'y');
+
+    var ord=keys.slice().sort(function(a,b){return nsOf(TREE.g2[a])-nsOf(TREE.g2[b]);});
+    mk('compo',{
+      tooltip:{trigger:'axis',backgroundColor:'#0A2430',borderWidth:0,textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
+        formatter:function(p){var o='<b>'+p[0].name+'</b>';p.forEach(function(x){o+='<br/>'+x.seriesName+': '+x.value+'%';});return o;}},
+      legend:{data:['Thực chi','Dự chi chưa thực chi','Chưa dự chi'],bottom:0,itemWidth:11,itemHeight:11,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
+      grid:{left:8,right:26,top:16,bottom:46,containLabel:true},
+      xAxis:Object.assign({type:'value',max:100,name:'%',nameTextStyle:{color:T.slate2,fontSize:11}},axis),
+      yAxis:Object.assign({type:'category',data:ord.map(function(k){return GN[k]||k;}),
+        axisLabel:{fontSize:11,color:T.ink,fontFamily:FONT,triggerEvent:true}},axis),
+      series:[
+        {name:'Thực chi',type:'bar',stack:'s',barWidth:'62%',itemStyle:{color:T.deep},
+         data:ord.map(function(k){var b=TREE.g2[k],ns=nsOf(b);return ns?+(b.tc*kT/ns*100).toFixed(1):0;})},
+        {name:'Dự chi chưa thực chi',type:'bar',stack:'s',itemStyle:{color:T.amber},
+         data:ord.map(function(k){var b=TREE.g2[k],ns=nsOf(b);return ns?+((b.du*kD-b.tc*kT)/ns*100).toFixed(1):0;})},
+        {name:'Chưa dự chi',type:'bar',stack:'s',itemStyle:{color:'#E3EDEF'},
+         data:ord.map(function(k){var b=TREE.g2[k],ns=nsOf(b);return ns?+Math.max((ns-b.du*kD)/ns*100,0).toFixed(1):0;})}
+      ]},function(i){focusGroup(ord[i]);},ord.map(function(k){return GN[k]||k;}),'y');
+  }
+
+  /* ===== TRANG 3: đề xuất chờ duyệt ===== */
+  /* mã, nội dung, dự án, mã dự toán, dự toán, đã dự chi, số tiền, projCode, costCode, tháng */
+  var PEND=[
+    ['DX00224','Máy phát điện 250kVA và tủ ATS','Kim Động','A2.1',16242,12241,400,'KD','VT','04/2025'],
+    ['DX00258','Thép sàn thao tác, giằng chéo cụm bể','Phú Hà','A1.2',18992,13100,486,'PH','VT','05/2025'],
+    ['DX00260','Nhân công lắp đặt cơ điện đợt 4','Kim Động','A2.2',5142,2262,642,'KD','NC','05/2025'],
+    ['DX00222','Hoá chất và bùn giống vận hành thử nghiệm','Kim Động','A3.3',1084,304,313,'KD','DV','04/2025'],
+    ['DX00254','Chi phí ban chỉ huy công trường tháng 5','Đồng Hướng','B1.1',3194,2172,124,'DH','CT','05/2025'],
+    ['DX00262','Bảo hành thiết bị năm thứ nhất','Phú Hà','B3.1',791,95,148,'PH','DV','05/2025'],
+    ['DX00264','Ép cọc bổ sung hạng mục hạ tầng','Kim Động','A1.1',4386,4210,264,'KD','NC','05/2025'],
+    ['DX00251','Vận chuyển VTTB đợt 3 về công trường','Phú Hà','A2.3',878,922,86,'PH','DV','05/2025'],
+    ['DX00256','Xử lý defect bề mặt bê tông bể sinh học','Kim Động','B5.1',785,849,62,'KD','DV','05/2025']
+  ];
+  function inMonth(t){
+    for(var x=0;x<MO.length;x++){if(MO[x].k===t) return x>=ST.m0&&x<=ST.m1;}
+    return true;
+  }
+  function passRow(pj,ct,mth){
+    if(ST.proj!=='all'&&pj!==ST.proj) return false;
+    if(ST.cost!=='all'&&ct!==ST.cost) return false;
+    if(mth&&!inMonth(mth)) return false;
+    return true;
+  }
+  function renderPend(){
+    var h='',n=0,nOver=0,sumOver=0,fu=tShare('du');
+    PEND.forEach(function(r){
+      if(!passRow(r[7],r[8],r[9])) return;
+      n++;
+      var duSoFar=r[5]*fu;
+      var left=r[4]-duSoFar, after=left-r[6];
+      if(after<0){nOver++;sumOver+=r[6];}
+      var kl=after<0?['t-bad','Vượt dự toán']:(after/r[4]<0.05?['t-warn','Sát ngưỡng']:['t-ok','Trong dự toán']);
+      h+='<tr><td class="l"><a class="lnk" href="#">'+r[0]+' <i class="ti ti-external-link"></i></a></td>'+
+         '<td class="l">'+r[1]+'</td><td class="l">'+r[2]+'</td><td class="l code">'+r[3]+'</td>'+
+         '<td class="num">'+fm(r[4])+'</td><td class="num">'+fm(duSoFar)+'</td>'+
+         '<td class="num" style="color:'+(left<0?T.red:T.ink)+'">'+fm(left)+'</td>'+
+         '<td class="num"><b>'+fm(r[6])+'</b></td>'+
+         '<td class="num" style="color:'+(after<0?T.red:T.green)+';font-weight:700">'+fm(after)+'</td>'+
+         '<td class="l"><span class="tag '+kl[0]+'">'+kl[1]+'</span></td>'+
+         '<td class="l"><a class="bbtn" href="#"><i class="ti ti-gavel"></i> Duyệt trên Base</a></td></tr>';
+    });
+    var sum=0;
+    PEND.forEach(function(r){if(passRow(r[7],r[8],r[9]))sum+=r[6];});
+    if(!n) h='<tr><td class="l" colspan="11" style="text-align:center;color:'+T.slate2+';padding:18px">Không có đề xuất nào khớp bộ lọc</td></tr>';
+    else h+='<tr class="tot"><td class="l">Σ</td><td class="l">'+n+' đề xuất trọng yếu đang chờ duyệt</td><td class="l">—</td><td class="l">—</td>'+
+       '<td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">'+fm(sum)+'</td><td class="num">—</td><td class="l">—</td><td class="l">—</td></tr>';
+    document.getElementById('pendBody').innerHTML=h;
+    return {n:n,over:nOver,overVal:sumOver,sum:sum};
+  }
+  function sumMO(arr){var t=0;for(var i=ST.m0;i<=ST.m1;i++)t+=arr[i];return t;}
+  function renderP3(){
+    /* ---- luồng 5 bước dạng bar ---- */
+    var cf0=fCount();
+    var rc=function(v){return Math.round(v*cf0);};
+    var nOk=rc(sumMO(PMO.ok)),nWait=rc(sumMO(PMO.wait)),nAdj=rc(sumMO(PMO.adj)),nNo=rc(sumMO(PMO.no));
+    var nAll=nOk+nWait+nAdj+nNo, nIn=nOk+nWait, nOver=nAdj+nNo;
+    var steps=[
+      {n:'Bước 5 · Chuyển mua hàng',v:nOk,st:'ok',d:'Thành dự chi đã duyệt'},
+      {n:'Bước 4 · Duyệt chi',v:nOk,st:'ok',d:nWait+' chờ duyệt · '+nNo+' từ chối · '+nAdj+' xin điều chỉnh'},
+      {n:'Bước 3 · Thông báo kết quả',v:nAll,st:'all',d:nIn+' trong dự toán · '+nOver+' vượt dự toán'},
+      {n:'Bước 2 · Đối chiếu dự toán',v:nAll,st:'all',d:'Kéo dữ liệu → khớp mã dự toán → so sánh số còn lại'},
+      {n:'Bước 1 · Tạo đề xuất',v:nAll,st:'all',d:'Đề xuất mua hàng và thanh toán từ dự án'}
+    ];
+    /* ---- 5 card theo bộ lọc ---- */
+    var cf=cf0;
+    var rd=function(x){return Math.max(0,Math.round(x));};
+    var fullAll=PMO.ok.reduce(function(a,b){return a+b;},0)+PMO.wait.reduce(function(a,b){return a+b;},0)+
+                PMO.adj.reduce(function(a,b){return a+b;},0)+PMO.no.reduce(function(a,b){return a+b;},0);
+    var VAL={ok:47188,wait:2860,adj:1640,no:1150};
+    var vOf=function(k,cnt,full){return full?VAL[k]*(cnt/full):0;};
+    var pend=renderPend();
+    setTxt('q1',fm(rd(nWait)));
+    setHtml('q1s','Giá trị <b>'+fb(vOf('wait',nWait,PMO.wait.reduce(function(a,b){return a+b;},0)))+' tỷ đ</b> · tồn TB 4,6 ngày');
+    setTxt('q2',fm(pend.over));
+    setHtml('q2s','Giá trị <b style="color:'+T.red+'">'+fm(pend.overVal)+' tr đ</b> · cần lãnh đạo quyết');
+    setTxt('q3',fm(rd(nAll)));
+    setHtml('q3s','Giá trị đề xuất '+fb((VAL.ok+VAL.wait+VAL.adj+VAL.no)*(nAll/(fullAll*cf0||1)))+' tỷ đ');
+    setTxt('q4',fm(rd(nOk)));
+    setHtml('q4s',(nAll?Math.round(nOk/nAll*100):0)+'% số phiếu · '+fb(vOf('ok',nOk,PMO.ok.reduce(function(a,b){return a+b;},0)))+' tỷ đ');
+    setTxt('q5',fm(rd(nAdj)));
+    setHtml('q5s','Giá trị '+fm(vOf('adj',nAdj,PMO.adj.reduce(function(a,b){return a+b;},0)))+' tr đ');
+    setHtml('stepTag',fm(rd(nAll))+' phiếu đề xuất trong kỳ');
+    mk('stepBar',{
+      tooltip:{trigger:'item',backgroundColor:'#0A2430',borderWidth:0,textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
+        formatter:function(p){var d=steps[p.dataIndex];return '<b>'+d.n+'</b><br/>'+fm(d.v)+' phiếu<br/>'+d.d;}},
+      grid:{left:10,right:80,top:10,bottom:10,containLabel:true},
+      xAxis:Object.assign({type:'value',max:Math.round(nAll*1.05),show:false},axis),
+      yAxis:Object.assign({type:'category',data:steps.map(function(x){return x.n;}),
+        axisLabel:{fontSize:11.5,color:T.ink,fontFamily:FONT,triggerEvent:true}},axis),
+      series:[{type:'bar',barWidth:'52%',
+        data:steps.map(function(x,i){
+          return {value:x.v,st:x.st,
+            itemStyle:{color:i===0?T.deep:(i===1?T.teal:T.aqua),opacity:i>1?.55:1,borderRadius:[0,4,4,0]}};}),
+        label:{show:true,position:'right',fontFamily:FONT,fontSize:12,fontWeight:600,color:T.ink,
+          formatter:function(p){return fm(p.value)+' phiếu';}}}]
+    },function(i){if(steps[i])setFilter('pst',steps[i].st==='ok'?'ok':'all');},steps.map(function(x){return x.n;}),'y');
+
+    mk('phieuMonth',{
+      tooltip:tip,legend:{data:['Đã duyệt','Chờ duyệt','Xin điều chỉnh','Từ chối'],bottom:0,itemWidth:11,itemHeight:11,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
+      grid:{left:8,right:16,top:26,bottom:46,containLabel:true},
+      xAxis:Object.assign({type:'category',data:MO.slice(ST.m0,ST.m1+1).map(function(m){return m.lb;}),
+        axisLabel:{color:T.slate,fontFamily:FONT,fontSize:11.5,triggerEvent:true}},axis),
+      yAxis:Object.assign({type:'value',name:'phiếu',nameTextStyle:{color:T.slate2,fontSize:11}},axis),
+      series:[
+        {name:'Đã duyệt',type:'bar',stack:'p',barWidth:'46%',itemStyle:{color:T.deep},data:PMO.ok.slice(ST.m0,ST.m1+1).map(rc)},
+        {name:'Chờ duyệt',type:'bar',stack:'p',itemStyle:{color:T.amber},data:PMO.wait.slice(ST.m0,ST.m1+1).map(rc)},
+        {name:'Xin điều chỉnh',type:'bar',stack:'p',itemStyle:{color:T.violet},data:PMO.adj.slice(ST.m0,ST.m1+1).map(rc)},
+        {name:'Từ chối',type:'bar',stack:'p',itemStyle:{color:'#9FDAE1',borderRadius:[3,3,0,0]},data:PMO.no.slice(ST.m0,ST.m1+1).map(rc),
+         label:{show:true,position:'top',fontFamily:FONT,fontSize:11.5,color:T.ink,
+           formatter:function(p){var i=ST.m0+p.dataIndex;return rc(PMO.ok[i]+PMO.wait[i]+PMO.adj[i]+PMO.no[i]);}}}
+      ]},function(i){setFilter('month',ST.m0+i);},MO.slice(ST.m0,ST.m1+1).map(function(m){return m.lb;}),'x');
+    mk('checkPie',{
+      tooltip:{trigger:'item',backgroundColor:'#0A2430',borderWidth:0,textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
+        formatter:function(p){return p.name+'<br/><b>'+p.value+' phiếu</b> · '+p.percent+'%';}},
+      legend:{bottom:0,itemWidth:10,itemHeight:10,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
+      series:[{type:'pie',radius:['46%','72%'],center:['50%','43%'],itemStyle:{borderColor:'#fff',borderWidth:2},label:{show:false},
+        data:[{name:'Trong dự toán',value:nIn,st:'all',itemStyle:{color:T.green}},
+              {name:'Vượt — xin điều chỉnh',value:nAdj,st:'adj',itemStyle:{color:T.violet}},
+              {name:'Vượt — từ chối',value:nNo,st:'no',itemStyle:{color:T.red}}]}]},
+      function(i,d){if(d&&d.st)setFilter('pst',d.st);},['Trong dự toán','Vượt — xin điều chỉnh','Vượt — từ chối']);
+  }
+  var PH=[
+    ['DX00218','Bồn bể composite FRP cụm bể hoá lý','Kim Động','A2.1','Vật tư & thiết bị','HTP','03/2025',800,'ok'],
+    ['TT00241','Thanh toán giai đoạn 2 thầu phụ phần xây dựng','Kim Động','A1.2','Nhân công & thầu phụ','Nhà thầu phụ XYZ','05/2025',1475,'ok'],
+    ['DX00224','Máy phát điện 250kVA và tủ ATS','Kim Động','A2.1','Vật tư & thiết bị','VINAGENSET','04/2025',400,'wait'],
+    ['DX00231','Máy ép bùn băng tải và tách rác','Đồng Hướng','A2.1','Vật tư & thiết bị','Mê ga','04/2025',355,'adj'],
+    ['DX00196','Cơ khí chế tạo lan can, sàn thao tác','Kim Động','A1.2','Nhân công & thầu phụ','Minh Hậu','03/2025',348,'ok'],
+    ['TT00248','Chi phí xin giấy phép môi trường và PCCC','Đồng Hướng','A3.2','Dịch vụ, bảo hành & dự phòng','Đơn vị tư vấn','05/2025',408,'ok'],
+    ['DX00222','Hoá chất, bùn giống cho vận hành thử nghiệm','Kim Động','A3.3','Dịch vụ, bảo hành & dự phòng','Nhiều NCC','04/2025',313,'wait'],
+    ['DX00187','Cáp điện động lực toàn trạm','Phú Hà','A2.1','Vật tư & thiết bị','LS Vina','02/2025',288,'ok'],
+    ['DX00203','Hệ thống hoá chất, bơm định lượng','Phú Hà','A2.1','Vật tư & thiết bị','Blue White','03/2025',257,'ok'],
+    ['DX00179','Tủ điện điều khiển trạm và tủ pha hoá chất','Kim Động','A2.1','Vật tư & thiết bị','3CIE','02/2025',250,'ok'],
+    ['DX00212','Máy thổi khí Root 15kW (03 bộ)','Đồng Hướng','A2.1','Vật tư & thiết bị','Longtech','03/2025',219,'adj'],
+    ['TT00236','Thanh toán khối lượng bê tông cụm bể đợt 3','Phú Hà','A1.2','Nhân công & thầu phụ','Nhà thầu phụ XYZ','04/2025',186,'ok'],
+    ['DX00184','Hệ thống chiếu sáng trong và ngoài nhà','Kim Động','A1.3','Vật tư & thiết bị','Rạng Đông','02/2025',179,'ok'],
+    ['DX00260','Nhân công lắp đặt cơ điện đợt 4','Kim Động','A2.2','Nhân công & thầu phụ','Công nghệ mới','05/2025',642,'wait'],
+    ['DX00258','Thép sàn thao tác, giằng chéo cụm bể','Phú Hà','A1.2','Vật tư & thiết bị','Khang Thịnh','05/2025',486,'wait'],
+    ['DX00153','Trang bị văn phòng công trường, container','Thái Hà GĐ1','B1.1','Chi phí quản lý tại dự án','Nhiều NCC','01/2025',86,'ok'],
+    ['DX00251','Vận chuyển VTTB đợt 3 về công trường','Phú Hà','A2.3','Dịch vụ, bảo hành & dự phòng','Vận tải Hưng Yên','05/2025',86,'wait'],
+    ['DX00256','Xử lý defect bề mặt bê tông bể sinh học','Kim Động','B5.1','Dịch vụ, bảo hành & dự phòng','Nhà thầu phụ XYZ','05/2025',62,'wait'],
+    ['DX00264','Ép cọc bổ sung hạng mục hạ tầng','Kim Động','A1.1','Nhân công & thầu phụ','Cọc Hà Nội','05/2025',264,'wait'],
+    ['DX00262','Bảo hành thiết bị năm thứ nhất','Phú Hà','B3.1','Dịch vụ, bảo hành & dự phòng','Nhiều NCC','05/2025',148,'wait'],
+    ['DX00245','Bổ sung bơm dự phòng ngoài thiết kế','Phú Hà','A2.1','Vật tư & thiết bị','Shinmaywa','05/2025',149,'adj'],
+    ['DX00209','Nâng cấp bơm chìm lên model công suất lớn hơn','Kim Động','A2.1','Vật tư & thiết bị','Shinmaywa','03/2025',149,'no'],
+    ['DX00226','Bổ sung camera giám sát ngoài phạm vi','Đồng Hướng','A2.1','Vật tư & thiết bị','Hikvision','04/2025',43,'no'],
+    ['DX00194','Thuê cẩu bánh xích 50T ngoài kế hoạch','Kim Động','A1.2','Nhân công & thầu phụ','Cho thuê TB Hà Nội','03/2025',97,'no'],
+    ['TT00239','Thanh toán vượt tỷ lệ so với dự toán đợt 2','Phú Hà','A2.1','Vật tư & thiết bị','3CIE','04/2025',68,'no']
+  ];
+  var PST={ok:['t-ok','Đã duyệt chi',T.green],wait:['t-warn','Chờ duyệt',T.amber],
+           adj:['t-idle','Xin điều chỉnh',T.violet],no:['t-bad','Từ chối',T.red]};
+  function renderPhieu(){
+    var st=ST.pst,q=ST.pq,h='',n=0,sum=0;
+    var mk0=MO[ST.m0].k,mk1=MO[ST.m1].k;
+    function inRange(t){
+      var i=-1;for(var x=0;x<MO.length;x++){if(MO[x].k===t)i=x;}
+      return i<0?true:(i>=ST.m0&&i<=ST.m1);
+    }
+    PH.slice().sort(function(a,b){return b[7]-a[7];}).forEach(function(r){
+      if(st!=='all'&&r[8]!==st) return;
+      if(ST.proj!=='all'&&r[2]!==PROJ[ST.proj].n) return;
+      if(ST.cost!=='all'&&r[4]!==COST[ST.cost].n) return;
+      if(!inRange(r[6])) return;
+      if(q&&(r[1]+' '+r[5]+' '+r[2]).toLowerCase().indexOf(q)<0) return;
+      n++;sum+=r[7];
+      var m=PST[r[8]];
+      h+='<tr><td class="l"><a class="lnk" href="#">'+r[0]+' <i class="ti ti-external-link"></i></a></td>'+
+         '<td class="l">'+r[1]+'</td><td class="l">'+r[2]+'</td><td class="l code">'+r[3]+'</td>'+
+         '<td class="l" style="font-size:11.5px;color:'+T.slate+'">'+r[4]+'</td><td class="l">'+r[5]+'</td>'+
+         '<td class="l code">'+r[6]+'</td><td class="num"><b>'+fm(r[7])+'</b> tr</td>'+
+         '<td class="l"><span class="tag '+m[0]+'"><span class="dotstat" style="background:'+m[2]+'"></span>'+m[1]+'</span></td></tr>';
+    });
+    document.getElementById('phieuBody').innerHTML=h;
+    setTxt('phieuCount','Hiển thị '+n+'/'+PH.length+' phiếu trọng yếu · tổng '+fm(sum)+' tr đ · khoảng '+mk0+' – '+mk1+
+      (st==='all'?'':' · trạng thái: '+PST[st][1])+'. Toàn kỳ có 512 phiếu, giá trị đề xuất 52,84 tỷ đ.');
+    var pills=document.querySelectorAll('.pill[data-s]');
+    for(var i=0;i<pills.length;i++){
+      if(pills[i].getAttribute('data-s')===st) pills[i].classList.add('on');
+      else pills[i].classList.remove('on');
+    }
+  }
+
+  /* ===== TRANG 4: điều chỉnh dự toán ===== */
+  /* 0 pb, 1 phiếu, 2 ngày, 3 dự án, 4 mã, 5 lý do, 6 giá trị, 7 NS sau, 8 lãi trước, 9 lãi sau, 10 người duyệt, 11 projCode, 12 costCode, 13 tháng, 14 nhóm nguyên nhân */
+  var ADJ=[
+    ['v1.1','DC-001','12/01/2025','Kim Động','A1.1','Ép cọc thí nghiệm phát sinh khối lượng theo kết quả nén tĩnh',100,69530,13.10,12.98,'Nguyễn Quang Kiên','KD','NC','01/2025','Phát sinh khối lượng thi công'],
+    ['v1.2','DC-002','08/02/2025','Kim Động','A1.2','Chống thấm và xử lý defect bề mặt bể ngoài dự toán',180,69710,12.98,12.75,'Nguyễn Quang Kiên','KD','NC','02/2025','Xử lý lỗi, làm lại'],
+    ['v1.3','DC-003','05/03/2025','Phú Hà','A2.1','Giá bơm và máy thổi khí nhập khẩu tăng 8% so thời điểm lập dự toán',220,69930,12.75,12.48,'Ban giám đốc','PH','VT','03/2025','Biến động giá vật tư, thiết bị'],
+    ['v1.4','DC-004','18/03/2025','Đồng Hướng','A1.2','Chủ đầu tư điều chỉnh cao độ đáy bể, tăng khối lượng đào và bê tông',170,70100,12.48,12.27,'Nguyễn Quang Kiên','DH','NC','03/2025','Chủ đầu tư thay đổi thiết kế'],
+    ['v1.5','DC-005','09/04/2025','Thái Hà GĐ1','A2.1','Bổ sung biến tần và tủ ATS theo yêu cầu nghiệm thu điện',180,70280,12.27,12.04,'Ban giám đốc','TH','VT','04/2025','Biến động giá vật tư, thiết bị']
+  ];
+  function renderP4(){
+    var h='',vis=[],sumAdj=0,reasons={};
+    ADJ.forEach(function(r){
+      if(!passRow(r[11],r[12],r[13])) return;
+      vis.push(r);sumAdj+=r[6];
+      reasons[r[14]]=(reasons[r[14]]||0)+r[6];
+    });
+    var a4=agg();
+    var pctAfter=(a4.rev-a4.ns)/a4.rev*100, pctEac=(a4.rev-a4.eac)/a4.rev*100;
+    setTxt('v1',vis.length?vis[vis.length-1][0]:'v1.0');
+    setTxt('v1s',vis.length?('Duyệt & khóa '+vis[vis.length-1][2]+' · '+vis[vis.length-1][10]):'Bản gốc, chưa điều chỉnh trong kỳ');
+    setHtml('v2','+'+fm(sumAdj)+' <span>tr đ</span>');
+    setTxt('v2s',vis.length+' lần điều chỉnh trong phạm vi đang xem');
+    setHtml('v3',fp(pctAfter,2)+' <span>%</span>');
+    setTxt('v3s','Mục tiêu ban đầu '+fp((a4.rev-a4.g)/a4.rev*100,2)+'%');
+    setHtml('v4',fp(pctEac,2)+' <span>%</span>');
+    setHtml('v4s',pctEac<FLOOR_PCT?'<b style="color:'+T.red+'">Đã phá ngưỡng sàn</b>':'Còn trong ngưỡng sàn');
+    h+='<tr class="lv1"><td class="l code">v1.0</td><td class="l">Dự toán ban đầu — duyệt &amp; khóa</td><td class="l code">25/11/2024</td>'+
+       '<td class="l">4 dự án</td><td class="l code">—</td><td class="l">Lập sau khi trúng thầu, khóa làm dữ liệu gốc</td>'+
+       '<td class="num">—</td><td class="num"><b>69.430</b></td><td class="num">—</td><td class="num">13,10%</td><td class="l">Ban giám đốc</td></tr>';
+    vis.forEach(function(r){
+      var bad=r[9]<12.00;
+      h+='<tr><td class="l code">'+r[0]+'</td><td class="l"><a class="lnk" href="#">'+r[1]+' <i class="ti ti-external-link"></i></a></td>'+
+         '<td class="l code">'+r[2]+'</td><td class="l">'+r[3]+'</td><td class="l code">'+r[4]+'</td>'+
+         '<td class="l" style="font-size:12px">'+r[5]+'</td>'+
+         '<td class="num" style="color:'+T.violet+';font-weight:700">+'+fm(r[6])+'</td><td class="num">'+fm(r[7])+'</td>'+
+         '<td class="num">'+fp(r[8],2)+'%</td>'+
+         '<td class="num" style="color:'+(bad?T.red:T.amber)+';font-weight:700">'+fp(r[9],2)+'%</td>'+
+         '<td class="l">'+r[10]+'</td></tr>';
+    });
+    h+='<tr class="tot"><td class="l">Σ</td><td class="l">'+vis.length+' lần điều chỉnh đã duyệt</td><td class="l">—</td><td class="l">—</td><td class="l">—</td>'+
+       '<td class="l">Chưa gồm dự chi vượt đang chờ xử lý</td>'+
+       '<td class="num">+'+fm(sumAdj)+'</td><td class="num">'+fm(a4.ns)+'</td><td class="num">'+fp((a4.rev-a4.g)/a4.rev*100,2)+'%</td>'+
+       '<td class="num">'+fp(pctAfter,2)+'%</td><td class="l">—</td></tr>';
+    document.getElementById('adjBody').innerHTML=h;
+
+    var mLb=['v1.0'],mVal=[+((a4.rev-a4.g)/a4.rev*100).toFixed(2)],cum=0;
+    vis.forEach(function(r){cum+=r[6];mLb.push(r[0]);mVal.push(+((a4.rev-a4.g-cum)/a4.rev*100).toFixed(2));});
+    mLb.push('Dự kiến');mVal.push(+pctEac.toFixed(2));
+    var tgtLine=mLb.map(function(){return +((a4.rev-a4.g)/a4.rev*100).toFixed(2);});
+    var floorLine=mLb.map(function(){return FLOOR_PCT;});
+    mk('marginTrend',{
+      tooltip:{trigger:'axis',backgroundColor:'#0A2430',borderWidth:0,textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
+        formatter:function(ps){var o='<b>'+ps[0].name+'</b>';ps.forEach(function(x){o+='<br/>'+x.seriesName+': '+fp(x.value,2)+'%';});return o;}},
+      legend:{data:['Lãi dự kiến','Mục tiêu ban đầu','Ngưỡng sàn'],bottom:0,itemWidth:14,itemHeight:9,
+        textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
+      grid:{left:8,right:24,top:22,bottom:46,containLabel:true},
+      xAxis:Object.assign({type:'category',data:mLb},axis),
+      yAxis:Object.assign({type:'value',name:'%',min:function(v){return Math.floor(Math.min(v.min,FLOOR_PCT)-0.4);},
+        max:function(v){return Math.ceil(v.max+0.4);},nameTextStyle:{color:T.slate2,fontSize:11}},axis),
+      series:[
+        {name:'Lãi dự kiến',type:'line',symbol:'circle',symbolSize:8,lineStyle:{width:3,color:T.teal},itemStyle:{color:T.teal},
+         data:mVal,label:{show:true,position:'top',fontFamily:FONT,fontSize:11,color:T.ink,
+           formatter:function(pp){return fp(pp.value,2)+'%';}},
+         areaStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(14,124,134,.2)'},{offset:1,color:'rgba(14,124,134,0)'}])}},
+        {name:'Mục tiêu ban đầu',type:'line',symbol:'none',lineStyle:{width:1.5,type:'dashed',color:T.slate2},itemStyle:{color:T.slate2},data:tgtLine},
+        {name:'Ngưỡng sàn',type:'line',symbol:'none',lineStyle:{width:1.5,type:'dashed',color:T.red},itemStyle:{color:T.red},data:floorLine}
+      ]});
+
+    var RC={'Biến động giá vật tư, thiết bị':T.deep,'Chủ đầu tư thay đổi thiết kế':T.aqua,
+            'Phát sinh khối lượng thi công':T.teal,'Xử lý lỗi, làm lại':T.amber};
+    var rData=[];
+    for(var rk in reasons){rData.push({name:rk,value:reasons[rk],itemStyle:{color:RC[rk]||T.violet}});}
+    mk('reasonPie',{
+      tooltip:{trigger:'item',backgroundColor:'#0A2430',borderWidth:0,textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
+        formatter:function(pp){return pp.name+'<br/><b>'+fm(pp.value)+' tr đ</b> · '+pp.percent+'%';}},
+      legend:{bottom:0,itemWidth:10,itemHeight:10,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
+      series:[{type:'pie',radius:['44%','70%'],center:['50%','42%'],itemStyle:{borderColor:'#fff',borderWidth:2},label:{show:false},
+        data:rData.length?rData:[{name:'Không có điều chỉnh trong phạm vi lọc',value:1,itemStyle:{color:'#E7EEF0'}}]}]});
+  }
+
+  /* ===== BỘ LỌC LIÊN ĐỘNG ===== */
+  function setFilter(kind,val){
+    if(kind==='proj'){ ST.proj=(ST.proj===val?'all':val); document.getElementById('fProj').value=ST.proj; renderAll(); }
+    else if(kind==='cost'){ ST.cost=(ST.cost===val?'all':val); document.getElementById('fCost').value=ST.cost; renderAll(); }
+    else if(kind==='month'){
+      if(ST.m0===val&&ST.m1===val){ST.m0=0;ST.m1=5;} else {ST.m0=val;ST.m1=val;}
+      syncDates(); renderAll();
+    }
+    else if(kind==='pst'){ ST.pst=(ST.pst===val?'all':val); renderPhieu(); }
+  }
+  function focusGroup(code){
+    var k1=code.charAt(0);
+    ST.grp=(ST.grp===code?null:code);
+    openSet[k1]=true; openSet[code]=!!ST.grp;
+    applyCollapse(); highlightGroup();
+  }
+  function highlightGroup(){
+    var rows=document.querySelectorAll('#treeBody tr');
+    for(var i=0;i<rows.length;i++){
+      var cl=rows[i].className||'';
+      if(ST.grp&&(cl.indexOf('c-'+ST.grp)>=0)) rows[i].classList.add('hl');
+      else rows[i].classList.remove('hl');
+    }
+  }
+  function syncDates(){
+    document.getElementById('fFrom').value=MFROM[ST.m0];
+    document.getElementById('fTo').value=MTO[ST.m1];
+    var rps=document.querySelectorAll('.pill[data-r]');
+    var key=(ST.m0===0&&ST.m1===5)?'all':((ST.m0===3&&ST.m1===5)?'q':((ST.m0===5&&ST.m1===5)?'m':null));
+    for(var i=0;i<rps.length;i++){
+      if(key&&rps[i].getAttribute('data-r')===key) rps[i].classList.add('on');
+      else rps[i].classList.remove('on');
+    }
+  }
+  function dateToMonth(v,isEnd){
+    if(!v) return isEnd?5:0;
+    var y=+v.slice(0,4),m=+v.slice(5,7);
+    for(var i=0;i<MO.length;i++){
+      var mk=MO[i].k, mm=+mk.slice(0,2), yy=+mk.slice(3);
+      if(yy===y&&mm===m) return i;
+    }
+    var val=y*12+m, first=2024*12+12, last=2025*12+5;
+    return val<first?0:(val>last?5:(isEnd?5:0));
+  }
+
+  /* ===== INIT ===== */
+  function renderAll(){renderP1();renderTree();renderP2Charts();renderP3();renderP4();renderPhieu();highlightGroup();}
+  ST.grp=null;
+  renderAll();
+
+  document.getElementById('fProj').addEventListener('change',function(){ST.proj=this.value;renderAll();});
+  document.getElementById('fCost').addEventListener('change',function(){ST.cost=this.value;renderAll();});
+  document.getElementById('fReset').addEventListener('click',function(){
+    ST.proj='all';ST.cost='all';ST.m0=0;ST.m1=5;ST.pst='all';ST.pq='';ST.grp=null;
+    document.getElementById('fProj').value='all';document.getElementById('fCost').value='all';
+    document.getElementById('qp').value='';
+    syncDates();renderAll();
+  });
+  document.getElementById('fFrom').addEventListener('change',function(){
+    var m=dateToMonth(this.value,false);
+    ST.m0=Math.min(m,ST.m1);syncDates();renderAll();
+  });
+  document.getElementById('fTo').addEventListener('change',function(){
+    var m=dateToMonth(this.value,true);
+    ST.m1=Math.max(m,ST.m0);syncDates();renderAll();
+  });
+  var rp=document.querySelectorAll('.pill[data-r]');
+  for(var i=0;i<rp.length;i++){
+    rp[i].addEventListener('click',function(){
+      var r=this.getAttribute('data-r');
+      if(r==='all'){ST.m0=0;ST.m1=5;} else if(r==='q'){ST.m0=3;ST.m1=5;} else {ST.m0=5;ST.m1=5;}
+      syncDates();renderAll();
+    });
+  }
+  document.getElementById('expandAll').addEventListener('click',function(){
+    for(var k in openSet) openSet[k]=true; applyCollapse();
+  });
+  document.getElementById('collapseAll').addEventListener('click',function(){
+    for(var k in openSet) openSet[k]=(k.length===1); applyCollapse();
+  });
+  var sp=document.querySelectorAll('.pill[data-s]');
+  for(var j=0;j<sp.length;j++){
+    sp[j].addEventListener('click',function(){
+      ST.pst=this.getAttribute('data-s');
+      renderPhieu();
+    });
+  }
+  document.getElementById('qp').addEventListener('input',function(){
+    ST.pq=this.value.toLowerCase().trim();renderPhieu();
+  });
+  document.getElementById('btnCompact').addEventListener('click',function(){
+    document.body.classList.toggle('compact');
+    setTimeout(resizeAll,80);
+  });
+  var tabs=document.querySelectorAll('.tab');
+  for(var t=0;t<tabs.length;t++){
+    tabs[t].addEventListener('click',function(){
+      document.querySelector('.tab.active').classList.remove('active');
+      this.classList.add('active');
+      document.querySelector('.page.active').classList.remove('active');
+      document.getElementById(this.getAttribute('data-p')).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+      setTimeout(resizeAll,60);
+    });
+  }
+  window.addEventListener('resize',resizeAll);
+})();
+</script>
+</body>
+</html>
