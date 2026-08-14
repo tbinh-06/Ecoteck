@@ -33,8 +33,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--i
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:12px;color:#A9C6CD;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:7px;background:var(--aqua);color:#04222a;border:0;border-radius:9px;padding:8px 14px;font:500 12.5px Inter;cursor:pointer}
 .btn:hover{background:#4ecad7}
-.btn.ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.22)}
-.btn.ghost:hover{background:rgba(255,255,255,.18)}
 
 .hero{background:linear-gradient(135deg,#0B3441 0%,#0E5765 60%,#0E7C86 100%);color:#fff;padding:24px 24px 0}
 .hero-in{max-width:1520px;margin:0 auto}
@@ -155,15 +153,6 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
 .note{font-size:11.5px;color:var(--slate);margin-top:11px;line-height:1.6}
 .foot{max-width:1520px;margin:0 auto;padding:16px 24px 34px;font-size:11px;color:var(--slate-2);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 
-/* chế độ rút gọn: dùng để nhúng XSpace/XPay hoặc xem trên điện thoại */
-body.compact .hide-c{display:none!important}
-body.compact .g5{grid-template-columns:repeat(2,1fr)}
-body.compact .wrap{padding:16px 14px 40px}
-body.compact .hero{padding:18px 14px 0}
-body.compact .hero h1{font-size:18px}
-.cbadge{display:none;background:var(--amber);color:#fff;border-radius:99px;padding:2px 9px;font:500 10.5px Inter}
-body.compact .cbadge{display:inline-block}
-
 @media(max-width:1280px){.g5{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:1380px){.g3a{grid-template-columns:1fr 1fr}}
 @media(max-width:1180px){.g4{grid-template-columns:repeat(2,1fr)}.g23,.g2,.g3,.g3a{grid-template-columns:1fr}}
@@ -178,9 +167,7 @@ body.compact .cbadge{display:inline-block}
   <div class="topbar-in">
     <div class="brand"><div class="mark"><i class="ti ti-droplet"></i></div><div>ECO TECK<small>QUẢN TRỊ CHI PHÍ DỰ ÁN</small></div></div>
     <div class="topbar-right">
-      <span class="cbadge">Chế độ rút gọn</span>
       <span><i class="ti ti-refresh"></i> Cập nhật 19/05/2025 08:15</span>
-      <button class="btn ghost" id="btnCompact"><i class="ti ti-device-mobile"></i> Chế độ rút gọn</button>
       <button class="btn"><i class="ti ti-file-spreadsheet"></i> Xuất Excel</button>
     </div>
   </div>
@@ -203,7 +190,7 @@ body.compact .cbadge{display:inline-block}
 
 <div class="wrap">
 
-  <div class="filterbar hide-c">
+  <div class="filterbar">
     <span class="fl">Bộ lọc</span>
     <div class="inp"><i class="ti ti-building-factory-2"></i>
       <select id="fProj">
@@ -222,6 +209,19 @@ body.compact .cbadge{display:inline-block}
         <option value="CT">Chi phí quản lý tại dự án</option>
         <option value="QL">Chi phí bán hàng &amp; QLDN</option>
         <option value="DV">Dịch vụ, bảo hành &amp; dự phòng</option>
+      </select>
+    </div>
+    <div class="inp"><i class="ti ti-list-tree"></i>
+      <select id="fGrp">
+        <option value="all">Tất cả hạng mục</option>
+        <option value="A1">A1 · Chi phí xây dựng</option>
+        <option value="A2">A2 · Chi phí cơ điện</option>
+        <option value="A3">A3 · Chi phí khác</option>
+        <option value="B1">B1 · Quản lý tại dự án</option>
+        <option value="B2">B2 · Chi phí bán hàng</option>
+        <option value="B3">B3 · Bảo hành, sau bán</option>
+        <option value="B4">B4 · Quản lý doanh nghiệp</option>
+        <option value="B5">B5 · Dự phòng phí</option>
       </select>
     </div>
     <div class="inp"><i class="ti ti-calendar-event"></i><input type="date" id="fFrom" value="2024-12-01"></div>
@@ -258,7 +258,7 @@ body.compact .cbadge{display:inline-block}
     </div>
   </div>
 
-  <div class="grid g3a hide-c" style="margin-bottom:16px">
+  <div class="grid g3a" style="margin-bottom:16px">
     <div class="card">
       <div class="card-h"><div><h3><i class="ti ti-chart-bar"></i> Ba lớp chi phí theo dự án</h3><p id="projNote">—</p></div></div>
       <div id="byProj" class="chart tall"></div>
@@ -273,7 +273,7 @@ body.compact .cbadge{display:inline-block}
     </div>
   </div>
 
-  <div class="card hide-c">
+  <div class="card">
     <div class="card-h"><div><h3><i class="ti ti-grid-dots"></i> Bản đồ nhiệt sử dụng dự toán</h3><p>Dự án × loại chi phí · màu theo tỷ lệ dự toán đã dự chi · bấm vào ô để lọc</p></div>
       <span class="tag t-idle">Bấm ô để lọc theo dự án và loại chi phí</span></div>
     <div id="heatmap" class="chart" style="height:340px"></div>
@@ -283,24 +283,17 @@ body.compact .cbadge{display:inline-block}
 <!-- ================= P2 ================= -->
 <div class="page" id="p2">
   <div class="grid g4" style="margin-bottom:16px">
-    <div class="kpi"><div class="lbl"><i class="ti ti-list-check"></i> Mã dự toán theo dõi</div><div class="val" id="m1">—</div><div class="sub">2 nhóm · 8 hạng mục · 15 mã chi tiết</div></div>
+    <div class="kpi"><div class="lbl"><i class="ti ti-list-check"></i> Mã dự toán theo dõi</div><div class="val" id="m1">—</div><div class="sub" id="m1s">—</div></div>
     <div class="kpi k-red"><div class="lbl"><i class="ti ti-arrow-bear-right"></i> Mã vượt dự toán</div><div class="val" id="m2">—</div><div class="sub" id="m2s">—</div></div>
     <div class="kpi k-amber"><div class="lbl"><i class="ti ti-battery-1"></i> Mã sắp cạn (≥90%)</div><div class="val" id="m3">—</div><div class="sub" id="m3s">—</div></div>
     <div class="kpi k-green"><div class="lbl"><i class="ti ti-wallet"></i> Dự toán còn lại</div><div class="val" id="m4">—</div><div class="sub" id="m4s">—</div></div>
   </div>
 
-  <div class="grid g2 hide-c" style="margin-bottom:16px">
-    <div class="card">
-      <div class="card-h"><div><h3><i class="ti ti-chart-arrows"></i> Dự toán · dự chi · thực chi theo hạng mục</h3><p>Thanh nền là dự toán, thanh giữa là dự chi, thanh trong cùng là thực chi — triệu đồng</p></div>
-        <span class="tag t-idle">Thanh lồng</span></div>
-      <div id="ctrlMatrix" class="chart xtall"></div>
-    </div>
-    <div class="card">
-      <div class="card-h"><div><h3><i class="ti ti-chart-bar-popular"></i> Cấu trúc sử dụng dự toán từng hạng mục</h3><p>Tỷ lệ %: thực chi · dự chi chưa thực chi · chưa dự chi</p></div>
-        <span class="tag t-idle">Thanh chồng 100%</span></div>
-      <div id="compo" class="chart xtall"></div>
-      <p class="note">Dải cam là tiền đã duyệt chi nhưng chưa giải ngân — nơi dòng tiền sắp phải ra.</p>
-    </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-h"><div><h3><i class="ti ti-chart-arrows"></i> <span id="matTitle">Dự toán · dự chi · thực chi theo hạng mục</span></h3><p id="matNote">—</p></div>
+      <span class="tag t-idle" id="matTag">—</span></div>
+    <div id="ctrlMatrix" class="chart" style="height:420px"></div>
+    <p class="note">Khoảng trắng còn lại của thanh nền là dư địa còn được duyệt chi. Thanh dự chi chuyển đỏ khi đã vượt dự toán.</p>
   </div>
 
   <div class="card">
@@ -344,13 +337,13 @@ body.compact .cbadge{display:inline-block}
     <div class="kpi k-violet"><div class="lbl"><i class="ti ti-adjustments-alt"></i> Xin điều chỉnh dự toán</div><div class="val" id="q5">—</div><div class="sub" id="q5s">—</div></div>
   </div>
 
-  <div class="card hide-c" style="margin-bottom:16px">
+  <div class="card" style="margin-bottom:16px">
     <div class="card-h"><div><h3><i class="ti ti-git-branch"></i> Luồng đề xuất — đối chiếu dự toán — duyệt chi</h3><p>Số phiếu đi qua từng bước trong kỳ báo cáo · bấm vào thanh để lọc danh sách phiếu bên dưới</p></div>
       <span class="tag t-idle" id="stepTag">—</span></div>
     <div id="stepBar" class="chart" style="height:250px"></div>
   </div>
 
-  <div class="grid g23 hide-c" style="margin-bottom:16px">
+  <div class="grid g23" style="margin-bottom:16px">
     <div class="card">
       <div class="card-h"><div><h3><i class="ti ti-chart-histogram"></i> Số phiếu theo tháng</h3><p>Phân tách theo kết quả xử lý</p></div>
         <span class="tag t-idle">Cột chồng</span></div>
@@ -380,7 +373,7 @@ body.compact .cbadge{display:inline-block}
     <p class="note">Còn lại = Dự toán hiện hành − Dự chi đã duyệt. Phiếu làm số còn lại chuyển âm sẽ được đánh dấu đỏ: lãnh đạo có thể từ chối, hoặc duyệt kèm phiếu điều chỉnh dự toán.</p>
   </div>
 
-  <div class="card hide-c">
+  <div class="card">
     <div class="card-h">
       <div><h3><i class="ti ti-table-options"></i> Toàn bộ danh sách phiếu</h3><p>Bấm mã phiếu để mở trên Base Service</p></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
@@ -414,7 +407,7 @@ body.compact .cbadge{display:inline-block}
     <div class="kpi k-red"><div class="lbl"><i class="ti ti-alert-hexagon"></i> So với ngưỡng sàn 12%</div><div class="val" id="v4">—</div><div class="sub" id="v4s">—</div></div>
   </div>
 
-  <div class="grid g23 hide-c" style="margin-bottom:16px">
+  <div class="grid g23" style="margin-bottom:16px">
     <div class="card">
       <div class="card-h"><div><h3><i class="ti ti-chart-line"></i> Lãi dự kiến qua các phiên bản dự toán</h3><p>Mỗi lần điều chỉnh làm mỏng biên lợi nhuận</p></div></div>
       <div id="marginTrend" class="chart tall"></div>
@@ -549,6 +542,7 @@ body.compact .cbadge{display:inline-block}
     DH:{n:'Đồng Hướng',rev:16450,g:14260,dc:180,du:10286,tc:8462,ov:0},
     PH:{n:'Phú Hà',rev:21700,g:18920,dc:200,du:12684,tc:9846,ov:48},
     TH:{n:'Thái Hà GĐ1',rev:9650,g:8440,dc:70,du:4372,tc:2846,ov:0}};
+  (function(){for(var k in PROJ){PROJ[k].ns=PROJ[k].g+PROJ[k].dc;}})();
   var COST={
     VT:{n:'Vật tư & thiết bị',ns:39180,du:27957,tc:21213},
     NC:{n:'Nhân công & thầu phụ',ns:19848,du:12125,tc:9912},
@@ -556,63 +550,152 @@ body.compact .cbadge{display:inline-block}
     QL:{n:'Chi phí bán hàng & QLDN',ns:4484,du:2772,tc:2729},
     DV:{n:'Dịch vụ, bảo hành & dự phòng',ns:3574,du:2162,tc:1444}};
   var TOT={rev:79900,g:69430,dc:850,ns:70280,du:47188,tc:37278,eac:70388};
+  /* tính lại giá trị từng loại chi phí từ cơ cấu MIX để mọi con số khớp tuyệt đối */
+  function recalcCost(){
+    for(var k in COST){COST[k].ns=0;COST[k].du=0;COST[k].tc=0;}
+    LEAF.forEach(function(r){
+      var m=MIX[r[0]];if(!m)return;
+      for(var k in m){
+        if(!COST[k])continue;
+        COST[k].ns+=(r[2]+r[3])*m[k];COST[k].du+=r[4]*m[k];COST[k].tc+=r[5]*m[k];
+      }
+    });
+  }
   var TARGET_PCT=13.10, FLOOR_PCT=12.00;
 
   /* dữ liệu theo tháng — dùng cho bộ lọc thời gian */
   var MO=[{lb:'T12/24',k:'12/2024'},{lb:'T01/25',k:'01/2025'},{lb:'T02/25',k:'02/2025'},
           {lb:'T03/25',k:'03/2025'},{lb:'T04/25',k:'04/2025'},{lb:'T05/25',k:'05/2025'}];
-  var CUM={ns:[8200,16400,25800,34600,44200,52400],
-           du:[7400,14800,23600,32400,41200,47188],
-           tc:[5200,10800,18400,26200,32800,37278]};
+  /* Nhịp phát sinh theo tháng của từng hạng mục — bám trình tự thi công trong tiến độ tổng thể:
+     cọc móng và bể chạy trước, cơ điện vào giữa, vận hành thử nghiệm và bảo hành ở cuối. */
+  var PACE_DU={
+    A1:[0.12,0.20,0.22,0.20,0.16,0.10], A2:[0.02,0.06,0.14,0.24,0.30,0.24],
+    A3:[0.04,0.06,0.10,0.20,0.30,0.30], B1:[0.16,0.17,0.17,0.17,0.17,0.16],
+    B2:[0.30,0.25,0.17,0.12,0.10,0.06], B3:[0.00,0.00,0.05,0.15,0.30,0.50],
+    B4:[0.16,0.17,0.17,0.17,0.17,0.16], B5:[0.04,0.08,0.14,0.22,0.26,0.26]
+  };
+  var PACE_TC={
+    A1:[0.08,0.16,0.22,0.22,0.18,0.14], A2:[0.00,0.04,0.10,0.22,0.32,0.32],
+    A3:[0.02,0.04,0.08,0.18,0.30,0.38], B1:[0.14,0.16,0.17,0.18,0.18,0.17],
+    B2:[0.24,0.24,0.18,0.14,0.12,0.08], B3:[0.00,0.00,0.00,0.10,0.30,0.60],
+    B4:[0.14,0.16,0.17,0.18,0.18,0.17], B5:[0.02,0.06,0.12,0.22,0.28,0.30]
+  };
+  function cumPace(tbl,grp,m){
+    var a=tbl[grp]||[0,0,0,0,0,1],t=0;
+    for(var i=0;i<=m;i++) t+=a[i];
+    return t;
+  }
+  var CUM={ns:[8200,16400,25800,34600,44200,52400],du:[],tc:[]};
+  (function(){
+    for(var m=0;m<6;m++){
+      var du=0,tc=0;
+      LEAF.forEach(function(r){
+        var g=r[0].split('.')[0];
+        du+=r[4]*cumPace(PACE_DU,g,m);
+        tc+=r[5]*cumPace(PACE_TC,g,m);
+      });
+      CUM.du.push(du);CUM.tc.push(tc);
+    }
+  })();
   var PMO={ok:[48,62,78,86,84,70],wait:[3,5,6,8,9,10],adj:[1,2,3,4,4,4],no:[3,4,5,5,4,4]};
   var MFROM=['2024-12-01','2025-01-01','2025-02-01','2025-03-01','2025-04-01','2025-05-01'];
   var MTO=['2024-12-31','2025-01-31','2025-02-28','2025-03-31','2025-04-30','2025-05-19'];
 
-  var ST={proj:'all',cost:'all',m0:0,m1:5,pst:'all',pq:''};
+  var ST={proj:'all',cost:'all',grp:'all',m0:0,m1:5,pst:'all',pq:''};
   /* hệ số thời gian: dự chi và thực chi tính lũy kế đến hết tháng cuối của khoảng lọc */
   function tShare(f){
     if(f!=='du'&&f!=='tc') return 1;
     return CUM[f][ST.m1]/CUM[f][5];
   }
-  function shP(f){return ST.proj==='all'?1:PROJ[ST.proj][f]/TOT[f==='ns'?'ns':f];}
-  function pShare(f){
+  /* Cơ cấu loại chi phí của từng mã dự toán — loại chi phí là trục ĐỘC LẬP với
+     hạng mục, nên phải gắn tỷ trọng cho từng mã thay vì nhân hệ số đều lên cả cây. */
+  var MIX={
+    'A1.1':{VT:0.6,NC:0.4},'A1.2':{VT:0.6,NC:0.4},'A1.3':{VT:0.6,NC:0.4},'A1.4':{VT:0.6,NC:0.4},
+    'A2.1':{VT:1},'A2.2':{NC:1},'A2.3':{DV:1},
+    'A3.1':{DV:1},'A3.2':{DV:1},'A3.3':{DV:1},
+    'B1.1':{CT:1},'B2.1':{QL:1},'B3.1':{DV:1},'B4.1':{QL:1},'B5.1':{DV:1}
+  };
+  function wCost(code){
+    if(ST.cost==='all') return 1;
+    var m=MIX[code];
+    return m&&m[ST.cost]?m[ST.cost]:0;
+  }
+  function inGrp(code){return ST.grp==='all'||code.split('.')[0]===ST.grp;}
+  /* hệ số theo dự án và theo thời gian, tách riêng từng lớp */
+  function kP(f){
     if(ST.proj==='all') return 1;
     var p=PROJ[ST.proj];
-    if(f==='ns') return (p.g+p.dc)/TOT.ns;
-    if(f==='du') return p.du/TOT.du;
-    if(f==='tc') return p.tc/TOT.tc;
-    if(f==='rev')return p.rev/TOT.rev;
-    if(f==='dc') return p.dc/TOT.dc;
+    if(f==='g') return p.g/TOT.g;
+    if(f==='dc')return p.dc/TOT.dc;
+    if(f==='du')return p.du/TOT.du;
+    if(f==='tc')return p.tc/TOT.tc;
     return 1;
   }
-  function cShare(f){
-    if(ST.cost==='all') return 1;
-    var c=COST[ST.cost];
-    if(f==='ns') return c.ns/TOT.ns;
-    if(f==='du') return c.du/TOT.du;
-    if(f==='tc') return c.tc/TOT.tc;
-    if(f==='rev')return c.ns/TOT.ns;
-    if(f==='dc') return c.ns/TOT.ns;
-    return 1;
+  function kG(){return kP('g');}
+  function kDC(){return kP('dc');}
+  function kD(){return kP('du')*tShare('du');}
+  function kT(){return kP('tc')*tShare('tc');}
+
+  /* Dựng lại toàn bộ số liệu theo bộ lọc hiện tại — mọi card, bảng, chart đều đọc từ đây */
+  function buildView(ignoreGrp){
+    var a=kG(),b=kDC(),c=kP('du'),d=kP('tc');
+    var leaves=[],g1={},g2={},ord2=[],ord1=[];
+    var tot={g:0,dc:0,du:0,tc:0,over:0,nOver:0,nNear:0,nLeaf:0,nGrp:0};
+    LEAF.forEach(function(r){
+      if(!ignoreGrp&&!inGrp(r[0])) return;
+      var w=wCost(r[0]); if(w<=0) return;
+      var k2=r[0].split('.')[0], k1=k2.charAt(0);
+      var g=r[2]*w*a, dc=r[3]*w*b, ns=g+dc;
+      var du=r[4]*w*c*cumPace(PACE_DU,k2,ST.m1), tc=r[5]*w*d*cumPace(PACE_TC,k2,ST.m1);
+      leaves.push({code:r[0],name:r[1],g:g,dc:dc,du:du,tc:tc,ns:ns,k1:k1,k2:k2});
+      if(!g2[k2]){g2[k2]={g:0,dc:0,du:0,tc:0,ns:0,kids:[]};ord2.push(k2);tot.nGrp++;}
+      if(!g1[k1]){g1[k1]={g:0,dc:0,du:0,tc:0,ns:0,kids:[]};ord1.push(k1);}
+      ['g','dc','du','tc','ns'].forEach(function(f,ix){
+        var v=[g,dc,du,tc,ns][ix];g2[k2][f]+=v;g1[k1][f]+=v;
+      });
+      g2[k2].kids.push(leaves[leaves.length-1]);
+      if(g1[k1].kids.indexOf(k2)<0) g1[k1].kids.push(k2);
+      tot.g+=g;tot.dc+=dc;tot.du+=du;tot.tc+=tc;tot.nLeaf++;
+      if(ns>0&&du>ns){tot.nOver++;tot.over+=du-ns;}
+      else if(ns>0&&du/ns>=0.9) tot.nNear++;
+    });
+    tot.ns=tot.g+tot.dc;
+    return {leaves:leaves,g1:g1,g2:g2,ord1:ord1,ord2:ord2,tot:tot};
   }
-  /* hệ số nhân cho từng lớp — dùng chung cho KPI, cây dự toán và mọi chart */
-  function fG(){return (ST.proj==='all'?1:PROJ[ST.proj].g/TOT.g)*cShare('ns');}
-  function fDC(){return (ST.proj==='all'?1:PROJ[ST.proj].dc/TOT.dc)*cShare('ns');}
-  function fN(){return pShare('ns')*cShare('ns');}
-  function fD(){return pShare('du')*cShare('du')*tShare('du');}
-  function fT(){return pShare('tc')*cShare('tc')*tShare('tc');}
-  function fCount(){return pShare('du')*cShare('du');}
-  /* chart so sánh giữ đủ hạng mục nhưng làm mờ phần không nằm trong bộ lọc,
-     để vừa thấy đang lọc gì vừa bấm chuyển trực tiếp sang mục khác được */
+  /* tỷ trọng của phần loại chi phí + hạng mục đang lọc, bỏ qua dự án và thời gian */
+  function portion(){
+    var g=0,dc=0,du=0,tc=0;
+    LEAF.forEach(function(r){
+      if(!inGrp(r[0])) return;
+      var w=wCost(r[0]); if(w<=0) return;
+      g+=r[2]*w;dc+=r[3]*w;du+=r[4]*w;tc+=r[5]*w;
+    });
+    return {ns:(g+dc)/TOT.ns,du:TOT.du?du/TOT.du:0,tc:TOT.tc?tc/TOT.tc:0};
+  }
+  /* giá trị dự toán của một loại chi phí (không phụ thuộc ST.cost) */
+  function costVal(k,fld){
+    var v=0;
+    LEAF.forEach(function(r){
+      if(!inGrp(r[0])) return;
+      var m=MIX[r[0]];
+      if(!m||!m[k]) return;
+      v+=(fld==='du'?r[4]:fld==='tc'?r[5]:(r[2]+r[3]))*m[k];
+    });
+    return v;
+  }
+  var VIEW=null,VIEWG=null;
+  function agg(){
+    var v=VIEW||buildView();
+    var revBase=(ST.proj==='all')?TOT.rev:PROJ[ST.proj].rev;
+    var nsFull=(ST.proj==='all')?TOT.ns:PROJ[ST.proj].ns;
+    var rev=nsFull?revBase*(v.tot.ns/nsFull):0;
+    return {ns:v.tot.ns,du:v.tot.du,tc:v.tot.tc,dc:v.tot.dc,g:v.tot.g,
+            rev:rev,over:v.tot.over,eac:v.tot.ns+v.tot.over};
+  }
+  function fCount(){return kP('du')*portion().du;}
   function dimP(k){return (ST.proj==='all'||ST.proj===k)?1:0.18;}
   function dimC(k){return (ST.cost==='all'||ST.cost===k)?1:0.18;}
-  function agg(){
-    var g=TOT.g*fG(), dc=TOT.dc*fDC(), ns=g+dc;
-    var du=TOT.du*fD(), tc=TOT.tc*fT();
-    var rev=TOT.rev*(ST.proj==='all'?1:PROJ[ST.proj].rev/TOT.rev)*cShare('ns');
-    var over=(TOT.eac-TOT.ns)*(pShare('du')*cShare('du'));
-    return {ns:ns,du:du,tc:tc,dc:dc,rev:rev,eac:ns+over,over:over,g:g};
-  }
+  function dimG(k){return (ST.grp==='all'||ST.grp===k)?1:0.18;}
 
   /* ===== TRANG 1 ===== */
   function renderP1(){
@@ -630,10 +713,21 @@ body.compact .cbadge{display:inline-block}
     setHtml('k5s','<b>'+fp(pct,2)+'%</b> · mục tiêu '+fp(tpct,2)+'% <span class="delta d-down">'+fp(pct-tpct,2)+'</span>');
 
     var pk=['KD','DH','PH','TH'];
-    var cn=cShare('ns'),cd=cShare('du')*tShare('du'),ct=cShare('tc')*tShare('tc');
-    setTxt('projNote','Đơn vị: tỷ đồng · '+(ST.cost==='all'?'toàn bộ loại chi phí':'chỉ '+COST[ST.cost].n));
+    var PRT=portion();
+    var cn=PRT.ns,cd=PRT.du*tShare('du'),ct=PRT.tc*tShare('tc');
+    var pNS=pk.map(function(k){return +((PROJ[k].g+PROJ[k].dc)*cn/1000).toFixed(2);});
+    var pDU=pk.map(function(k){return +(PROJ[k].du*cd/1000).toFixed(2);});
+    var pTC=pk.map(function(k){return +(PROJ[k].tc*ct/1000).toFixed(2);});
+    var nOverP=0;pDU.forEach(function(v,ix){if(v>pNS[ix])nOverP++;});
     mk('byProj',{
-      tooltip:tip,legend:{data:['Dự toán hiện hành','Dự chi đã duyệt','Thực chi'],bottom:0,itemWidth:11,itemHeight:11,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#0A2430',borderWidth:0,
+        textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
+        formatter:function(ps){
+          var ix=ps[0].dataIndex,ns=pNS[ix],du=pDU[ix],tc=pTC[ix];
+          return '<b>'+PROJ[pk[ix]].n+'</b><br/>Dự toán: '+fp(ns,2)+' tỷ đ<br/>Dự chi: '+fp(du,2)+' tỷ ('+Math.round(du/ns*100)+'%)'+
+                 '<br/>Thực chi: '+fp(tc,2)+' tỷ ('+Math.round(tc/ns*100)+'%)'+
+                 (du>ns?'<br/><span style="color:#FF9E9E">Dự chi vượt dự toán '+fm((du-ns)*1000)+' tr đ</span>':'');}},
+      legend:{data:['Dự toán hiện hành','Dự chi đã duyệt','Thực chi'],bottom:0,itemWidth:11,itemHeight:11,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
       grid:{left:8,right:16,top:22,bottom:46,containLabel:true},
       xAxis:{type:'category',data:pk.map(function(k){return PROJ[k].n;}),
         axisLine:{lineStyle:{color:T.line}},axisTick:{show:false},
@@ -641,17 +735,29 @@ body.compact .cbadge{display:inline-block}
       yAxis:Object.assign({type:'value',name:'tỷ đ',nameTextStyle:{color:T.slate2,fontSize:11}},axis),
       series:[
         {name:'Dự toán hiện hành',type:'bar',barGap:'-100%',barWidth:'62%',
-         data:pk.map(function(k){return {value:+((PROJ[k].g+PROJ[k].dc)*cn/1000).toFixed(2),
-           itemStyle:{color:'#E3EDEF',opacity:dimP(k),borderRadius:[3,3,0,0]}};})},
+         itemStyle:{color:'#DCE7EA',borderRadius:[3,3,0,0]},
+         data:pNS.map(function(v,ix){return {value:v,itemStyle:{opacity:dimP(pk[ix])}};}),
+         markPoint:{silent:true,symbol:'rect',symbolSize:[46,3],itemStyle:{color:T.ink},
+           label:{show:false},
+           data:pNS.map(function(v,ix){return pDU[ix]>v?{coord:[ix,v]}:null;}).filter(Boolean)}},
         {name:'Dự chi đã duyệt',type:'bar',barGap:'-100%',barWidth:'62%',
-         data:pk.map(function(k){return {value:+(PROJ[k].du*cd/1000).toFixed(2),
-           itemStyle:{color:T.amber,opacity:dimP(k),borderRadius:[3,3,0,0]}};})},
+         itemStyle:{color:T.amber,borderRadius:[3,3,0,0]},
+         data:pDU.map(function(v,ix){
+           var over=v>pNS[ix];
+           return {value:v,itemStyle:{opacity:dimP(pk[ix]),color:over?T.red:T.amber}};}),
+         label:{show:true,position:'top',fontFamily:FONT,fontSize:11,fontWeight:600,color:T.red,
+           formatter:function(pp){var ix=pp.dataIndex;
+             if(pDU[ix]<=pNS[ix]) return '';
+             var d=pDU[ix]-pNS[ix];
+             return 'vượt '+(d<1?(fm(d*1000)+' tr'):(fp(d,2)+' tỷ'));}}},
         {name:'Thực chi',type:'bar',barWidth:'32%',
-         data:pk.map(function(k){return {value:+(PROJ[k].tc*ct/1000).toFixed(2),
-           itemStyle:{color:T.deep,opacity:dimP(k),borderRadius:[3,3,0,0]}};})}
+         itemStyle:{color:T.deep,borderRadius:[3,3,0,0]},
+         data:pTC.map(function(v,ix){return {value:v,itemStyle:{opacity:dimP(pk[ix])}};})}
       ]},function(i){setFilter('proj',pk[i]);},pk.map(function(k){return PROJ[k].n;}),'x');
+    setHtml('projNote','Đơn vị: tỷ đồng · '+(ST.cost==='all'?'toàn bộ loại chi phí':'chỉ '+COST[ST.cost].n)+
+      (nOverP?' · <b style="color:'+T.red+'">'+nOverP+' dự án có dự chi vượt dự toán</b>':''));
 
-    var pf=pShare('ns');
+    var pf=(ST.proj==='all')?1:PROJ[ST.proj].ns/TOT.ns;
     setTxt('costNote','Tổng '+fb(TOT.ns*pf)+' tỷ đ · '+(ST.proj==='all'?'toàn bộ 4 dự án':'dự án '+PROJ[ST.proj].n));
     var ck=['VT','NC','CT','QL','DV'],cc=[T.deep,T.aqua,T.teal,T.violet,T.amber];
     mk('byCost',{
@@ -659,7 +765,7 @@ body.compact .cbadge{display:inline-block}
         formatter:function(p){return p.name+'<br/><b>'+fb(p.value)+' tỷ đ</b> · '+p.percent+'%';}},
       legend:{bottom:0,itemWidth:10,itemHeight:10,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
       series:[{type:'pie',radius:['46%','72%'],center:['50%','44%'],itemStyle:{borderColor:'#fff',borderWidth:2},label:{show:false},
-        data:ck.map(function(k,i){return {name:COST[k].n,value:Math.round(COST[k].ns*pf),itemStyle:{color:cc[i],opacity:dimC(k)}};})}]},
+        data:ck.map(function(k,i){return {name:COST[k].n,value:Math.round(costVal(k,'ns')*pf),itemStyle:{color:cc[i],opacity:dimC(k)}};})}]},
       function(i){setFilter('cost',ck[i]);},ck.map(function(k){return COST[k].n;}));
 
     /* ---- bản đồ nhiệt: dự án x loại chi phí ---- */
@@ -668,9 +774,9 @@ body.compact .cbadge{display:inline-block}
     for(var yi=0;yi<HC.length;yi++){
       for(var xi=0;xi<HP.length;xi++){
         var pr=PROJ[HP[xi]], co=COST[HC[yi]];
-        var cns=(pr.g+pr.dc)*co.ns/TOT.ns;
-        var cdu=pr.du*co.du/TOT.du*tShare('du');
-        var ctc=pr.tc*co.tc/TOT.tc*tShare('tc');
+        var cns=(pr.g+pr.dc)*costVal(HC[yi],'ns')/TOT.ns;
+        var cdu=pr.du*costVal(HC[yi],'du')/TOT.du*tShare('du');
+        var ctc=pr.tc*costVal(HC[yi],'tc')/TOT.tc*tShare('tc');
         var pc2=cns?+(cdu/cns*100).toFixed(1):0;
         if(pc2>maxPct)maxPct=pc2;
         if(pc2<minPct)minPct=pc2;
@@ -678,6 +784,12 @@ body.compact .cbadge{display:inline-block}
           itemStyle:{opacity:Math.min(dimP(HP[xi]),dimC(HC[yi]))===1?1:0.22}});
       }
     }
+    /* ô màu nhạt thì chữ trắng sẽ chìm — đổi sang chữ đậm màu mực */
+    var rng=Math.max(maxPct-minPct,0.001);
+    cells.forEach(function(cl){
+      var t=(cl.value[2]-minPct)/rng;
+      cl.label={color:t>0.55?'#fff':T.ink};
+    });
     mk('heatmap',{
       tooltip:{backgroundColor:'#0A2430',borderWidth:0,textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
         formatter:function(p){var d=p.data;
@@ -694,8 +806,7 @@ body.compact .cbadge{display:inline-block}
         inRange:{color:['#EAF6F7','#9FDAE1','#35B9C7','#0E7C86','#0B4A57']}},
       series:[{type:'heatmap',data:cells,
         label:{show:true,fontFamily:FONT,fontSize:12,fontWeight:600,
-          formatter:function(p){return p.data.value[2]+'%';},
-          color:'#fff',textBorderColor:'rgba(0,0,0,.25)',textBorderWidth:2},
+          formatter:function(p){return p.data.value[2]+'%';}},
         itemStyle:{borderColor:'#fff',borderWidth:3},
         emphasis:{itemStyle:{borderColor:T.amber,borderWidth:3}}}]
     },function(i,d,xy){
@@ -726,9 +837,11 @@ body.compact .cbadge{display:inline-block}
              Object.assign({type:'value',name:'%',min:8,max:16,nameTextStyle:{color:T.slate2,fontSize:11},splitLine:{show:false}},axis)],
       series:[
         {name:'Lãi mục tiêu ban đầu',type:'bar',barWidth:'26%',
-         data:tgt.map(function(v,ix){return {value:v,itemStyle:{color:'#E3EDEF',opacity:dimP(pk[ix]),borderRadius:[3,3,0,0]}};})},
+         itemStyle:{color:'#DCE7EA',borderRadius:[3,3,0,0]},
+         data:tgt.map(function(v,ix){return {value:v,itemStyle:{opacity:dimP(pk[ix])}};})},
         {name:'Lãi dự kiến hiện tại',type:'bar',barWidth:'26%',
-         data:now.map(function(v,ix){return {value:v,itemStyle:{color:T.teal,opacity:dimP(pk[ix]),borderRadius:[3,3,0,0]}};})},
+         itemStyle:{color:T.teal,borderRadius:[3,3,0,0]},
+         data:now.map(function(v,ix){return {value:v,itemStyle:{opacity:dimP(pk[ix])}};})},
         {name:'Tỷ lệ lãi dự kiến (%)',type:'line',yAxisIndex:1,symbol:'circle',symbolSize:8,lineStyle:{width:2.5,color:T.red},itemStyle:{color:T.red},
          data:pctNow,
          markLine:{silent:true,symbol:'none',animation:false,
@@ -780,24 +893,22 @@ body.compact .cbadge{display:inline-block}
       '<td class="l"><span class="tag '+st[0]+'">'+st[1]+'</span></td></tr>';
   }
   function renderTree(){
-    var kG=fG(),kDC=fDC(),kD=fD(),kT=fT();
-    var h='',over=0,near=0,overSum=0,g0=0,d0=0,u0=0,t0=0,e0=0;
-    ['A','B'].forEach(function(k1){
-      var a=TREE.g1[k1];
-      h+=rowHtml('lv1',k1,GN[k1],a.g*kG,a.dc*kDC,a.du*kD,a.tc*kT,'g'+k1,false);
+    var v=VIEW, h='', e0=0;
+    v.ord1.forEach(function(k1){
+      var a=v.g1[k1];
+      h+=rowHtml('lv1',k1,GN[k1],a.g,a.dc,a.du,a.tc,'g'+k1,false);
       a.kids.forEach(function(k2){
-        var b=TREE.g2[k2];
-        h+=rowHtml('lv2 c-'+k1,k2,GN[k2]||k2,b.g*kG,b.dc*kDC,b.du*kD,b.tc*kT,'g'+k2,false);
-        b.kids.forEach(function(r){
-          h+=rowHtml('lv3 c-'+k1+' c-'+k2,r[0],r[1],r[2]*kG,r[3]*kDC,r[4]*kD,r[5]*kT,null,true);
-          var ns=r[2]*kG+r[3]*kDC, du=r[4]*kD;
-          if(ns>0&&du>ns){over++;overSum+=du-ns;}
-          else if(ns>0&&du/ns>=0.9) near++;
-          g0+=r[2]*kG;d0+=r[3]*kDC;u0+=r[4]*kD;t0+=r[5]*kT;e0+=Math.max(ns,du);
+        var b=v.g2[k2];
+        h+=rowHtml('lv2 c-'+k1,k2,GN[k2]||k2,b.g,b.dc,b.du,b.tc,'g'+k2,false);
+        b.kids.forEach(function(x){
+          h+=rowHtml('lv3 c-'+k1+' c-'+k2,x.code,x.name,x.g,x.dc,x.du,x.tc,null,true);
+          e0+=Math.max(x.ns,x.du);
         });
       });
     });
-    var ns0=g0+d0;
+    var g0=v.tot.g,d0=v.tot.dc,u0=v.tot.du,t0=v.tot.tc,ns0=v.tot.ns;
+    var over=v.tot.nOver,near=v.tot.nNear,overSum=v.tot.over,nLeaf=v.tot.nLeaf,nGrp=v.tot.nGrp;
+    if(!nLeaf) h='<tr><td class="l" colspan="12" style="text-align:center;color:'+T.slate2+';padding:18px">Không có mã dự toán nào khớp bộ lọc</td></tr>';
     h+='<tr class="tot"><td class="l">C</td><td class="l">GIÁ THÀNH (A + B)</td><td class="num">'+fm(g0)+'</td><td class="num">+'+fm(d0)+'</td>'+
        '<td class="num">'+fm(ns0)+'</td><td class="num">'+fm(u0)+'</td><td class="num">'+fm(t0)+'</td><td class="num">'+fm(e0)+'</td>'+
        '<td class="num">'+fm(ns0-u0)+'</td><td class="num">'+fm(e0-ns0)+'</td><td class="num">'+Math.round(u0/ns0*100)+'%</td><td class="l">—</td></tr>';
@@ -812,15 +923,16 @@ body.compact .cbadge{display:inline-block}
        '<td class="l"><span class="tag '+(pnlE/rev*100<FLOOR_PCT?'t-bad':'t-ok')+'">'+(pnlE/rev*100<FLOOR_PCT?'Dưới ngưỡng sàn':'Đạt ngưỡng')+'</span></td></tr>';
     document.getElementById('treeBody').innerHTML=h;
 
-    setTxt('m1','15');
+    setTxt('m1',String(nLeaf));
+    setTxt('m1s',nGrp+' hạng mục đang xem'+(ST.grp==='all'?' · toàn bộ cây dự toán':' · đã lọc '+ST.grp));
     setTxt('m2',String(over));
     setHtml('m2s','Dự chi vượt <b style="color:'+T.red+'">'+fm(overSum)+' tr đ</b> — cần phiếu điều chỉnh dự toán');
     setTxt('m3',String(near));
     setTxt('m3s','Dự chi đã dùng ≥ 90% dự toán, dư địa rất mỏng');
     setHtml('m4',fb(ns0-u0)+' <span>tỷ đ</span>');
     setTxt('m4s','Chiếm '+Math.round((ns0-u0)/ns0*100)+'% dự toán hiện hành');
-    setTxt('treeNote','Tổng CP dự kiến = Thực chi + phần dự chi đã duyệt chưa thực chi + dự toán của phần chưa có dự chi (bằng MAX của dự toán và dự chi). '+
-      (ST.proj==='all'?'Đang xem tổng hợp 4 dự án.':'Đang xem dự án '+PROJ[ST.proj].n+' — cấp mã chi tiết chưa lọc theo loại chi phí trong bản demo.'));
+    setTxt('treeNote','Tổng CP dự kiến = Thực chi + dự chi đã duyệt chưa thực chi + dự toán của phần chưa dự chi (bằng MAX của dự toán và dự chi). '+
+      (ST.cost==='all'?'':'Đang lọc '+COST[ST.cost].n+': mã dự toán hỗn hợp như cụm bể chỉ tính phần thuộc loại chi phí này.'));
     bindToggles();applyCollapse();
   }
   function bindToggles(){
@@ -846,8 +958,8 @@ body.compact .cbadge{display:inline-block}
     }
   }
   function renderP2Charts(){
-    var keys=TREE.ord2, kG=fG(),kDC=fDC(),kD=fD(),kT=fT();
-    var nsOf=function(b){return b.g*kG+b.dc*kDC;};
+    var VW=VIEWG, keys=VW.ord2;
+    var nsOf=function(b){return b.ns;};
     function colorFor(p){
       if(p>=80)return T.deep;
       if(p>=65)return T.teal;
@@ -855,12 +967,27 @@ body.compact .cbadge{display:inline-block}
       if(p>=30)return '#9FDAE1';
       return '#D6EDF0';
     }
-    var ordB=keys.slice().sort(function(a,b){return nsOf(TREE.g2[a])-nsOf(TREE.g2[b]);});
-    var bNS=[],bDU=[],bTC=[],bLB=[];
-    ordB.forEach(function(k){
-      var b=TREE.g2[k],ns=nsOf(b),du=b.du*kD,tc=b.tc*kT;
-      bLB.push(GN[k]||k);bNS.push(Math.round(ns));bDU.push(Math.round(du));bTC.push(Math.round(tc));
-    });
+    /* chưa lọc hạng mục -> vẽ 8 hạng mục; đã lọc -> vẽ các mã chi tiết bên trong */
+    var drill=(ST.grp!=='all'), items=[];
+    if(drill){
+      VIEW.leaves.forEach(function(x){
+        items.push({key:x.code,lb:x.code+' · '+x.name,ns:x.ns,du:x.du,tc:x.tc});
+      });
+    }else{
+      keys.forEach(function(k){
+        var b=VW.g2[k];
+        items.push({key:k,lb:k+' · '+(GN[k]||k),ns:b.ns,du:b.du,tc:b.tc});
+      });
+    }
+    items.sort(function(a,b){return a.ns-b.ns;});
+    var ordB=items.map(function(x){return x.key;});
+    var bLB=items.map(function(x){return x.lb;});
+    var bNS=items.map(function(x){return Math.round(x.ns);});
+    var bDU=items.map(function(x){return Math.round(x.du);});
+    var bTC=items.map(function(x){return Math.round(x.tc);});
+    setTxt('matTitle',drill?('Chi tiết mã dự toán — '+ST.grp+' · '+(GN[ST.grp]||'')):'Dự toán · dự chi · thực chi theo hạng mục');
+    setTxt('matNote','Thanh nền là dự toán, thanh giữa là dự chi, thanh trong cùng là thực chi · nhãn cuối thanh ghi kèm % dự toán đã dự chi — triệu đồng');
+    setHtml('matTag',drill?'<i class="ti ti-arrow-back-up"></i> Bấm thanh để quay lại toàn bộ hạng mục':'Bấm thanh để xem chi tiết mã bên trong');
     mk('ctrlMatrix',{
       tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#0A2430',borderWidth:0,
         textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
@@ -876,32 +1003,22 @@ body.compact .cbadge{display:inline-block}
       yAxis:Object.assign({type:'category',data:bLB,
         axisLabel:{fontSize:11,color:T.ink,fontFamily:FONT,triggerEvent:true}},axis),
       series:[
-        {name:'Dự toán',type:'bar',barWidth:'64%',itemStyle:{color:'#E7EEF0',borderRadius:[0,3,3,0]},data:bNS,
-         label:{show:true,position:'right',fontFamily:FONT,fontSize:11,color:T.slate2,
-           formatter:function(pp){return fm(bNS[pp.dataIndex]);}}},
+        {name:'Dự toán',type:'bar',barWidth:'64%',
+         itemStyle:{color:'#DCE7EA',borderRadius:[0,3,3,0]},
+         data:bNS.map(function(v,ix){return {value:v,itemStyle:{opacity:drill?1:dimG(ordB[ix])}};}),
+         label:{show:true,position:'right',fontFamily:FONT,fontSize:11,color:T.slate,
+           formatter:function(pp){var ix=pp.dataIndex,ns=bNS[ix];
+             return fm(ns)+'  ·  '+(ns?Math.round(bDU[ix]/ns*100):0)+'%';}}},
         {name:'Dự chi đã duyệt',type:'bar',barWidth:'34%',barGap:'-49%',
-         data:bDU.map(function(v,ix){return {value:v,itemStyle:{color:v>bNS[ix]?T.red:T.amber,borderRadius:[0,2,2,0]}};})},
+         itemStyle:{color:T.amber,borderRadius:[0,2,2,0]},
+         data:bDU.map(function(v,ix){return {value:v,itemStyle:{opacity:drill?1:dimG(ordB[ix]),
+           color:v>bNS[ix]?T.red:T.amber}};})},
         {name:'Thực chi',type:'bar',barWidth:'12%',barGap:'-23%',
-         itemStyle:{color:T.deep,borderRadius:[0,2,2,0]},data:bTC}
-      ]},function(i2){focusGroup(ordB[i2]);},bLB,'y');
+         itemStyle:{color:T.deep,borderRadius:[0,2,2,0]},
+         data:bTC.map(function(v,ix){return {value:v,itemStyle:{opacity:drill?1:dimG(ordB[ix])}};})}
+      ]},function(i2){focusGroup(drill?ST.grp:ordB[i2]);},bLB,'y');
 
-    var ord=keys.slice().sort(function(a,b){return nsOf(TREE.g2[a])-nsOf(TREE.g2[b]);});
-    mk('compo',{
-      tooltip:{trigger:'axis',backgroundColor:'#0A2430',borderWidth:0,textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
-        formatter:function(p){var o='<b>'+p[0].name+'</b>';p.forEach(function(x){o+='<br/>'+x.seriesName+': '+x.value+'%';});return o;}},
-      legend:{data:['Thực chi','Dự chi chưa thực chi','Chưa dự chi'],bottom:0,itemWidth:11,itemHeight:11,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
-      grid:{left:8,right:26,top:16,bottom:46,containLabel:true},
-      xAxis:Object.assign({type:'value',max:100,name:'%',nameTextStyle:{color:T.slate2,fontSize:11}},axis),
-      yAxis:Object.assign({type:'category',data:ord.map(function(k){return GN[k]||k;}),
-        axisLabel:{fontSize:11,color:T.ink,fontFamily:FONT,triggerEvent:true}},axis),
-      series:[
-        {name:'Thực chi',type:'bar',stack:'s',barWidth:'62%',itemStyle:{color:T.deep},
-         data:ord.map(function(k){var b=TREE.g2[k],ns=nsOf(b);return ns?+(b.tc*kT/ns*100).toFixed(1):0;})},
-        {name:'Dự chi chưa thực chi',type:'bar',stack:'s',itemStyle:{color:T.amber},
-         data:ord.map(function(k){var b=TREE.g2[k],ns=nsOf(b);return ns?+((b.du*kD-b.tc*kT)/ns*100).toFixed(1):0;})},
-        {name:'Chưa dự chi',type:'bar',stack:'s',itemStyle:{color:'#E3EDEF'},
-         data:ord.map(function(k){var b=TREE.g2[k],ns=nsOf(b);return ns?+Math.max((ns-b.du*kD)/ns*100,0).toFixed(1):0;})}
-      ]},function(i){focusGroup(ord[i]);},ord.map(function(k){return GN[k]||k;}),'y');
+
   }
 
   /* ===== TRANG 3: đề xuất chờ duyệt ===== */
@@ -921,16 +1038,17 @@ body.compact .cbadge{display:inline-block}
     for(var x=0;x<MO.length;x++){if(MO[x].k===t) return x>=ST.m0&&x<=ST.m1;}
     return true;
   }
-  function passRow(pj,ct,mth){
+  function passRow(pj,ct,mth,code){
     if(ST.proj!=='all'&&pj!==ST.proj) return false;
     if(ST.cost!=='all'&&ct!==ST.cost) return false;
+    if(ST.grp!=='all'&&code&&String(code).split('.')[0]!==ST.grp) return false;
     if(mth&&!inMonth(mth)) return false;
     return true;
   }
   function renderPend(){
     var h='',n=0,nOver=0,sumOver=0,fu=tShare('du');
     PEND.forEach(function(r){
-      if(!passRow(r[7],r[8],r[9])) return;
+      if(!passRow(r[7],r[8],r[9],r[3])) return;
       n++;
       var duSoFar=r[5]*fu;
       var left=r[4]-duSoFar, after=left-r[6];
@@ -1065,6 +1183,7 @@ body.compact .cbadge{display:inline-block}
       if(st!=='all'&&r[8]!==st) return;
       if(ST.proj!=='all'&&r[2]!==PROJ[ST.proj].n) return;
       if(ST.cost!=='all'&&r[4]!==COST[ST.cost].n) return;
+      if(ST.grp!=='all'&&String(r[3]).split('.')[0]!==ST.grp) return;
       if(!inRange(r[6])) return;
       if(q&&(r[1]+' '+r[5]+' '+r[2]).toLowerCase().indexOf(q)<0) return;
       n++;sum+=r[7];
@@ -1097,7 +1216,7 @@ body.compact .cbadge{display:inline-block}
   function renderP4(){
     var h='',vis=[],sumAdj=0,reasons={};
     ADJ.forEach(function(r){
-      if(!passRow(r[11],r[12],r[13])) return;
+      if(!passRow(r[11],r[12],r[13],r[4])) return;
       vis.push(r);sumAdj+=r[6];
       reasons[r[14]]=(reasons[r[14]]||0)+r[6];
     });
@@ -1176,18 +1295,10 @@ body.compact .cbadge{display:inline-block}
     else if(kind==='pst'){ ST.pst=(ST.pst===val?'all':val); renderPhieu(); }
   }
   function focusGroup(code){
-    var k1=code.charAt(0);
-    ST.grp=(ST.grp===code?null:code);
-    openSet[k1]=true; openSet[code]=!!ST.grp;
-    applyCollapse(); highlightGroup();
-  }
-  function highlightGroup(){
-    var rows=document.querySelectorAll('#treeBody tr');
-    for(var i=0;i<rows.length;i++){
-      var cl=rows[i].className||'';
-      if(ST.grp&&(cl.indexOf('c-'+ST.grp)>=0)) rows[i].classList.add('hl');
-      else rows[i].classList.remove('hl');
-    }
+    ST.grp=(ST.grp===code?'all':code);
+    var sel=document.getElementById('fGrp'); if(sel) sel.value=ST.grp;
+    if(ST.grp!=='all'){openSet[ST.grp.charAt(0)]=true;openSet[ST.grp]=true;}
+    renderAll();
   }
   function syncDates(){
     document.getElementById('fFrom').value=MFROM[ST.m0];
@@ -1211,15 +1322,27 @@ body.compact .cbadge{display:inline-block}
   }
 
   /* ===== INIT ===== */
-  function renderAll(){renderP1();renderTree();renderP2Charts();renderP3();renderP4();renderPhieu();highlightGroup();}
-  ST.grp=null;
+  /* một chart lỗi không được phép làm đứng cả trang: mỗi phần render tách riêng */
+  function safe(name,fn){try{fn();}catch(err){if(window.console)console.error('Lỗi khi vẽ '+name+':',err);}}
+  function renderAll(){
+    recalcCost();
+    VIEW=buildView(false);VIEWG=buildView(true);
+    safe('tổng quan',renderP1);
+    safe('bảng dự toán',renderTree);
+    safe('chart hạng mục',renderP2Charts);
+    safe('đề xuất',renderP3);
+    safe('điều chỉnh dự toán',renderP4);
+    safe('danh sách phiếu',renderPhieu);
+  }
   renderAll();
 
   document.getElementById('fProj').addEventListener('change',function(){ST.proj=this.value;renderAll();});
   document.getElementById('fCost').addEventListener('change',function(){ST.cost=this.value;renderAll();});
+  document.getElementById('fGrp').addEventListener('change',function(){ST.grp=this.value;renderAll();});
   document.getElementById('fReset').addEventListener('click',function(){
-    ST.proj='all';ST.cost='all';ST.m0=0;ST.m1=5;ST.pst='all';ST.pq='';ST.grp=null;
+    ST.proj='all';ST.cost='all';ST.grp='all';ST.m0=0;ST.m1=5;ST.pst='all';ST.pq='';
     document.getElementById('fProj').value='all';document.getElementById('fCost').value='all';
+    document.getElementById('fGrp').value='all';
     document.getElementById('qp').value='';
     syncDates();renderAll();
   });
@@ -1254,10 +1377,6 @@ body.compact .cbadge{display:inline-block}
   }
   document.getElementById('qp').addEventListener('input',function(){
     ST.pq=this.value.toLowerCase().trim();renderPhieu();
-  });
-  document.getElementById('btnCompact').addEventListener('click',function(){
-    document.body.classList.toggle('compact');
-    setTimeout(resizeAll,80);
   });
   var tabs=document.querySelectorAll('.tab');
   for(var t=0;t<tabs.length;t++){
