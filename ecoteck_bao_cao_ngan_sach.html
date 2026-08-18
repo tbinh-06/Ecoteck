@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -121,6 +121,7 @@ tr.hl td{background:#FFF6E5!important;box-shadow:inset 3px 0 0 var(--amber)}
 table{width:100%;border-collapse:collapse;font-size:12px}
 thead th{background:#F0F5F6;color:var(--slate);font-weight:500;text-align:right;padding:9px 10px;position:sticky;top:0;white-space:nowrap;border-bottom:1px solid var(--line);font-size:11px;z-index:3}
 thead th:first-child,thead th.l{text-align:left}
+thead th.gR{background:#E6EEE4}
 thead th.gA{background:#E4EFF0}thead th.gB{background:#FBF1DE}thead th.gC{background:#E9E6FA}
 tbody td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line-2);white-space:nowrap;font-variant-numeric:tabular-nums}
 tbody td:first-child,tbody td.l{text-align:left;white-space:normal}
@@ -309,6 +310,7 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
         <thead>
           <tr>
             <th class="l" rowspan="2">Mã</th><th class="l" rowspan="2">Hạng mục</th>
+            <th class="gR" rowspan="2">HĐ ký với<br>khách hàng</th>
             <th class="gA" colspan="3">DỰ TOÁN</th>
             <th class="gB" colspan="2">DỰ CHI &amp; THỰC CHI</th>
             <th class="gC" colspan="4">DỰ KIẾN HOÀN THÀNH</th>
@@ -563,6 +565,17 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
   }
   var TARGET_PCT=13.10, FLOOR_PCT=12.00;
 
+  /* Giá ký hợp đồng với chủ đầu tư, phân bổ về từng mã theo hệ số giá bán của nhóm
+     rồi chuẩn hoá lại để tổng khớp đúng giá trị hợp đồng. */
+  var REVK={A1:1.145,A2:1.20,A3:1.02,B1:1.10,B2:1.00,B3:1.10,B4:1.10,B5:1.00};
+  var REV={};
+  (function(){
+    var raw=0;
+    LEAF.forEach(function(r){raw+=r[2]*(REVK[r[0].split('.')[0]]||1);});
+    var norm=raw?TOT.rev/raw:0;
+    LEAF.forEach(function(r){REV[r[0]]=r[2]*(REVK[r[0].split('.')[0]]||1)*norm;});
+  })();
+
   /* dữ liệu theo tháng — dùng cho bộ lọc thời gian */
   var MO=[{lb:'T12/24',k:'12/2024'},{lb:'T01/25',k:'01/2025'},{lb:'T02/25',k:'02/2025'},
           {lb:'T03/25',k:'03/2025'},{lb:'T04/25',k:'04/2025'},{lb:'T05/25',k:'05/2025'}];
@@ -640,22 +653,23 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
   function buildView(ignoreGrp){
     var a=kG(),b=kDC(),c=kP('du'),d=kP('tc');
     var leaves=[],g1={},g2={},ord2=[],ord1=[];
-    var tot={g:0,dc:0,du:0,tc:0,over:0,nOver:0,nNear:0,nLeaf:0,nGrp:0};
+    var tot={g:0,dc:0,du:0,tc:0,rev:0,over:0,nOver:0,nNear:0,nLeaf:0,nGrp:0};
     LEAF.forEach(function(r){
       if(!ignoreGrp&&!inGrp(r[0])) return;
       var w=wCost(r[0]); if(w<=0) return;
       var k2=r[0].split('.')[0], k1=k2.charAt(0);
       var g=r[2]*w*a, dc=r[3]*w*b, ns=g+dc;
       var du=r[4]*w*c*cumPace(PACE_DU,k2,ST.m1), tc=r[5]*w*d*cumPace(PACE_TC,k2,ST.m1);
-      leaves.push({code:r[0],name:r[1],g:g,dc:dc,du:du,tc:tc,ns:ns,k1:k1,k2:k2});
-      if(!g2[k2]){g2[k2]={g:0,dc:0,du:0,tc:0,ns:0,kids:[]};ord2.push(k2);tot.nGrp++;}
-      if(!g1[k1]){g1[k1]={g:0,dc:0,du:0,tc:0,ns:0,kids:[]};ord1.push(k1);}
-      ['g','dc','du','tc','ns'].forEach(function(f,ix){
-        var v=[g,dc,du,tc,ns][ix];g2[k2][f]+=v;g1[k1][f]+=v;
+      var rv=REV[r[0]]*w*(ST.proj==='all'?1:PROJ[ST.proj].rev/TOT.rev);
+      leaves.push({code:r[0],name:r[1],g:g,dc:dc,du:du,tc:tc,ns:ns,rev:rv,k1:k1,k2:k2});
+      if(!g2[k2]){g2[k2]={g:0,dc:0,du:0,tc:0,ns:0,rev:0,kids:[]};ord2.push(k2);tot.nGrp++;}
+      if(!g1[k1]){g1[k1]={g:0,dc:0,du:0,tc:0,ns:0,rev:0,kids:[]};ord1.push(k1);}
+      ['g','dc','du','tc','ns','rev'].forEach(function(f,ix){
+        var v=[g,dc,du,tc,ns,rv][ix];g2[k2][f]+=v;g1[k1][f]+=v;
       });
       g2[k2].kids.push(leaves[leaves.length-1]);
       if(g1[k1].kids.indexOf(k2)<0) g1[k1].kids.push(k2);
-      tot.g+=g;tot.dc+=dc;tot.du+=du;tot.tc+=tc;tot.nLeaf++;
+      tot.g+=g;tot.dc+=dc;tot.du+=du;tot.tc+=tc;tot.rev+=rv;tot.nLeaf++;
       if(ns>0&&du>ns){tot.nOver++;tot.over+=du-ns;}
       else if(ns>0&&du/ns>=0.9) tot.nNear++;
     });
@@ -686,9 +700,7 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
   var VIEW=null,VIEWG=null;
   function agg(){
     var v=VIEW||buildView();
-    var revBase=(ST.proj==='all')?TOT.rev:PROJ[ST.proj].rev;
-    var nsFull=(ST.proj==='all')?TOT.ns:PROJ[ST.proj].ns;
-    var rev=nsFull?revBase*(v.tot.ns/nsFull):0;
+    var rev=v.tot.rev;
     return {ns:v.tot.ns,du:v.tot.du,tc:v.tot.tc,dc:v.tot.dc,g:v.tot.g,
             rev:rev,over:v.tot.over,eac:v.tot.ns+v.tot.over};
   }
@@ -874,7 +886,7 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
     if(du===0) return ['t-idle','Chưa dùng'];
     return ['t-ok','Trong dự toán'];
   }
-  function rowHtml(cls,code,name,g,dc,du,tc,tgKey,ind){
+  function rowHtml(cls,code,name,g,dc,du,tc,tgKey,ind,rev){
     var ns=g+dc, eac=Math.max(ns,du), over=Math.max(du-ns,0);
     var pct=ns?Math.round(du/ns*100):0, st=statusOf(ns,du);
     var mc=du>ns?'max':(ns&&du/ns>=0.9?'hi':'');
@@ -882,6 +894,7 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
                    :(ind?'<span class="ind"></span>'+name:name);
     return '<tr class="'+cls+'">'+
       '<td class="l code">'+code+'</td><td class="l">'+label+'</td>'+
+      '<td class="num" style="background:#F4F8F2;font-weight:600">'+(rev?fm(rev):'—')+'</td>'+
       '<td class="num">'+fm(g)+'</td>'+
       '<td class="num" style="color:'+(dc>0?T.violet:T.slate2)+'">'+(dc>0?'+'+fm(dc):'—')+'</td>'+
       '<td class="num"><b>'+fm(ns)+'</b></td>'+
@@ -896,28 +909,25 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
     var v=VIEW, h='', e0=0;
     v.ord1.forEach(function(k1){
       var a=v.g1[k1];
-      h+=rowHtml('lv1',k1,GN[k1],a.g,a.dc,a.du,a.tc,'g'+k1,false);
+      h+=rowHtml('lv1',k1,GN[k1],a.g,a.dc,a.du,a.tc,'g'+k1,false,a.rev);
       a.kids.forEach(function(k2){
         var b=v.g2[k2];
-        h+=rowHtml('lv2 c-'+k1,k2,GN[k2]||k2,b.g,b.dc,b.du,b.tc,'g'+k2,false);
+        h+=rowHtml('lv2 c-'+k1,k2,GN[k2]||k2,b.g,b.dc,b.du,b.tc,'g'+k2,false,b.rev);
         b.kids.forEach(function(x){
-          h+=rowHtml('lv3 c-'+k1+' c-'+k2,x.code,x.name,x.g,x.dc,x.du,x.tc,null,true);
+          h+=rowHtml('lv3 c-'+k1+' c-'+k2,x.code,x.name,x.g,x.dc,x.du,x.tc,null,true,x.rev);
           e0+=Math.max(x.ns,x.du);
         });
       });
     });
     var g0=v.tot.g,d0=v.tot.dc,u0=v.tot.du,t0=v.tot.tc,ns0=v.tot.ns;
     var over=v.tot.nOver,near=v.tot.nNear,overSum=v.tot.over,nLeaf=v.tot.nLeaf,nGrp=v.tot.nGrp;
-    if(!nLeaf) h='<tr><td class="l" colspan="12" style="text-align:center;color:'+T.slate2+';padding:18px">Không có mã dự toán nào khớp bộ lọc</td></tr>';
-    h+='<tr class="tot"><td class="l">C</td><td class="l">GIÁ THÀNH (A + B)</td><td class="num">'+fm(g0)+'</td><td class="num">+'+fm(d0)+'</td>'+
+    if(!nLeaf) h='<tr><td class="l" colspan="13" style="text-align:center;color:'+T.slate2+';padding:18px">Không có mã dự toán nào khớp bộ lọc</td></tr>';
+    h+='<tr class="tot"><td class="l">C</td><td class="l">GIÁ THÀNH (A + B)</td><td class="num">'+fm(v.tot.rev)+'</td><td class="num">'+fm(g0)+'</td><td class="num">+'+fm(d0)+'</td>'+
        '<td class="num">'+fm(ns0)+'</td><td class="num">'+fm(u0)+'</td><td class="num">'+fm(t0)+'</td><td class="num">'+fm(e0)+'</td>'+
        '<td class="num">'+fm(ns0-u0)+'</td><td class="num">'+fm(e0-ns0)+'</td><td class="num">'+Math.round(u0/ns0*100)+'%</td><td class="l">—</td></tr>';
-    var rev=agg().rev;
-    h+='<tr class="rev"><td class="l">D</td><td class="l">GIÁ KÝ HỢP ĐỒNG (doanh thu)</td><td class="num">'+fm(rev)+'</td><td class="num">—</td>'+
-       '<td class="num">'+fm(rev)+'</td><td class="num">—</td><td class="num">—</td><td class="num">'+fm(rev)+'</td>'+
-       '<td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="l">—</td></tr>';
+    var rev=v.tot.rev;
     var pnlT=rev-g0, pnlE=rev-e0;
-    h+='<tr class="pnl"><td class="l">E</td><td class="l">LÃI/LỖ — mục tiêu vs dự kiến</td><td class="num">'+fm(pnlT)+'</td><td class="num">−'+fm(d0)+'</td>'+
+    h+='<tr class="pnl"><td class="l">D</td><td class="l">LÃI/LỖ — mục tiêu vs dự kiến</td><td class="num">'+fm(rev)+'</td><td class="num">'+fm(pnlT)+'</td><td class="num">−'+fm(d0)+'</td>'+
        '<td class="num">'+fm(rev-ns0)+'</td><td class="num">—</td><td class="num">—</td><td class="num">'+fm(pnlE)+'</td>'+
        '<td class="num">—</td><td class="num">−'+fm(e0-ns0)+'</td><td class="num">'+fp(pnlE/rev*100,2)+'%</td>'+
        '<td class="l"><span class="tag '+(pnlE/rev*100<FLOOR_PCT?'t-bad':'t-ok')+'">'+(pnlE/rev*100<FLOOR_PCT?'Dưới ngưỡng sàn':'Đạt ngưỡng')+'</span></td></tr>';
