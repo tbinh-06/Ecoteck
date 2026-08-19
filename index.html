@@ -97,6 +97,7 @@ svg.stage-svg{display:block;width:100%;height:auto}
 .chip.gold{color:var(--k-gold);border-color:var(--k-gold)}
 
 /* ---------- trang báo cáo ngân sách: một ô mở báo cáo ---------- */
+#p5.on{display:flex;flex-direction:column;gap:18px}
 .opencard{display:flex;align-items:center;gap:22px;text-decoration:none;
   background:var(--sc);border:1px solid var(--k-eco);border-radius:18px;padding:30px 32px;
   transition:.18s}
@@ -153,7 +154,7 @@ svg.stage-svg{display:block;width:100%;height:auto}
     <button class="tab on" data-p="p1" role="tab"><span class="no">01</span> Sơ đồ giải pháp</button>
     <button class="tab" data-p="p4" role="tab"><span class="no">02</span> Dự toán → Dự chi → Thực chi</button>
     <button class="tab" data-p="p2" role="tab"><span class="no">03</span> Luồng mua hàng · check dự toán</button>
-    <button class="tab" data-p="p5" role="tab"><span class="no">04</span> Báo cáo Ngân sách</button>
+    <button class="tab" data-p="p5" role="tab"><span class="no">04</span> Báo cáo</button>
     <button class="tab" data-p="p3" role="tab"><span class="no">05</span> Bài toán khác</button>
   </div>
 
@@ -220,7 +221,7 @@ svg.stage-svg{display:block;width:100%;height:auto}
     </div>
   </section>
 
-  <!-- ============ TRANG 4 · BÁO CÁO QUẢN TRỊ ============ -->
+  <!-- ============ TRANG 4 · BÁO CÁO ============ -->
   <section class="page" id="p5">
     <a class="opencard" id="rpLink" href="https://tbinh-06.github.io/Ecoteck/ecoteck_bao_cao_ngan_sach.html" target="_blank" rel="noopener">
       <div class="oc-ic">
@@ -231,7 +232,21 @@ svg.stage-svg{display:block;width:100%;height:auto}
       </div>
       <div class="oc-tx">
         <h2>Báo cáo Ngân sách</h2>
-        <p>Dự toán – dự chi – thực chi theo dự án và hạng mục · ngân sách còn lại · số vượt · lãi/lỗ dự kiến · phiếu đang chờ duyệt</p>
+        <p>Bốn lớp hợp đồng – dự toán – dự chi – thực chi theo dự án và hạng mục · ngân sách còn lại · số vượt · lãi/lỗ dự kiến · đề xuất đang chờ duyệt</p>
+      </div>
+      <div class="oc-go">Mở báo cáo  ↗</div>
+    </a>
+
+    <a class="opencard" id="rpLink2" href="https://tbinh-06.github.io/Ecoteck/ecoteck_bao_cao_vat_tu.html" target="_blank" rel="noopener">
+      <div class="oc-ic">
+        <svg viewBox="0 0 44 44" width="44" height="44" aria-hidden="true">
+          <path d="M22,6 L36,13 v18 L22,38 L8,31 V13 Z M8,13 L22,20 L36,13 M22,20 v18" fill="none"
+                stroke="var(--k-eco)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="oc-tx">
+        <h2>Báo cáo Sản lượng &amp; Vật tư thiết bị</h2>
+        <p>Khối lượng và tiền chạy song song theo dự án, hạng mục, loại vật tư và đơn vị tính · khối lượng dự toán, đã duyệt mua, đã giao · cảnh báo vượt định mức · duyệt đề xuất mua hàng</p>
       </div>
       <div class="oc-go">Mở báo cáo  ↗</div>
     </a>
@@ -837,8 +852,8 @@ const TITLES={
      'Dự toán khoá → mọi đề xuất trừ vào dự toán → phần chưa phát sinh được tạm tính để biết trước lãi/lỗ cả dự án'],
  p2:['Mua hàng <em>không vượt dự toán</em> mà không ai biết',
      'Đề xuất mua trên Base → Data Center tự đối chiếu dự toán đã duyệt → duyệt, từ chối, hoặc trình điều chỉnh dự toán'],
- p5:['Báo cáo Ngân sách để <em>ra quyết định duyệt</em>',
-     'Mở báo cáo ở tab mới · từ báo cáo bấm thẳng vào phiếu để quay về Base xử lý'],
+ p5:['Báo cáo để <em>ra quyết định duyệt</em>',
+     'Hai báo cáo chạy song song: tiền và khối lượng · mở ở tab mới, bấm thẳng vào phiếu để quay về Base xử lý'],
  p3:['Các bài toán khác <em>cùng chạy trên nền tảng này</em>',
      'Sau khi lớp dự toán – dự chi – thực chi đã chạy, mở rộng dần sang tài chính, nhân sự, vật tư và tiến độ'],
 };
