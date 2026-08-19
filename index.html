@@ -152,10 +152,11 @@ svg.stage-svg{display:block;width:100%;height:auto}
 
   <div class="tabs" role="tablist">
     <button class="tab on" data-p="p1" role="tab"><span class="no">01</span> Sơ đồ giải pháp</button>
-    <button class="tab" data-p="p4" role="tab"><span class="no">02</span> Dự toán → Dự chi → Thực chi</button>
-    <button class="tab" data-p="p2" role="tab"><span class="no">03</span> Luồng mua hàng · check dự toán</button>
-    <button class="tab" data-p="p5" role="tab"><span class="no">04</span> Báo cáo</button>
-    <button class="tab" data-p="p3" role="tab"><span class="no">05</span> Bài toán khác</button>
+    <button class="tab" data-p="p4" role="tab"><span class="no">02</span> Hợp đồng → Dự toán → Dự chi → Thực chi</button>
+    <button class="tab" data-p="p6" role="tab"><span class="no">03</span> Sản lượng &amp; vật tư thiết bị</button>
+    <button class="tab" data-p="p2" role="tab"><span class="no">04</span> Luồng mua hàng · check dự toán</button>
+    <button class="tab" data-p="p5" role="tab"><span class="no">05</span> Báo cáo</button>
+    <button class="tab" data-p="p3" role="tab"><span class="no">06</span> Bài toán khác</button>
   </div>
 
   <!-- ============ TRANG 1 ============ -->
@@ -217,6 +218,24 @@ svg.stage-svg{display:block;width:100%;height:auto}
           <g id="defs4"></g>
         </defs>
         <g id="ly4"></g><g id="lines4"></g><g id="ly4b"></g><g id="fx4"></g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============ TRANG 3 · SẢN LƯỢNG & VẬT TƯ ============ -->
+  <section class="page" id="p6">
+    <div class="stage">
+      <svg class="stage-svg" id="s6" viewBox="0 0 1800 820" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="glow6" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <marker id="ah6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,1 L9,5 L0,9 z" fill="var(--k-cyan)"/>
+          </marker>
+          <g id="defs6"></g>
+        </defs>
+        <g id="ly6"></g><g id="lines6"></g><g id="ly6b"></g><g id="fx6"></g>
       </svg>
     </div>
   </section>
@@ -556,27 +575,35 @@ function buildPage2(){
   /* --- các khối --- */
   term(152,330,'BƯỚC 1','Tạo đề xuất');
   g.appendChild(T(152,392,'Base Request · form đề xuất mua','var(--st3)',9.8,600,'middle'));
+  g.appendChild(T(152,412,'Nhập: vật tư · số lượng · đơn giá','var(--k-cyan)',9.8,700,'middle'));
+  g.appendChild(T(152,428,'thành tiền tự tính, không gõ tay','var(--st3)',9.2,600,'middle'));
 
   proc(320,290,232,80,'BƯỚC 2','Kiểm tra ngân sách','Data Center · tự động');
-  g.appendChild(T(900,754,'“ngân sách” trong luồng của khách = dự toán đã được duyệt và khoá',
+  g.appendChild(T(436,392,'Check song song: tiền và khối lượng','var(--k-cyan)',9.8,700,'middle'));
+  g.appendChild(T(900,754,'“ngân sách” trong luồng của khách = dự toán đã duyệt và khoá · mỗi bước đều mang theo cặp số lượng × đơn giá, không chỉ số tiền',
     'var(--st3)',11,600,'middle'));
   g.appendChild(T(900,1186,'Từ báo cáo bấm thẳng vào phiếu — không phải tìm lại trên Base',
     'var(--st3)',11,600,'middle'));
   g.appendChild(el('rect',{x:298,y:418,width:276,height:326,rx:13,fill:'var(--ssoft2)',stroke:'var(--sl)',
     'stroke-width':1,'stroke-dasharray':'6 6'}));
-  sub(322,446,228,68,'2.1  Kéo dữ liệu','Dự toán duyệt + dự chi + thực chi','var(--k-gold)');
-  sub(322,546,228,68,'2.2  Đối chiếu dự toán','Theo mã dự án · từng hạng mục','var(--k-gold)');
-  sub(322,646,228,68,'2.3  So sánh','Còn lại  vs  giá trị đề xuất','var(--k-gold)');
+  sub(322,446,228,68,'2.1  Kéo dữ liệu','Dự toán · dự chi · thực chi — cả tiền lẫn KL','var(--k-gold)');
+  sub(322,546,228,68,'2.2  Đối chiếu dự toán','Theo mã hạng mục và theo mã vật tư','var(--k-gold)');
+  sub(322,646,228,68,'2.3  So sánh','Tiền còn lại  ·  khối lượng còn lại','var(--k-gold)');
 
   proc(660,290,232,80,'BƯỚC 3','Thông báo kết quả','Đã dùng · còn lại · % · vượt');
+  g.appendChild(T(776,392,'Hiện cả tiền và khối lượng','var(--k-cyan)',9.8,700,'middle'));
+  g.appendChild(T(776,408,'vượt tiền hoặc vượt định mức đều chặn','var(--st3)',9.2,600,'middle'));
 
   const dcx=1100, dcy=330;
   g.appendChild(el('path',{d:`M${dcx},${dcy-68} L${dcx+132},${dcy} L${dcx},${dcy+68} L${dcx-132},${dcy} Z`,
     fill:'var(--sc)',stroke:'var(--k-gold)','stroke-width':1.8}));
   g.appendChild(T(dcx,dcy-6,'BƯỚC 4','var(--k-gold)',10.5,800,'middle'));
   g.appendChild(T(dcx,dcy+14,'Duyệt ngân sách?','var(--st1)',13.5,700,'middle'));
+  g.appendChild(T(dcx,dcy+32,'tiền · khối lượng','var(--st3)',9.4,600,'middle'));
 
   subproc(975,112,250,88,'QT mua hàng','Đặt hàng · nhận · thanh toán',AQ);
+  g.appendChild(T(1100,222,'Đơn duyệt → ghi dự chi (tiền + KL đặt)','var(--k-cyan)',9.6,700,'middle'));
+  g.appendChild(T(1100,238,'Hàng về công trình → ghi thực tế (KL đã giao)','var(--st3)',9.2,600,'middle'));
   subproc(975,474,250,96,'QT điều chỉnh dự toán','Chốt: LN dự kiến ≥ mục tiêu',EC);
   sub(985,636,230,76,'Cập nhật dự toán','Khoá bản mới · lưu lịch sử',EC);
   term(1630,330,'BƯỚC 5','Kết thúc');
@@ -698,7 +725,15 @@ const STEPS=[
 
 /* ===================== TRANG · BA LỚP DỰ TOÁN – DỰ CHI – THỰC CHI ===================== */
 const LAYERS=[
- {no:'LỚP 1',t:'DỰ TOÁN',s:'Nguồn: file Excel dự toán đã duyệt & khoá',c:'var(--k-gold)',
+ {no:'LỚP 1',t:'HỢP ĐỒNG',s:'Nguồn: hợp đồng ký với chủ đầu tư',c:'var(--k-purple)',
+  cards:[
+   {t:'Giá trị hợp đồng của dự án',l:['Giá ký với chủ đầu tư, trước VAT','Là mốc doanh thu để tính lãi/lỗ']},
+   {t:'Bóc về từng hạng mục',l:['Mỗi hạng mục mang một phần doanh thu','Có hạng mục nào bán dưới giá vốn không']},
+   {t:'Phụ lục và điều chỉnh hợp đồng',l:['Thay đổi giá trị thì cập nhật lại mốc','Lưu lịch sử để biết mốc đã đổi mấy lần']},
+   {t:'Chốt: mọi lãi/lỗ so về mốc này',hl:1,
+    l:['Lãi mục tiêu = hợp đồng − dự toán ban đầu','Lãi dự kiến = hợp đồng − tổng CP dự kiến']},
+  ]},
+ {no:'LỚP 2',t:'DỰ TOÁN',s:'Nguồn: file Excel dự toán đã duyệt & khoá',c:'var(--k-gold)',
   cards:[
    {t:'Lập ngay sau khi trúng thầu',l:['Theo từng dự án và từng hạng mục','Doanh thu hợp đồng là mốc tính lợi nhuận']},
    {t:'Phê duyệt rồi khoá',l:['Đã khoá thì không sửa tuỳ tiện','Bản khoá trở thành dữ liệu gốc của hệ thống']},
@@ -706,7 +741,7 @@ const LAYERS=[
    {t:'Chốt: lợi nhuận không được tụt',hl:1,
     l:['LN dự kiến sau điều chỉnh ≥ mục tiêu ban đầu','Không đạt thì không cho duyệt điều chỉnh']},
   ]},
- {no:'LỚP 2',t:'DỰ CHI',s:'Nguồn: đề xuất mua & thanh toán trên Base',c:'var(--k-aqua)',
+ {no:'LỚP 3',t:'DỰ CHI',s:'Nguồn: đề xuất mua & thanh toán trên Base',c:'var(--k-aqua)',
   cards:[
    {t:'Nhân sự gửi đề xuất',l:['Đề xuất mua hàng hoặc đề nghị thanh toán','Bắt buộc gắn mã dự án + hạng mục']},
    {t:'Đối chiếu dự toán đã duyệt',l:['Hệ thống tự so đúng hạng mục tương ứng','Người duyệt không phải mở file Excel']},
@@ -714,7 +749,7 @@ const LAYERS=[
    {t:'Cảnh báo khi vượt',hl:1,c:'var(--k-red)',
     l:['Vượt hạng mục hoặc vượt tổng dự toán dự án','Là căn cứ để lãnh đạo duyệt hoặc từ chối']},
   ]},
- {no:'LỚP 3',t:'THỰC CHI & DỰ BÁO',s:'Nguồn: dòng tiền thực tế · MISA',c:'var(--k-eco)',
+ {no:'LỚP 4',t:'THỰC CHI & DỰ BÁO',s:'Nguồn: dòng tiền thực tế · MISA',c:'var(--k-eco)',
   cards:[
    {t:'Thực chi theo dòng tiền',l:['Số tiền đã thanh toán thực tế','Đối chiếu lại với dự chi đã duyệt']},
    {t:'Chưa phát sinh → tạm tính',
@@ -727,37 +762,37 @@ const LAYERS=[
 const F4=[
  ['Ngân sách còn lại','= Dự toán  −  (Thực chi  +  Dự chi đã duyệt)'],
  ['Tổng chi phí dự kiến','= Thực chi  +  Tạm tính phần chưa phát sinh'],
- ['Lãi/lỗ dự kiến','= Doanh thu hợp đồng  −  Tổng chi phí dự kiến'],
+ ['Lãi/lỗ dự kiến','= Giá trị hợp đồng  −  Tổng chi phí dự kiến'],
 ];
 let built4=false, F4W=[], f4i=0, f4busy=0, f4cool=0;
 function buildPage4(){
   const g=el('g',{}); $('ly4').appendChild(g);
   const gT=el('g',{}); $('ly4b').appendChild(gT);
   const O={defs:'defs4',lines:'lines4',fx:'fx4',fl:'glow4'};
-  const CW4=540, XS=[40,620,1200], CY=[108,248,388,528], CH=118;
+  const CW4=408, XS=[40,478,916,1354], CY=[108,248,388,528], CH=118;
 
   LAYERS.forEach((L,li)=>{
     const x=XS[li];
     g.appendChild(el('rect',{x,y:18,width:CW4,height:66,rx:12,fill:'var(--sc2)',stroke:L.c,'stroke-width':1.6}));
     g.appendChild(el('rect',{x,y:18,width:6,height:66,rx:3,fill:L.c}));
-    g.appendChild(T(x+24,44,L.no,L.c,11,800));
-    g.appendChild(T(x+24,68,L.t,'var(--st1)',19,800));
-    g.appendChild(T(x+CW4-22,44,L.s,'var(--st3)',10.2,600,'end'));
+    g.appendChild(T(x+22,42,L.no,L.c,10.6,800));
+    g.appendChild(T(x+22,66,L.t,'var(--st1)',16.5,800));
+    g.appendChild(T(x+CW4-16,42,L.s,'var(--st3)',9.4,600,'end'));
 
     L.cards.forEach((cd,i)=>{
       const y=CY[i], col=cd.c||L.c, hl=!!cd.hl;
       g.appendChild(el('rect',{x,y,width:CW4,height:CH,rx:11,fill:hl?'var(--sc2)':'var(--sc)',
         stroke:hl?col:'var(--sl)','stroke-width':hl?1.8:1.2}));
       g.appendChild(el('rect',{x,y:y+14,width:5,height:CH-28,rx:2.5,fill:col,opacity:hl?1:.65}));
-      g.appendChild(T(x+22,y+30,String(li+1)+'.'+(i+1),'var(--st3)',9.6,800));
-      g.appendChild(T(x+22,y+58,cd.t,'var(--st1)',14.5,700));
-      cd.l.forEach((t,k)=>g.appendChild(T(x+22,y+84+k*19,'·  '+t,'var(--st2)',11.2,500)));
+      g.appendChild(T(x+20,y+30,String(li+1)+'.'+(i+1),'var(--st3)',9.6,800));
+      g.appendChild(T(x+20,y+58,cd.t,'var(--st1)',13.4,700));
+      cd.l.forEach((t,k)=>g.appendChild(T(x+20,y+84+k*19,'·  '+t,'var(--st2)',10.2,500)));
     });
   });
 
   /* chevron giữa các cột */
-  [580,1160].forEach(x=>{
-    g.appendChild(el('path',{d:`M${x+8},322 l16,18 l-16,18`,fill:'none',stroke:'var(--k-eco)',
+  [448,886,1324].forEach(x=>{
+    g.appendChild(el('path',{d:`M${x+6},322 l14,18 l-14,18`,fill:'none',stroke:'var(--k-eco)',
       'stroke-width':3,'stroke-linecap':'round','stroke-linejoin':'round',opacity:.9}));
   });
 
@@ -775,10 +810,11 @@ function buildPage4(){
 
   const W4=(id,d)=>wire(id,d,Object.assign({},O,{stroke:'var(--k-eco)',o:.8,w:1.8,
     marker:'ah4',solid:true,dash:null}));
-  W4('w4a','M582,340 H610');
-  W4('w4b','M1162,340 H1190');
-  [310,890,1470].forEach((x,i)=>W4('w4c'+i,`M${x},${CY[3]+CH} V684`));
-  F4W=[['w4a'],['w4b'],['w4c0'],['w4c1'],['w4c2']];
+  W4('w4a','M450,340 H474');
+  W4('w4b','M888,340 H912');
+  W4('w4c','M1326,340 H1350');
+  [244,682,1120,1558].forEach((x,i)=>W4('w4d'+i,`M${x},${CY[3]+CH} V684`));
+  F4W=[['w4a'],['w4b'],['w4c'],['w4d0'],['w4d1'],['w4d2'],['w4d3']];
   built4=true;
 }
 function flow4Tick(){
@@ -786,6 +822,106 @@ function flow4Tick(){
   if(performance.now()<f4cool) return;
   const id=F4W[f4i%F4W.length][0]; f4i++; f4busy=1;
   dot(id,'var(--k-eco)',.9,()=>{f4busy=0;f4cool=performance.now()+260;},4.4);
+}
+
+/* ===================== TRANG · SẢN LƯỢNG & VẬT TƯ THIẾT BỊ ===================== */
+const LAYERS6=[
+ {no:'LỚP 1',t:'HỢP ĐỒNG',s:'Nguồn: BOQ ký với chủ đầu tư',c:'var(--k-gold)',
+  cards:[
+   {t:'Khối lượng và đơn giá bán',l:['Bóc từ BOQ của hợp đồng','KL hợp đồng × đơn giá bán = doanh thu vật tư']},
+   {t:'Gắn về dự án và hạng mục',l:['Mỗi đầu mục thuộc đúng hạng mục thi công','Cùng cây hạng mục với báo cáo ngân sách']},
+   {t:'Đơn vị tính chốt từ đầu',l:['Tấn, m³, m, bộ, thùng — không đổi giữa chừng','Khối lượng chỉ cộng trong cùng đơn vị']},
+   {t:'Chốt: đây là mốc doanh thu',hl:1,
+    l:['Bán bao nhiêu khối lượng thì thu bấy nhiêu','Mọi lớp sau đều so ngược về mốc này']},
+  ]},
+ {no:'LỚP 2',t:'DỰ TOÁN — ĐỊNH MỨC',s:'Nguồn: Excel dự toán đã duyệt & khoá',c:'var(--k-cyan)',
+  cards:[
+   {t:'Khối lượng định mức',l:['Định mức từng đầu mục vật tư','Có thể lệch BOQ do hao hụt, biện pháp thi công']},
+   {t:'Đơn giá dự toán đi kèm',l:['Giá dự kiến mua vào của từng đầu mục','Chênh với đơn giá bán chính là biên vật tư']},
+   {t:'Khoá cùng lúc với dự toán tiền',l:['Đã khoá thì không sửa tuỳ tiện','Muốn đổi định mức phải qua phiếu điều chỉnh']},
+   {t:'Chốt: định mức là mốc chặn mua',hl:1,
+    l:['Mua vượt định mức là phải có người chịu trách nhiệm','Không đợi hết tiền mới biết đã mua dư']},
+  ]},
+ {no:'LỚP 3',t:'DỰ CHI — ĐƠN ĐÃ DUYỆT',s:'Nguồn: đơn mua trên Base',c:'var(--k-aqua)',
+  cards:[
+   {t:'Mỗi đơn nhập SL × đơn giá',l:['Thành tiền tự tính, không gõ tay','Bắt buộc gắn mã dự án · hạng mục · mã vật tư']},
+   {t:'Cộng dồn khối lượng lũy kế',l:['Lũy kế theo từng đầu mục vật tư','So ngay với định mức: còn lại bao nhiêu']},
+   {t:'Đơn chờ duyệt để riêng',l:['Chưa duyệt thì chưa tính vào lũy kế','Báo trước: duyệt đơn này xong sẽ vượt định mức']},
+   {t:'Cảnh báo vượt định mức',hl:1,c:'var(--k-red)',
+    l:['Vượt khối lượng hoặc vượt tiền đều chặn','Là căn cứ để duyệt, từ chối hay xin điều chỉnh']},
+  ]},
+ {no:'LỚP 4',t:'THỰC TẾ MUA HÀNG',s:'Nguồn: phiếu giao hàng · MISA',c:'var(--k-eco)',
+  cards:[
+   {t:'Khối lượng đã giao công trình',l:['Mua là giao thẳng, không qua kho','Không có nhập – xuất – tồn để theo dõi']},
+   {t:'Đã duyệt nhưng chưa giao',l:['Biết hàng đang trên đường là bao nhiêu','Chênh giữa lớp 3 và lớp 4 chính là phần này']},
+   {t:'Tách nguyên nhân chênh lệch',
+    l:['Do khối lượng: (KL mua − KL định mức) × ĐG dự toán','Do đơn giá: KL mua × (ĐG mua − ĐG dự toán)']},
+   {t:'Lãi vật tư dự kiến',hl:1,
+    l:['= Giá trị hợp đồng − tổng CP vật tư dự kiến','Biết sớm phần vật tư đang lãi hay lỗ']},
+  ]},
+];
+const F6=[
+ ['Khối lượng còn được mua','= KL định mức  −  KL trên các đơn đã duyệt'],
+ ['Chênh lệch do khối lượng','= (KL đã mua  −  KL định mức)  ×  Đơn giá dự toán'],
+ ['Chênh lệch do đơn giá','= KL đã mua  ×  (Đơn giá mua  −  Đơn giá dự toán)'],
+];
+let built6=false, F6W=[], f6i=0, f6busy=0, f6cool=0;
+function buildPage6(){
+  const g=el('g',{}); $('ly6').appendChild(g);
+  const O={defs:'defs6',lines:'lines6',fx:'fx6',fl:'glow6'};
+  const CW=408, XS=[40,478,916,1354], CY=[108,248,388,528], CH=118;
+
+  LAYERS6.forEach((L,li)=>{
+    const x=XS[li];
+    g.appendChild(el('rect',{x,y:18,width:CW,height:66,rx:12,fill:'var(--sc2)',stroke:L.c,'stroke-width':1.6}));
+    g.appendChild(el('rect',{x,y:18,width:6,height:66,rx:3,fill:L.c}));
+    g.appendChild(T(x+22,42,L.no,L.c,10.6,800));
+    g.appendChild(T(x+22,66,L.t,'var(--st1)',16.5,800));
+    g.appendChild(T(x+CW-16,42,L.s,'var(--st3)',9.4,600,'end'));
+
+    L.cards.forEach((cd,i)=>{
+      const y=CY[i], col=cd.c||L.c, hl=!!cd.hl;
+      g.appendChild(el('rect',{x,y,width:CW,height:CH,rx:11,fill:hl?'var(--sc2)':'var(--sc)',
+        stroke:hl?col:'var(--sl)','stroke-width':hl?1.8:1.2}));
+      g.appendChild(el('rect',{x,y:y+14,width:5,height:CH-28,rx:2.5,fill:col,opacity:hl?1:.65}));
+      g.appendChild(T(x+20,y+30,String(li+1)+'.'+(i+1),'var(--st3)',9.6,800));
+      g.appendChild(T(x+20,y+58,cd.t,'var(--st1)',13.4,700));
+      cd.l.forEach((t,k)=>g.appendChild(T(x+20,y+84+k*19,'·  '+t,'var(--st2)',10.2,500)));
+    });
+  });
+
+  /* chevron giữa các lớp */
+  [448,886,1324].forEach(x=>{
+    g.appendChild(el('path',{d:`M${x+6},322 l14,18 l-14,18`,fill:'none',stroke:'var(--k-cyan)',
+      'stroke-width':3,'stroke-linecap':'round','stroke-linejoin':'round',opacity:.9}));
+  });
+
+  /* băng kết quả */
+  g.appendChild(el('rect',{x:40,y:690,width:1720,height:112,rx:14,fill:'var(--ssoft)',
+    stroke:'var(--k-cyan)','stroke-width':1.4}));
+  g.appendChild(T(60,718,'KẾT QUẢ VẬT TƯ — mỗi lớp giữ cả khối lượng và đơn giá, nên chặn được cả mua dư lẫn mua đắt',
+    'var(--k-cyan)',12.5,800));
+  F6.forEach((f,i)=>{
+    const x=60+i*572;
+    g.appendChild(el('rect',{x,y:730,width:536,height:56,rx:10,fill:'var(--sc)',stroke:'var(--sl)','stroke-width':1.1}));
+    g.appendChild(T(x+18,752,f[0],'var(--st1)',12.5,700));
+    g.appendChild(T(x+18,772,f[1],'var(--st3)',11,500));
+  });
+
+  const W6=(id,d)=>wire(id,d,Object.assign({},O,{stroke:'var(--k-cyan)',o:.8,w:1.8,
+    marker:'ah6',solid:true,dash:null}));
+  W6('w6a','M450,340 H474');
+  W6('w6b','M888,340 H912');
+  W6('w6c','M1326,340 H1350');
+  [244,682,1120,1558].forEach((x,i)=>W6('w6d'+i,`M${x},${CY[3]+CH} V684`));
+  F6W=[['w6a'],['w6b'],['w6c'],['w6d0'],['w6d1'],['w6d2'],['w6d3']];
+  built6=true;
+}
+function flow6Tick(){
+  if(!built6||f6busy) return;
+  if(performance.now()<f6cool) return;
+  const id=F6W[f6i%F6W.length][0]; f6i++; f6busy=1;
+  dot(id,'var(--k-cyan)',.9,()=>{f6busy=0;f6cool=performance.now()+260;},4.4);
 }
 
 /* ===================== TRANG · CÁCH TRIỂN KHAI & ĐIỂM CẦN CHỐT ===================== */
@@ -797,10 +933,6 @@ const DOMAINS=[
   d:'Hồ sơ và chi phí nhân sự gắn về đúng dự án đang làm',
   chips:['Hồ sơ','Hợp đồng','Quyết định lương','Chấm công','Phép'],
   out:['Bảng công tháng','Bảng lương','Biến động nhân sự']},
- {t:'Vật tư & Thiết bị',c:'var(--k-cyan)',i:'wh',
-  d:'Từ đề xuất mua tới nhận hàng và hết hạn bảo hành',
-  chips:['Order','Nhà cung cấp','Giá','Giao hàng','Bảo hành'],
-  out:['Nhập – xuất – tồn','So giá nhà cung cấp','Vật tư sắp thiếu']},
  {t:'Tiến độ dự án',c:'var(--k-gold)',i:'gear',
   d:'Khối lượng thực hiện so kế hoạch theo từng hạng mục',
   chips:['Khối lượng','IPC từng đợt','% hoàn thành','Nghiệm thu'],
@@ -841,6 +973,7 @@ function tick(ts){
     ct+=dt; if(ct>6.4){ct=0; cap(CAPS[ci%CAPS.length][0],CAPS[ci%CAPS.length][1]); ci++;}
   } else if(active==='p2'){ flow2Tick(); }
   else if(active==='p4'){ flow4Tick(); }
+  else if(active==='p6'){ flow6Tick(); }
   raf=requestAnimationFrame(tick);
 }
 
@@ -848,14 +981,16 @@ function tick(ts){
 const TITLES={
  p1:['Kiểm soát <em>dự toán → dự chi → thực chi</em> trên một nền tảng',
      'Dự toán duyệt &amp; khoá làm dữ liệu gốc · Base giữ dự chi · MISA giữ thực chi → Data Center → báo cáo ngân sách để duyệt'],
- p4:['Ba lớp số phải <em>khớp nhau</em>: dự toán · dự chi · thực chi',
-     'Dự toán khoá → mọi đề xuất trừ vào dự toán → phần chưa phát sinh được tạm tính để biết trước lãi/lỗ cả dự án'],
+ p4:['Bốn lớp số phải <em>khớp nhau</em>: hợp đồng · dự toán · dự chi · thực chi',
+     'Hợp đồng là mốc doanh thu → dự toán khoá → mọi đề xuất trừ vào dự toán → phần chưa phát sinh được tạm tính để biết trước lãi/lỗ'],
+ p6:['Vật tư cũng chạy <em>bốn lớp</em>: hợp đồng · dự toán · dự chi · thực tế',
+     'Khác ở chỗ mỗi lớp giữ cả khối lượng lẫn đơn giá · không quản kho vì mua giao thẳng công trình'],
  p2:['Mua hàng <em>không vượt dự toán</em> mà không ai biết',
      'Đề xuất mua trên Base → Data Center tự đối chiếu dự toán đã duyệt → duyệt, từ chối, hoặc trình điều chỉnh dự toán'],
  p5:['Báo cáo để <em>ra quyết định duyệt</em>',
      'Hai báo cáo chạy song song: tiền và khối lượng · mở ở tab mới, bấm thẳng vào phiếu để quay về Base xử lý'],
  p3:['Các bài toán khác <em>cùng chạy trên nền tảng này</em>',
-     'Sau khi lớp dự toán – dự chi – thực chi đã chạy, mở rộng dần sang tài chính, nhân sự, vật tư và tiến độ'],
+     'Sau khi lớp ngân sách và vật tư đã chạy, mở rộng dần sang tài chính, nhân sự và tiến độ thi công'],
 };
 function go(p){
   active=p;
@@ -864,9 +999,10 @@ function go(p){
   $('pgTitle').innerHTML=TITLES[p][0]; $('pgSub').innerHTML=TITLES[p][1];
   if(p==='p2' && !built2) buildPage2();
   if(p==='p4' && !built4) buildPage4();
+  if(p==='p6' && !built6) buildPage6();
   clearFx(); parts=[]; busy={}; cool={};
   mBusy=0; oBusy=0; mCool=0; oCool=0;
-  f2busy=0; f2cool=0; f4busy=0; f4cool=0;
+  f2busy=0; f2cool=0; f4busy=0; f4cool=0; f6busy=0; f6cool=0;
 }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>go(t.dataset.p)));
 $('replay').addEventListener('click',start1);
