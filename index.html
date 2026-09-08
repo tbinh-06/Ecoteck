@@ -944,104 +944,95 @@ function flow6Tick(){
 }
 
 /* ===================== TRANG · LỘ TRÌNH TRIỂN KHAI ===================== */
-const NW7=10;
-const G7=[
- {t:'CHUẨN BỊ — Ecoteck chủ trì, không tính ngày công',c:'var(--k-purple)',money:''},
- {t:'1. XÂY ĐƯỜNG ỐNG TÍCH HỢP',c:'var(--k-cyan)',money:'25 ngày công'},
- {t:'2. XÂY DỰNG BÁO CÁO',c:'var(--k-gold)',money:'16 ngày công'},
- {t:'3. BÀN GIAO & BẢO HÀNH',c:'var(--k-eco)',money:'đã bao gồm'},
+const PH7=[
+ {t:'Khảo sát',ic:'eye',c:'var(--k-cyan)',cards:[
+   {i:'users',x:'Ecoteck xác định nhu cầu xây dựng hệ thống dữ liệu'},
+   {i:'sheet',x:'Base làm rõ chi tiết nhu cầu và bộ chỉ số cần theo dõi'},
+   {i:'chart',x:'Khảo sát hiện trạng dữ liệu dự toán, vật tư và vận hành trên Base'},
+   {i:'check',x:'Thống nhất phương án triển khai'}]},
+ {t:'Hợp đồng',ic:'doc',c:'var(--k-aqua)',cards:[
+   {i:'share',x:'Thống nhất phạm vi, đầu ra và kế hoạch triển khai 10 tuần'},
+   {i:'lock',x:'Chốt cây hạng mục dự toán và danh mục vật tư dùng chung'}]},
+ {t:'Triển khai',ic:'gear',c:'var(--k-eco)',cards:[
+   {i:'chat',x:'Tư vấn chuẩn hoá quy trình và bổ sung trường trên form Base'},
+   {i:'db',x:'Xây kho dữ liệu tập trung và đường ống tích hợp'},
+   {i:'chart',x:'Xây dựng báo cáo ngân sách và báo cáo sản lượng vật tư'},
+   {i:'wh',x:'Đào tạo, nghiệm thu và bàn giao hệ thống'}]},
+ {t:'Bảo hành',ic:'shield',c:'var(--k-gold)',cards:[
+   {i:'plug',x:'Khắc phục lỗi từ hệ thống và quá trình triển khai'},
+   {i:'bot',x:'Hỗ trợ vận hành trong 03 tháng bảo hành'}]},
+ {t:'Bảo trì sau bảo hành',ic:'calc',c:'var(--k-purple)',opt:1,cards:[
+   {i:'bell',x:'Review định kỳ hàng tháng'},
+   {i:'plug',x:'Khắc phục sự cố do khách hàng hoặc bên thứ 3 gây ra'},
+   {i:'chart',x:'Nâng cấp hệ thống báo cáo khi nghiệp vụ thay đổi'}]},
 ];
-const T7=[
- {g:0,n:'0',t:'Chốt cây hạng mục, danh mục vật tư và quyền truy cập',
-  d:'Biên bản chốt yêu cầu dữ liệu',lb:'Ecoteck chủ trì',a:1,b:1,moc:'Mốc chặn'},
- {g:1,n:'1.1',t:'Chuẩn hoá và tích hợp dự toán, định mức vật tư',
-  d:'Dự toán và định mức lên kho tập trung',lb:'15 ngày',a:2,b:4},
- {g:1,n:'1.2',t:'Tích hợp dữ liệu Base Service',
-  d:'Dự chi · thực chi · đơn mua đồng bộ',lb:'10 ngày',a:5,b:6},
- {g:2,n:'2.1',t:'Xây dựng báo cáo quản trị ngân sách',
-  d:'Báo cáo bốn lớp trên dữ liệu thật',lb:'8 ngày',a:7,b:8},
- {g:2,n:'2.2',t:'Xây dựng báo cáo sản lượng và vật tư',
-  d:'Báo cáo bốn lớp cả khối lượng và tiền',lb:'8 ngày',a:8,b:9},
- {g:3,n:'3',t:'Đào tạo, nghiệm thu và bàn giao',
-  d:'Biên bản nghiệm thu · HDSD · source code',lb:'Miễn phí',a:10,b:10,moc:'Nghiệm thu'},
-];
-const C7=[
- ['Đầu mối','01 người nghiệp vụ và 01 người IT, phản hồi trong 02 ngày làm việc'],
- ['Dữ liệu nền','Cây hạng mục và danh mục vật tư chốt xong ngay tuần 1'],
- ['Form trên Base','Bổ sung trường mã dự toán, mã vật tư, số lượng, đơn giá'],
- ['Sau nghiệm thu','Bảo hành 03 tháng theo điều kiện trong báo giá'],
-];
-let built7=false, F7W=[], f7i=0, f7busy=0, f7cool=0;
+function wrap7(s,max){
+  const w=s.split(' '); const out=[]; let cur='';
+  w.forEach(x=>{ if((cur+' '+x).trim().length<=max) cur=(cur+' '+x).trim();
+    else {out.push(cur); cur=x;} });
+  if(cur) out.push(cur); return out;
+}
+let built7=false, f7busy=0, f7cool=0;
 function buildPage7(){
   const g=el('g',{}); $('ly7').appendChild(g);
-  const O={defs:'defs7',lines:'lines7',fx:'fx7',fl:'glow7'};
-  const LX=40, LW=430, TX=490, TW=1270, CW=TW/NW7;
-  const wx=i=>TX+i*CW;
+  const X0=40, CW=328, GAP=20, HY=150, HH=62, TIP=26;
 
-  /* header tuần */
-  g.appendChild(el('rect',{x:LX,y:26,width:LW,height:44,rx:9,fill:'var(--sc2)',stroke:'var(--sl)','stroke-width':1.2}));
-  g.appendChild(T(LX+18,54,'CÔNG VIỆC  ·  ĐẦU RA NGHIỆM THU','var(--st2)',11.5,700));
-  for(let i=0;i<NW7;i++){
-    const x=wx(i);
-    g.appendChild(el('rect',{x:x+2,y:26,width:CW-4,height:44,rx:8,
-      fill:(i%2?'var(--sc)':'var(--sc2)'),stroke:'var(--sl)','stroke-width':1}));
-    g.appendChild(T(x+CW/2,48,'TUẦN','var(--st3)',8.6,700,'middle'));
-    g.appendChild(T(x+CW/2,63,String(i+1),'var(--st1)',13,800,'middle'));
-  }
+  /* nhãn phạm vi phía trên */
+  const x4=X0+3*(CW+GAP);
+  g.appendChild(ic('check',x4+14,HY-26,'var(--k-eco)',.8));
+  g.appendChild(T(x4+30,HY-21,'Đã bao gồm trong dịch vụ','var(--st2)',11.5,700));
+  const x5=X0+4*(CW+GAP);
+  g.appendChild(el('rect',{x:x5,y:HY-40,width:206,height:26,rx:8,fill:'none',
+    stroke:'var(--k-gold)','stroke-width':1.6}));
+  g.appendChild(T(x5+103,HY-22,'Optional · trả phí thêm','var(--k-gold)',11.5,800,'middle'));
 
-  let y=86;
-  T7.forEach((k,idx)=>{
-    const grp=G7[k.g], first=(idx===0)||(T7[idx-1].g!==k.g);
-    if(first){
-      g.appendChild(el('rect',{x:LX,y:y,width:LW+TW+10,height:24,rx:6,fill:'var(--ssoft)'}));
-      g.appendChild(el('rect',{x:LX,y:y,width:4,height:24,rx:2,fill:grp.c}));
-      g.appendChild(T(LX+16,y+17,grp.t,grp.c,10.4,800));
-      if(grp.money) g.appendChild(T(LX+LW+TW,y+17,grp.money,'var(--st3)',9.8,700,'end'));
-      y+=32;
+  PH7.forEach((ph,k)=>{
+    const x=X0+k*(CW+GAP);
+    /* chevron tiêu đề */
+    g.appendChild(el('path',{d:`M${x},${HY} H${x+CW-TIP} L${x+CW},${HY+HH/2} L${x+CW-TIP},${HY+HH} H${x} Z`,
+      fill:'var(--sc2)',stroke:ph.c,'stroke-width':1.8}));
+    g.appendChild(el('circle',{cx:x+38,cy:HY+HH/2,r:19,fill:'none',stroke:ph.c,'stroke-width':1.6,opacity:.75}));
+    g.appendChild(ic(ph.ic,x+38,HY+HH/2,ph.c,.95));
+    const lines=wrap7(ph.t,12);
+    lines.forEach((ln,li)=>g.appendChild(T(x+68,HY+HH/2+5-(lines.length-1)*9+li*18,ln,'var(--st1)',
+      lines.length>1?13.5:15.5,800)));
+    /* mũi tên nối */
+    if(k<PH7.length-1){
+      const ax=x+CW+2;
+      g.appendChild(el('path',{d:`M${ax},${HY+HH/2} h13`,stroke:'var(--st3)','stroke-width':1.6,
+        fill:'none','stroke-linecap':'round'}));
+      g.appendChild(el('path',{d:`M${ax+9},${HY+HH/2-4.5} l4.5,4.5 l-4.5,4.5`,stroke:'var(--st3)',
+        'stroke-width':1.6,fill:'none','stroke-linecap':'round','stroke-linejoin':'round'}));
     }
-    const H=54;
-    g.appendChild(el('rect',{x:LX,y:y,width:LW,height:H,rx:9,fill:'var(--sc)',stroke:'var(--sl)','stroke-width':1.1}));
-    g.appendChild(el('circle',{cx:LX+24,cy:y+H/2,r:12,fill:grp.c,opacity:.15}));
-    g.appendChild(T(LX+24,y+H/2+4,k.n,grp.c,10.6,800,'middle'));
-    g.appendChild(T(LX+46,y+23,k.t,'var(--st1)',12.2,700));
-    g.appendChild(T(LX+46,y+42,'→  '+k.d,'var(--st3)',10,500));
-
-    /* lưới tuần */
-    for(let i=0;i<NW7;i++){
-      g.appendChild(el('rect',{x:wx(i)+2,y:y,width:CW-4,height:H,rx:7,
-        fill:(i%2?'transparent':'var(--sc2)'),opacity:.55}));
-    }
-    /* thanh tiến độ */
-    const bx=wx(k.a-1)+6, bw=(k.b-k.a+1)*CW-12;
-    g.appendChild(el('rect',{x:bx,y:y+9,width:bw,height:H-18,rx:8,fill:grp.c,opacity:.92}));
-    g.appendChild(T(bx+14,y+H/2+4,k.lb,'#08222a',10.6,800));
-    if(k.moc){
-      const mx=wx(k.b)-6;
-      g.appendChild(el('path',{d:`M${mx},${y+8} l9,10 l-9,10 l-9,-10 z`,fill:'var(--k-red)',
-        stroke:'var(--sbg)','stroke-width':2}));
-      g.appendChild(T(mx,y+H+13,k.moc,'var(--k-red)',9.4,800,'middle'));
-    }
-    y+=H+(k.moc?22:10);
+    /* các thẻ */
+    let y=HY+HH+18;
+    ph.cards.forEach(cd=>{
+      const ls=wrap7(cd.x,34), CH=Math.max(56,24+ls.length*17);
+      g.appendChild(el('rect',{x,y,width:CW,height:CH,rx:11,fill:'var(--sc)',
+        stroke:'var(--sl)','stroke-width':1.2}));
+      g.appendChild(el('rect',{x:x+14,y:y+CH/2-15,width:30,height:30,rx:8,fill:'var(--sc2)'}));
+      g.appendChild(ic(cd.i,x+29,y+CH/2,ph.c,.72));
+      ls.forEach((ln,li)=>g.appendChild(T(x+56,y+CH/2+5-(ls.length-1)*8.5+li*17,ln,'var(--st2)',11.5,600)));
+      y+=CH+12;
+    });
   });
 
-  /* băng điều kiện */
-  const by=y+8;
-  g.appendChild(el('rect',{x:LX,y:by,width:LW+TW+10,height:100,rx:14,fill:'var(--ssoft)',
+  /* băng tổng kết */
+  const BY=660;
+  g.appendChild(el('rect',{x:X0,y:BY,width:5*CW+4*GAP,height:104,rx:14,fill:'var(--ssoft)',
     stroke:'var(--k-cyan)','stroke-width':1.4}));
-  g.appendChild(T(LX+22,by+25,'ĐIỀU KIỆN ĐỂ GIỮ ĐÚNG TIẾN ĐỘ — chậm một mục là toàn bộ mốc phía sau lùi theo',
-    'var(--k-cyan)',12.5,800));
-  C7.forEach((c,i)=>{
-    const x=LX+22+i*((LW+TW-30)/4);
-    g.appendChild(el('rect',{x:x,y:by+34,width:(LW+TW-46)/4,height:54,rx:10,
-      fill:'var(--sc)',stroke:'var(--sl)','stroke-width':1.1}));
-    g.appendChild(T(x+16,by+56,c[0],'var(--st1)',11.5,700));
-    g.appendChild(T(x+16,by+76,c[1],'var(--st3)',9.6,500));
+  g.appendChild(T(X0+22,BY+28,'QUY MÔ TRIỂN KHAI — theo mục I của báo giá','var(--k-cyan)',12.5,800));
+  const B7=[['10 tuần','Từ ngày ký hợp đồng đến nghiệm thu bàn giao'],
+            ['41 ngày công','25 ngày đường ống tích hợp · 16 ngày xây dựng báo cáo'],
+            ['02 báo cáo','Ngân sách dự án và Sản lượng vật tư thiết bị'],
+            ['03 tháng','Bảo hành kể từ ngày nghiệm thu, đã gồm trong dịch vụ']];
+  B7.forEach((b,i)=>{
+    const bw=(5*CW+4*GAP-44)/4, bx=X0+22+i*bw;
+    g.appendChild(el('rect',{x:bx,y:BY+40,width:bw-14,height:52,rx:10,fill:'var(--sc)',
+      stroke:'var(--sl)','stroke-width':1.1}));
+    g.appendChild(T(bx+16,BY+62,b[0],'var(--st1)',13,800));
+    g.appendChild(T(bx+16,BY+81,b[1],'var(--st3)',9.6,500));
   });
-
-  const W7=(id,d)=>wire(id,d,Object.assign({},O,{stroke:'var(--k-cyan)',o:.85,w:1.8,
-    marker:'ah7',solid:true,dash:null}));
-  W7('w7a',`M${TX+10},78 H${TX+TW-10}`);
-  F7W=[['w7a']];
   built7=true;
 }
 function flow7Tick(){ /* trang lộ trình không chạy hiệu ứng chấm */ }
@@ -1111,8 +1102,8 @@ const TITLES={
      'Đề xuất mua trên Base → Data Center tự đối chiếu dự toán đã duyệt → duyệt, từ chối, hoặc trình điều chỉnh dự toán'],
  p5:['Báo cáo để <em>ra quyết định duyệt</em>',
      'Hai báo cáo chạy song song: tiền và khối lượng · mở ở tab mới, bấm thẳng vào phiếu để quay về Base xử lý'],
- p7:['Lộ trình <em>10 tuần</em> · 41 ngày công đúng theo báo giá',
-     'Quy đổi 05 ngày làm việc mỗi tuần · chốt dữ liệu nền ngay tuần 1 là mốc chặn của toàn bộ tiến độ phía sau'],
+ p7:['Lộ trình triển khai theo <em>từng giai đoạn</em>, có đầu ra cụ thể',
+     'Năm giai đoạn từ khảo sát đến bảo trì · bốn giai đoạn đầu đã bao gồm trong dịch vụ, bảo trì sau bảo hành là tuỳ chọn'],
  p3:['Các bài toán khác <em>cùng chạy trên nền tảng này</em>',
      'Sau khi lớp ngân sách và vật tư đã chạy, mở rộng dần sang tài chính, nhân sự và tiến độ thi công'],
 };
