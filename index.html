@@ -157,6 +157,7 @@ svg.stage-svg{display:block;width:100%;height:auto}
     <button class="tab" data-p="p2" role="tab"><span class="no">04</span> Luồng mua hàng · check dự toán</button>
     <button class="tab" data-p="p5" role="tab"><span class="no">05</span> Báo cáo</button>
     <button class="tab" data-p="p3" role="tab"><span class="no">06</span> Bài toán khác</button>
+    <button class="tab" data-p="p7" role="tab"><span class="no">07</span> Lộ trình triển khai</button>
   </div>
 
   <!-- ============ TRANG 1 ============ -->
@@ -274,6 +275,24 @@ svg.stage-svg{display:block;width:100%;height:auto}
   <!-- ============ TRANG 5 · BÀI TOÁN ============ -->
   <section class="page" id="p3">
     <div class="doms" id="doms"></div>
+  </section>
+
+  <!-- ============ TRANG 7 · LỘ TRÌNH TRIỂN KHAI ============ -->
+  <section class="page" id="p7">
+    <div class="stage">
+      <svg class="stage-svg" id="s7" viewBox="0 0 1800 820" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="glow7" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <marker id="ah7" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,1 L9,5 L0,9 z" fill="var(--k-cyan)"/>
+          </marker>
+          <g id="defs7"></g>
+        </defs>
+        <g id="ly7"></g><g id="lines7"></g><g id="ly7b"></g><g id="fx7"></g>
+      </svg>
+    </div>
   </section>
 
 </div>
@@ -924,6 +943,109 @@ function flow6Tick(){
   dot(id,'var(--k-cyan)',.9,()=>{f6busy=0;f6cool=performance.now()+260;},4.4);
 }
 
+/* ===================== TRANG · LỘ TRÌNH TRIỂN KHAI ===================== */
+const NW7=10;
+const G7=[
+ {t:'CHUẨN BỊ — Ecoteck chủ trì, không tính ngày công',c:'var(--k-purple)',money:''},
+ {t:'1. XÂY ĐƯỜNG ỐNG TÍCH HỢP',c:'var(--k-cyan)',money:'25 ngày công'},
+ {t:'2. XÂY DỰNG BÁO CÁO',c:'var(--k-gold)',money:'16 ngày công'},
+ {t:'3. BÀN GIAO & BẢO HÀNH',c:'var(--k-eco)',money:'đã bao gồm'},
+];
+const T7=[
+ {g:0,n:'0',t:'Chốt cây hạng mục, danh mục vật tư và quyền truy cập',
+  d:'Biên bản chốt yêu cầu dữ liệu',lb:'Ecoteck chủ trì',a:1,b:1,moc:'Mốc chặn'},
+ {g:1,n:'1.1',t:'Chuẩn hoá và tích hợp dự toán, định mức vật tư',
+  d:'Dự toán và định mức lên kho tập trung',lb:'15 ngày',a:2,b:4},
+ {g:1,n:'1.2',t:'Tích hợp dữ liệu Base Service',
+  d:'Dự chi · thực chi · đơn mua đồng bộ',lb:'10 ngày',a:5,b:6},
+ {g:2,n:'2.1',t:'Xây dựng báo cáo quản trị ngân sách',
+  d:'Báo cáo bốn lớp trên dữ liệu thật',lb:'8 ngày',a:7,b:8},
+ {g:2,n:'2.2',t:'Xây dựng báo cáo sản lượng và vật tư',
+  d:'Báo cáo bốn lớp cả khối lượng và tiền',lb:'8 ngày',a:8,b:9},
+ {g:3,n:'3',t:'Đào tạo, nghiệm thu và bàn giao',
+  d:'Biên bản nghiệm thu · HDSD · source code',lb:'Miễn phí',a:10,b:10,moc:'Nghiệm thu'},
+];
+const C7=[
+ ['Đầu mối','01 người nghiệp vụ và 01 người IT, phản hồi trong 02 ngày làm việc'],
+ ['Dữ liệu nền','Cây hạng mục và danh mục vật tư chốt xong ngay tuần 1'],
+ ['Form trên Base','Bổ sung trường mã dự toán, mã vật tư, số lượng, đơn giá'],
+ ['Sau nghiệm thu','Bảo hành 03 tháng theo điều kiện trong báo giá'],
+];
+let built7=false, F7W=[], f7i=0, f7busy=0, f7cool=0;
+function buildPage7(){
+  const g=el('g',{}); $('ly7').appendChild(g);
+  const O={defs:'defs7',lines:'lines7',fx:'fx7',fl:'glow7'};
+  const LX=40, LW=430, TX=490, TW=1270, CW=TW/NW7;
+  const wx=i=>TX+i*CW;
+
+  /* header tuần */
+  g.appendChild(el('rect',{x:LX,y:26,width:LW,height:44,rx:9,fill:'var(--sc2)',stroke:'var(--sl)','stroke-width':1.2}));
+  g.appendChild(T(LX+18,54,'CÔNG VIỆC  ·  ĐẦU RA NGHIỆM THU','var(--st2)',11.5,700));
+  for(let i=0;i<NW7;i++){
+    const x=wx(i);
+    g.appendChild(el('rect',{x:x+2,y:26,width:CW-4,height:44,rx:8,
+      fill:(i%2?'var(--sc)':'var(--sc2)'),stroke:'var(--sl)','stroke-width':1}));
+    g.appendChild(T(x+CW/2,48,'TUẦN','var(--st3)',8.6,700,'middle'));
+    g.appendChild(T(x+CW/2,63,String(i+1),'var(--st1)',13,800,'middle'));
+  }
+
+  let y=86;
+  T7.forEach((k,idx)=>{
+    const grp=G7[k.g], first=(idx===0)||(T7[idx-1].g!==k.g);
+    if(first){
+      g.appendChild(el('rect',{x:LX,y:y,width:LW+TW+10,height:24,rx:6,fill:'var(--ssoft)'}));
+      g.appendChild(el('rect',{x:LX,y:y,width:4,height:24,rx:2,fill:grp.c}));
+      g.appendChild(T(LX+16,y+17,grp.t,grp.c,10.4,800));
+      if(grp.money) g.appendChild(T(LX+LW+TW,y+17,grp.money,'var(--st3)',9.8,700,'end'));
+      y+=32;
+    }
+    const H=54;
+    g.appendChild(el('rect',{x:LX,y:y,width:LW,height:H,rx:9,fill:'var(--sc)',stroke:'var(--sl)','stroke-width':1.1}));
+    g.appendChild(el('circle',{cx:LX+24,cy:y+H/2,r:12,fill:grp.c,opacity:.15}));
+    g.appendChild(T(LX+24,y+H/2+4,k.n,grp.c,10.6,800,'middle'));
+    g.appendChild(T(LX+46,y+23,k.t,'var(--st1)',12.2,700));
+    g.appendChild(T(LX+46,y+42,'→  '+k.d,'var(--st3)',10,500));
+
+    /* lưới tuần */
+    for(let i=0;i<NW7;i++){
+      g.appendChild(el('rect',{x:wx(i)+2,y:y,width:CW-4,height:H,rx:7,
+        fill:(i%2?'transparent':'var(--sc2)'),opacity:.55}));
+    }
+    /* thanh tiến độ */
+    const bx=wx(k.a-1)+6, bw=(k.b-k.a+1)*CW-12;
+    g.appendChild(el('rect',{x:bx,y:y+9,width:bw,height:H-18,rx:8,fill:grp.c,opacity:.92}));
+    g.appendChild(T(bx+14,y+H/2+4,k.lb,'#08222a',10.6,800));
+    if(k.moc){
+      const mx=wx(k.b)-6;
+      g.appendChild(el('path',{d:`M${mx},${y+8} l9,10 l-9,10 l-9,-10 z`,fill:'var(--k-red)',
+        stroke:'var(--sbg)','stroke-width':2}));
+      g.appendChild(T(mx,y+H+13,k.moc,'var(--k-red)',9.4,800,'middle'));
+    }
+    y+=H+(k.moc?22:10);
+  });
+
+  /* băng điều kiện */
+  const by=y+8;
+  g.appendChild(el('rect',{x:LX,y:by,width:LW+TW+10,height:100,rx:14,fill:'var(--ssoft)',
+    stroke:'var(--k-cyan)','stroke-width':1.4}));
+  g.appendChild(T(LX+22,by+25,'ĐIỀU KIỆN ĐỂ GIỮ ĐÚNG TIẾN ĐỘ — chậm một mục là toàn bộ mốc phía sau lùi theo',
+    'var(--k-cyan)',12.5,800));
+  C7.forEach((c,i)=>{
+    const x=LX+22+i*((LW+TW-30)/4);
+    g.appendChild(el('rect',{x:x,y:by+34,width:(LW+TW-46)/4,height:54,rx:10,
+      fill:'var(--sc)',stroke:'var(--sl)','stroke-width':1.1}));
+    g.appendChild(T(x+16,by+56,c[0],'var(--st1)',11.5,700));
+    g.appendChild(T(x+16,by+76,c[1],'var(--st3)',9.6,500));
+  });
+
+  const W7=(id,d)=>wire(id,d,Object.assign({},O,{stroke:'var(--k-cyan)',o:.85,w:1.8,
+    marker:'ah7',solid:true,dash:null}));
+  W7('w7a',`M${TX+10},78 H${TX+TW-10}`);
+  F7W=[['w7a']];
+  built7=true;
+}
+function flow7Tick(){ /* trang lộ trình không chạy hiệu ứng chấm */ }
+
 /* ===================== TRANG · CÁCH TRIỂN KHAI & ĐIỂM CẦN CHỐT ===================== */
 const DOMAINS=[
  {t:'Tài chính',c:'var(--k-eco)',i:'chart',
@@ -989,6 +1111,8 @@ const TITLES={
      'Đề xuất mua trên Base → Data Center tự đối chiếu dự toán đã duyệt → duyệt, từ chối, hoặc trình điều chỉnh dự toán'],
  p5:['Báo cáo để <em>ra quyết định duyệt</em>',
      'Hai báo cáo chạy song song: tiền và khối lượng · mở ở tab mới, bấm thẳng vào phiếu để quay về Base xử lý'],
+ p7:['Lộ trình <em>10 tuần</em> · 41 ngày công đúng theo báo giá',
+     'Quy đổi 05 ngày làm việc mỗi tuần · chốt dữ liệu nền ngay tuần 1 là mốc chặn của toàn bộ tiến độ phía sau'],
  p3:['Các bài toán khác <em>cùng chạy trên nền tảng này</em>',
      'Sau khi lớp ngân sách và vật tư đã chạy, mở rộng dần sang tài chính, nhân sự và tiến độ thi công'],
 };
@@ -1000,9 +1124,10 @@ function go(p){
   if(p==='p2' && !built2) buildPage2();
   if(p==='p4' && !built4) buildPage4();
   if(p==='p6' && !built6) buildPage6();
+  if(p==='p7' && !built7) buildPage7();
   clearFx(); parts=[]; busy={}; cool={};
   mBusy=0; oBusy=0; mCool=0; oCool=0;
-  f2busy=0; f2cool=0; f4busy=0; f4cool=0; f6busy=0; f6cool=0;
+  f2busy=0; f2cool=0; f4busy=0; f4cool=0; f6busy=0; f6cool=0; f7busy=0; f7cool=0;
 }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>go(t.dataset.p)));
 $('replay').addEventListener('click',start1);
