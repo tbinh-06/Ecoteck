@@ -170,16 +170,16 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
 <!-- ============ P1 ============ -->
 <div class="page active" id="p1">
   <div class="grid g5" style="margin-bottom:16px">
-    <div class="kpi k-green"><div class="lbl"><i class="ti ti-file-dollar"></i> Vật tư theo hợp đồng</div>
-      <div class="val" id="k0">—</div><div class="sub" id="k0s">—</div></div>
-    <div class="kpi"><div class="lbl"><i class="ti ti-clipboard-list"></i> Dự toán vật tư</div>
+    <div class="kpi"><div class="lbl"><i class="ti ti-clipboard-list"></i> Lớp 2 · Giá trị dự toán</div>
       <div class="val" id="k1">—</div><div class="sub" id="k1s">—</div></div>
-    <div class="kpi k-amber"><div class="lbl"><i class="ti ti-stamp"></i> Dự chi đã duyệt</div>
+    <div class="kpi k-amber"><div class="lbl"><i class="ti ti-file-check"></i> Lớp 3 · GT đã thực hiện</div>
       <div class="val" id="k2">—</div><div class="sub" id="k2s">—</div></div>
-    <div class="kpi k-violet"><div class="lbl"><i class="ti ti-truck-delivery"></i> Thực tế mua hàng</div>
-      <div class="val" id="k3">—</div><div class="sub" id="k3s">—</div></div>
-    <div class="kpi k-red"><div class="lbl"><i class="ti ti-trending-up"></i> Lãi vật tư dự kiến</div>
+    <div class="kpi k-violet"><div class="lbl"><i class="ti ti-hourglass"></i> Lớp 3 · GT chưa thực hiện</div>
       <div class="val" id="k5">—</div><div class="sub" id="k5s">—</div></div>
+    <div class="kpi k-red"><div class="lbl"><i class="ti ti-sum"></i> Tổng CP vật tư dự kiến</div>
+      <div class="val" id="k0">—</div><div class="sub" id="k0s">—</div></div>
+    <div class="kpi k-green"><div class="lbl"><i class="ti ti-truck-delivery"></i> Đã nhận tại công trình</div>
+      <div class="val" id="k3">—</div><div class="sub" id="k3s">—</div></div>
   </div>
 
   <div class="grid g23" style="margin-bottom:16px">
@@ -196,7 +196,7 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
 
   <div class="grid g2">
     <div class="card">
-      <div class="card-h"><div><h3><i class="ti ti-chart-bar"></i> Dự toán và đã mua theo loại vật tư</h3><p id="loaiNote">—</p></div></div>
+      <div class="card-h"><div><h3><i class="ti ti-chart-bar"></i> Ba lớp giá trị theo nhóm vật tư</h3><p id="loaiNote">—</p></div></div>
       <div id="byLoai" class="chart tall"></div>
     </div>
     <div class="card">
@@ -227,8 +227,8 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
 
   <div class="grid g2" style="margin-bottom:16px">
     <div class="card">
-      <div class="card-h"><div><h3><i class="ti ti-building-bridge"></i> Bốn lớp vật tư theo hạng mục</h3>
-        <p>Bấm để lọc theo hạng mục · đơn vị: triệu đồng</p></div></div>
+      <div class="card-h"><div><h3><i class="ti ti-building-store"></i> Sản lượng cung cấp theo nhà cung cấp và theo tháng</h3>
+        <p>Giá trị hàng đã nhận · mỗi cột là một tháng, mỗi màu là một nhà cung cấp</p></div></div>
       <div id="hmChart" class="chart tall"></div>
     </div>
     <div class="card">
@@ -244,10 +244,11 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
 
   <div class="card">
     <div class="card-h">
-      <div><h3><i class="ti ti-table"></i> Khối lượng dự toán — đã mua — còn lại</h3>
-        <p>Bấm mũi tên để mở: dự án → hạng mục → đầu mục vật tư → từng đơn mua</p></div>
+      <div><h3><i class="ti ti-table"></i> Khối lượng dự toán — đã order — đã nhận — còn lại</h3>
+        <p>Bấm mũi tên để mở: dự án → nhóm vật tư → mã vật tư → từng đơn mua. Danh mục vật tư lấy tự động từ bảng dự toán.</p></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
         <button class="pill on" data-f="all">Tất cả</button>
+        <button class="pill" id="btnMoney"><i class="ti ti-currency-dong"></i> Xem theo tiền</button>
         <button class="pill" data-f="over">Vượt định mức</button>
         <button class="pill" data-f="short">Còn thiếu</button>
         <button class="pill" data-f="none">Chưa mua</button>
@@ -258,18 +259,14 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
       <table>
         <thead>
           <tr>
-            <th class="l" rowspan="2">Mã</th><th class="l" rowspan="2">Dự án / hạng mục / vật tư</th>
-            <th class="l" rowspan="2">Loại VT</th><th class="l" rowspan="2">ĐVT</th>
-            <th class="gK" colspan="6">KHỐI LƯỢNG</th>
-            <th class="gM" colspan="3">ĐƠN GIÁ (tr/ĐVT)</th>
-            <th class="gT" colspan="4">THÀNH TIỀN (triệu đồng)</th>
-            <th rowspan="2">% dự chi</th><th class="l" rowspan="2">Trạng thái</th>
-          </tr>
-          <tr>
-            <th class="gK">Hợp đồng</th><th class="gK">Dự toán</th><th class="gK">Dự chi đã duyệt</th>
-            <th class="gK">Chờ duyệt</th><th class="gK">Thực tế đã giao</th><th class="gK">Thiếu / vượt</th>
-            <th class="gM">Hợp đồng</th><th class="gM">Dự toán</th><th class="gM">Mua bình quân</th>
-            <th class="gT">Hợp đồng</th><th class="gT">Dự toán</th><th class="gT">Dự chi</th><th class="gT">Thực tế</th>
+            <th class="l">Mã</th><th class="l">Dự án / nhóm vật tư / mã vật tư</th>
+            <th class="l">Hạng mục</th><th class="l" id="thDvt">ĐVT</th>
+            <th class="gK">Dự toán</th>
+            <th class="gK" title="Khối lượng đã order, đã chốt với NCC">Đã order</th>
+            <th class="gK" title="Đã giao đến công trình">Đã nhận</th>
+            <th class="gK" title="Dự toán trừ đã order">Còn lại</th>
+            <th class="gB" title="Đơn chờ duyệt, chưa tính vào đã order">Chờ duyệt</th>
+            <th>% order</th><th class="l">Trạng thái</th>
           </tr>
         </thead>
         <tbody id="matBody"></tbody>
@@ -500,7 +497,7 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
   var MFROM=['01/12/2024','01/01/2025','01/02/2025','01/03/2025','01/04/2025','01/05/2025'];
   var MTO=['31/12/2024','31/01/2025','28/02/2025','31/03/2025','30/04/2025','19/05/2025'];
 
-  var ST={proj:'all',hm:'all',loai:'all',dvt:'all',m0:0,m1:5,f:'all',q:'',qp:'',bud:'all'};
+  var ST={proj:'all',hm:'all',loai:'all',dvt:'all',m0:0,m1:5,f:'all',q:'',qp:'',bud:'all',money:false};
 
   function monthIdx(d){var k=String(d).slice(3);for(var i=0;i<MO.length;i++){if(MO[i]===k)return i;}return -1;}
   function inRange(d){var i=monthIdx(d);return i<0?true:(i>=ST.m0&&i<=ST.m1);}
@@ -566,23 +563,30 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
 
   /* ===== TRANG 1 ===== */
   function renderP1(){
-    setHtml('k0',fb(V.tHD)+' <span>tỷ đ</span>');
-    setTxt('k0s','Khối lượng và đơn giá ký với chủ đầu tư');
+    /* phần chưa thực hiện tính theo từng đầu mục: KL còn lại × đơn giá dự toán */
+    var cc=0; V.rows.forEach(function(r){cc+=Math.max(r.klDT-r.klDC,0)*r.dgDT;});
+    var eac=V.tDC+cc;
     setHtml('k1',fb(V.tDT)+' <span>tỷ đ</span>');
-    setHtml('k1s',V.rows.length+' đầu mục · <span class="delta d-up">'+fp(V.tHD?(1-V.tDT/V.tHD)*100:0,1)+'%</span> biên bóc tách');
+    setTxt('k1s','Ngân sách vật tư · '+V.rows.length+' đầu mục lấy từ bảng dự toán');
     setHtml('k2',fb(V.tDC)+' <span>tỷ đ</span>');
-    setHtml('k2s','<span class="delta d-warn">'+fp(V.tDT?V.tDC/V.tDT*100:0,1)+'%</span> dự toán · chờ duyệt '+fm(V.tCho)+' tr');
+    setHtml('k2s','Khối lượng đã order, đã chốt giá với NCC · <span class="delta d-warn">'+
+      fp(eac?V.tDC/eac*100:0,1)+'%</span> tổng CP vật tư');
+    setHtml('k5',fb(cc)+' <span>tỷ đ</span>');
+    setHtml('k5s','Khối lượng chưa order, tạm tính theo đơn giá dự toán · chờ duyệt '+fm(V.tCho)+' tr');
+    setHtml('k0',fb(eac)+' <span>tỷ đ</span>');
+    var ch=V.tDT-eac;
+    setHtml('k0s','Chênh so dự toán <b style="color:'+(ch<0?T.red:T.green)+'">'+(ch>0?'+':'')+fm(ch)+
+      ' tr</b> · '+V.nOver+' đầu mục vượt định mức');
     setHtml('k3',fb(V.tTT)+' <span>tỷ đ</span>');
-    setHtml('k3s','Đã giao '+fp(V.tDC?V.tTT/V.tDC*100:0,1)+'% giá trị đơn đã duyệt');
-    var loi=V.tHD-V.eac, lpct=V.tHD?loi/V.tHD*100:0;
-    setHtml('k5',fb(loi)+' <span>tỷ đ</span>');
-    setHtml('k5s','<b>'+fp(lpct,2)+'%</b> · tổng CP vật tư dự kiến '+fb(V.eac)+' tỷ');
+    setHtml('k3s','Đã giao đến công trình · '+fp(V.tDC?V.tTT/V.tDC*100:0,1)+'% giá trị đã order');
 
     var lk=Object.keys(LOAI).filter(function(k){return V.byLoai[k];});
-    setTxt('loaiNote','Đơn vị: triệu đồng · bốn lớp theo từng loại vật tư');
+    var ccLoai={};
+    V.rows.forEach(function(r){ccLoai[r.loai]=(ccLoai[r.loai]||0)+Math.max(r.klDT-r.klDC,0)*r.dgDT;});
+    setTxt('loaiNote','Đơn vị: triệu đồng · thanh xanh là dự toán · thanh cam lồng trong là chi phí dự kiến gồm phần đã thực hiện và chưa thực hiện · thanh đậm là hàng đã nhận');
     mk('byLoai',{
-      tooltip:tip,legend:{data:['Hợp đồng','Dự toán','Dự chi đã duyệt','Thực tế mua'],bottom:0,itemWidth:11,itemHeight:11,
-        textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
+      tooltip:tip,legend:{data:['Lớp 2 · Giá trị dự toán','Lớp 3 · GT đã thực hiện','Lớp 3 · GT chưa thực hiện','Đã nhận'],
+        bottom:0,itemWidth:11,itemHeight:11,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
       grid:{left:8,right:16,top:20,bottom:46,containLabel:true},
       xAxis:{type:'category',data:lk.map(function(k){return LOAI[k];}),
         axisLine:{lineStyle:{color:T.line}},axisTick:{show:false},
@@ -590,14 +594,15 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
           formatter:function(v){return v.replace(' và ','\nvà ').replace('Vật tư ','Vật tư\n');}}},
       yAxis:Object.assign({type:'value',name:'tr đ',nameTextStyle:{color:T.slate2,fontSize:11}},axis),
       series:[
-        {name:'Hợp đồng',type:'bar',barGap:'-100%',barWidth:'80%',itemStyle:{color:'#EEF4F2',borderRadius:[3,3,0,0]},
-         data:lk.map(function(k){return Math.round(V.byLoai[k].hd);})},
-        {name:'Dự toán',type:'bar',barGap:'-100%',barWidth:'58%',itemStyle:{color:'#DCE7EA',borderRadius:[3,3,0,0]},
+        {name:'Lớp 2 · Giá trị dự toán',type:'bar',barGap:'-100%',barWidth:'72%',itemStyle:{color:'#C2D6DC',borderRadius:[3,3,0,0]},
          data:lk.map(function(k){return Math.round(V.byLoai[k].dt);})},
-        {name:'Dự chi đã duyệt',type:'bar',barGap:'-100%',barWidth:'38%',itemStyle:{color:T.amber,borderRadius:[3,3,0,0]},
+        {name:'Lớp 3 · GT đã thực hiện',type:'bar',stack:'L3',barGap:'-100%',barWidth:'44%',itemStyle:{color:T.amber},
          data:lk.map(function(k){var d=V.byLoai[k];return {value:Math.round(d.dc),
            itemStyle:{color:d.dc>d.dt?T.red:T.amber}};})},
-        {name:'Thực tế mua',type:'bar',barWidth:'20%',itemStyle:{color:T.deep,borderRadius:[3,3,0,0]},
+        {name:'Lớp 3 · GT chưa thực hiện',type:'bar',stack:'L3',barWidth:'44%',
+         itemStyle:{color:'#E3C08A',borderRadius:[3,3,0,0]},
+         data:lk.map(function(k){return Math.round(ccLoai[k]||0);})},
+        {name:'Đã nhận',type:'bar',barWidth:'20%',itemStyle:{color:T.deep,borderRadius:[3,3,0,0]},
          data:lk.map(function(k){return Math.round(V.byLoai[k].tt);})}
       ]},function(i){setFilter('loai',lk[i]);},lk.map(function(k){return LOAI[k];}),'x');
 
@@ -681,95 +686,80 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
     rows.forEach(function(r){
       if(!byP[r.proj]){byP[r.proj]={hd:0,dt:0,dc:0,cho:0,tt:0,H:{},ordH:[]};ordP.push(r.proj);}
       var P=byP[r.proj];P.hd+=r.tienHD;P.dt+=r.tienDT;P.dc+=r.tienDC;P.cho+=r.tienCho;P.tt+=r.tienTT;
-      if(!P.H[r.hm]){P.H[r.hm]={hd:0,dt:0,dc:0,cho:0,tt:0,kids:[]};P.ordH.push(r.hm);}
-      var H=P.H[r.hm];H.hd+=r.tienHD;H.dt+=r.tienDT;H.dc+=r.tienDC;H.cho+=r.tienCho;H.tt+=r.tienTT;
+      if(!P.H[r.loai]){P.H[r.loai]={hd:0,dt:0,dc:0,cho:0,tt:0,kids:[]};P.ordH.push(r.loai);}
+      var H=P.H[r.loai];H.hd+=r.tienHD;H.dt+=r.tienDT;H.dc+=r.tienDC;H.cho+=r.tienCho;H.tt+=r.tienTT;
       H.kids.push(r);
     });
     ordP.sort();
-    function moneyRow(cls,code,label,tg,o){
-      var pct=o.dt?o.dc/o.dt*100:0;
-      var lb='<span class="tg" data-tg="'+tg+'"><i class="ti ti-chevron-right"></i>'+label+'</span>';
+    /* KL hay tiền tuỳ nút chọn; dòng nhóm luôn hiển thị tiền vì khác đơn vị tính */
+    var MZ=ST.money;
+    function nrow(cls,code,label,tg,dvt,hm,dt,od,nh,cl,cho,pct,st,ind,sub,forceM){
+      var mc=pct>100?'max':(pct>=95?'hi':'');
+      var lb=tg?('<span class="tg" data-tg="'+tg+'"><i class="ti ti-chevron-right"></i>'+label+'</span>')
+               :(ind?'<span class="vind"></span>'+label:label);
+      if(sub) lb+='<div class="detail">'+sub+'</div>';
+      var M=MZ||forceM;
+      function n(v){return v===null?'—':(M?fm(v):fq(v));}
       return '<tr class="'+cls+'"><td class="l code">'+code+'</td><td class="l">'+lb+'</td>'+
-        '<td class="l">—</td><td class="l">—</td>'+
-        '<td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td>'+
-        '<td class="num">—</td><td class="num">—</td>'+
-        '<td class="num">—</td><td class="num">—</td><td class="num">—</td>'+
-        '<td class="num">'+fm(o.hd)+'</td><td class="num">'+fm(o.dt)+'</td>'+
-        '<td class="num" style="color:'+(o.dc>o.dt?T.red:'inherit')+'">'+fm(o.dc)+'</td>'+
-        '<td class="num">'+fm(o.tt)+'</td>'+
-        '<td class="num">'+fp(pct,1)+'%</td><td class="l">—</td></tr>';
+        '<td class="l code" style="font-size:11px;color:'+T.slate+'">'+(hm||'—')+'</td>'+
+        '<td class="l" style="'+(forceM&&!MZ?('color:'+T.slate2+';font-size:10.5px'):'')+'">'+(M?'tr đ':(dvt||'—'))+'</td>'+
+        '<td class="num">'+n(dt)+'</td>'+
+        '<td class="num"><b>'+(od>0?n(od):'<span class="zchip">0</span>')+'</b></td>'+
+        '<td class="num">'+n(nh)+'</td>'+
+        '<td class="num" style="font-weight:600;color:'+(cl<0?T.red:(cl>0?T.ink:T.slate2))+'">'+
+          (cl===null?'—':(Math.abs(cl)<0.005?'—':n(cl)))+'</td>'+
+        '<td class="num" style="color:'+(cho>0?T.violet:T.slate2)+'">'+(cho>0?('+'+n(cho)):'—')+'</td>'+
+        '<td class="num">'+(pct===null?'—':('<div class="bar-cell"><span>'+fp(pct,0)+'%</span>'+
+          '<span class="mini"><i class="'+mc+'" style="width:'+Math.min(pct,100)+'%"></i></span></div>'))+'</td>'+
+        '<td class="l">'+(st?('<span class="tag '+st[0]+'">'+st[1]+'</span>'):'—')+'</td></tr>';
     }
     var h='';
     ordP.forEach(function(pk){
       var P=byP[pk];
       if(openSet['P'+pk]===undefined) openSet['P'+pk]=true;
-      h+=moneyRow('lv0',pk,PROJ[pk],'P'+pk,P);
+      h+=nrow('lv0',pk,PROJ[pk],'P'+pk,null,null,P.dt,P.dc,P.tt,P.dt-P.dc,P.cho,P.dt?P.dc/P.dt*100:0,null,false,null,true);
       P.ordH.sort();
       P.ordH.forEach(function(hm){
         var H=P.H[hm],hkey='H'+pk+'_'+hm;
         if(openSet[hkey]===undefined) openSet[hkey]=true;
-        h+=moneyRow('lv1 c-P'+pk,hm,(HM[hm]||hm),hkey,H);
+        h+=nrow('lv1 c-P'+pk,hm.replace('_',''),(LOAI[hm]||hm),hkey,null,null,
+                H.dt,H.dc,H.tt,H.dt-H.dc,H.cho,H.dt?H.dc/H.dt*100:0,null,false,null,true);
         H.kids.forEach(function(r){
-          var st=stTag(r),diff=r.klDC-r.klDT;
-          var cls='lv2 c-P'+pk+' c-'+hkey+(r.klDC<=0?' dim':'');
+          var st=stTag(r), cls='lv2 c-P'+pk+' c-'+hkey+(r.klDC<=0?' dim':'');
           if(openSet[r.code]===undefined) openSet[r.code]=false;
-          var mc=r.pct>100?'max':(r.pct>=95?'hi':'');
-          h+='<tr class="'+cls+'"><td class="l code">'+r.code+'</td>'+
-             '<td class="l"><span class="tg" data-tg="'+r.code+'"><i class="ti ti-chevron-right"></i>'+r.name+'</span></td>'+
-             '<td class="l" style="font-size:11px;color:'+T.slate+'">'+(LOAI[r.loai]||r.loai)+'</td>'+
-             '<td class="l">'+r.dvt+'</td>'+
-             '<td class="num">'+fq(r.klHD)+'</td>'+
-             '<td class="num">'+fq(r.klDT)+'</td>'+
-             '<td class="num"><b>'+(r.klDC>0?fq(r.klDC):'<span class="zchip">0</span>')+'</b></td>'+
-             '<td class="num" style="color:'+(r.klCho>0?T.violet:T.slate2)+'">'+(r.klCho>0?('+'+fq(r.klCho)):'—')+'</td>'+
-             '<td class="num">'+fq(r.klTT)+'</td>'+
-             '<td class="num" style="color:'+(diff>0?T.red:(diff<0?T.amber:T.slate2))+';font-weight:600">'+
-               (diff>0?'+':'')+(Math.abs(diff)<0.005?'—':fq(diff))+'</td>'+
-             '<td class="num">'+fq(r.dgHD)+'</td>'+
-             '<td class="num">'+fq(r.dgDT)+'</td>'+
-             '<td class="num" style="color:'+(r.dgDC>r.dgDT?T.red:T.ink)+'">'+(r.dgDC?fq(r.dgDC):'—')+'</td>'+
-             '<td class="num">'+fm(r.tienHD)+'</td><td class="num">'+fm(r.tienDT)+'</td>'+
-             '<td class="num" style="color:'+(r.tienDC>r.tienDT?T.red:T.ink)+'">'+fm(r.tienDC)+'</td>'+
-             '<td class="num">'+fm(r.tienTT)+'</td>'+
-             '<td class="num"><div class="bar-cell"><span>'+fp(r.pct,0)+'%</span>'+
-               '<span class="mini"><i class="'+mc+'" style="width:'+Math.min(r.pct,100)+'%"></i></span></div></td>'+
-             '<td class="l"><span class="tag '+st[0]+'">'+st[1]+'</span></td></tr>';
+          var sub='ĐG dự toán '+fq(r.dgDT)+(r.dgDC?(' · ĐG mua '+fq(r.dgDC)):'');
+          h+=nrow(cls,r.code,'<span class="tg" data-tg="'+r.code+'"><i class="ti ti-chevron-right"></i>'+r.name+'</span>',
+                  null,r.dvt,r.hm,
+                  MZ?r.tienDT:r.klDT, MZ?r.tienDC:r.klDC, MZ?r.tienTT:r.klTT,
+                  MZ?(r.tienDT-r.tienDC):(r.klDT-r.klDC), MZ?(r.klCho*r.dgDT):r.klCho,
+                  r.pct,st,false,sub);
           r.pu.forEach(function(q){
             var wait=q[7]==='wait';
-            h+='<tr class="lv3 c-P'+pk+' c-'+hkey+' c-'+r.code+'">'+
-               '<td class="l code"><span class="vind"></span><a class="lnk" href="#">'+q[0]+'</a></td>'+
-               '<td class="l"><span class="vind"></span><a class="lnk" href="#" title="Mở đơn mua trên Base">'+
-                 (wait?'Đơn chờ duyệt ':'Đơn mua ')+'ngày '+q[1]+' <i class="ti ti-external-link"></i></a>'+
-                 '<span style="color:'+T.slate2+'"> · '+q[4]+'</span></td>'+
-               '<td class="l">—</td><td class="l">'+r.dvt+'</td>'+
-               '<td class="num">—</td><td class="num">—</td>'+
-               '<td class="num">'+(wait?'—':fq(q[5]))+'</td>'+
-               '<td class="num" style="color:'+T.violet+'">'+(wait?('+'+fq(q[5])):'—')+'</td>'+
-               '<td class="num">'+(wait?'—':fq(q[8]))+'</td><td class="num">—</td>'+
-               '<td class="num">—</td><td class="num">—</td><td class="num">'+fq(q[6])+'</td>'+
-               '<td class="num">—</td><td class="num">—</td>'+
-               '<td class="num">'+(wait?'—':fm(q[5]*q[6]))+'</td>'+
-               '<td class="num">'+(wait?'—':fm(q[8]*q[6]))+'</td>'+
-               '<td class="num">—</td>'+
-               '<td class="l"><span class="tag '+(wait?'t-warn':'t-idle')+'">'+(wait?'Chờ duyệt':r.hm)+'</span></td></tr>';
+            var nm='<a class="lnk" href="#" title="Mở đơn mua trên Base">'+(wait?'Đơn chờ duyệt ':'Đơn mua ')+
+                   'ngày '+q[1]+' <i class="ti ti-external-link"></i></a><span style="color:'+T.slate2+'"> · '+q[4]+'</span>';
+            h+=nrow('lv3 c-P'+pk+' c-'+hkey+' c-'+r.code,q[0],nm,null,r.dvt,null,
+                    null, wait?null:(MZ?q[5]*q[6]:q[5]), wait?null:(MZ?q[8]*q[6]:q[8]),
+                    null, wait?(MZ?q[5]*q[6]:q[5]):0, null,
+                    [wait?'t-warn':'t-idle', wait?'Chờ duyệt':'Đã duyệt'],true,null);
           });
         });
       });
     });
     var tHD=0,tDT=0,tDC=0,tTT=0;
     rows.forEach(function(r){tHD+=r.tienHD;tDT+=r.tienDT;tDC+=r.tienDC;tTT+=r.tienTT;});
-    if(!rows.length) h='<tr><td class="l" colspan="19" style="text-align:center;color:'+T.slate2+';padding:18px">Không có vật tư nào khớp bộ lọc</td></tr>';
+    if(!rows.length) h='<tr><td class="l" colspan="11" style="text-align:center;color:'+T.slate2+';padding:18px">Không có vật tư nào khớp bộ lọc</td></tr>';
     else h+='<tr class="tot"><td class="l">Σ</td><td class="l">TỔNG CỘNG '+rows.length+' ĐẦU MỤC</td>'+
-       '<td class="l">—</td><td class="l">—</td>'+
-       '<td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td>'+
-       '<td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td>'+
-       '<td class="num">'+fm(tHD)+'</td><td class="num">'+fm(tDT)+'</td><td class="num">'+fm(tDC)+'</td>'+
-       '<td class="num">'+fm(tTT)+'</td>'+
+       '<td class="l">—</td><td class="l">tr đ</td>'+
+       '<td class="num">'+fm(tDT)+'</td><td class="num">'+fm(tDC)+'</td><td class="num">'+fm(tTT)+'</td>'+
+       '<td class="num">'+fm(tDT-tDC)+'</td>'+
+       '<td class="num">+'+fm(V.tCho)+'</td>'+
        '<td class="num">'+fp(tDT?tDC/tDT*100:0,1)+'%</td><td class="l">—</td></tr>';
     document.getElementById('matBody').innerHTML=h;
-    setTxt('matNote','Bảng nhóm sẵn bốn cấp: dự án → hạng mục → đầu mục vật tư → đơn mua. '+
-      'Bốn lớp tiền chạy song song: hợp đồng, dự toán, dự chi là đơn đã duyệt, thực tế là khối lượng đã giao. '+
-      'Cột chờ duyệt tách riêng, chưa tính vào dự chi. Khối lượng chỉ cộng trong cùng đơn vị tính nên các dòng nhóm chỉ tổng hợp theo tiền.');
+    setTxt('matNote','Dự toán · Đã order · Đã nhận · Còn lại = dự toán − đã order · Chờ duyệt: chưa tính vào đã order. '+
+      'Dòng nhóm luôn quy ra tiền vì các đầu mục khác đơn vị tính. '+
+      'Danh mục vật tư và khối lượng dự toán lấy tự động từ bảng dự toán của dự án: bên dự toán thêm dòng hoặc đổi khối lượng thì bảng này cập nhật theo. '+
+      'Luồng khối lượng: dự toán → chờ duyệt order → đã order → đã mua và đã nhận → còn lại. '+
+      'Cột "Còn lại" âm nghĩa là đã order vượt định mức. Khối lượng chỉ cộng trong cùng đơn vị tính nên dòng nhóm chỉ tổng hợp theo tiền.');
     var nL={},nH={};V.rows.forEach(function(r){nL[r.loai]=1;nH[r.hm]=1;});
     setTxt('m1',String(V.rows.length));
     setTxt('m1s',ordP.length+' dự án · '+Object.keys(nH).length+' hạng mục · '+Object.keys(nL).length+' loại vật tư');
@@ -781,31 +771,38 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
     setTxt('m4s',V.nWait+' đầu mục mới chỉ có đơn chờ duyệt');
     bindTg();applyCollapse();
 
-    /* ---- bốn lớp theo hạng mục ---- */
-    var byHM={},ordH=[];
+    /* ---- sản lượng cung cấp theo nhà cung cấp và theo tháng ---- */
+    var byNM={},nccSet={};
     V.rows.forEach(function(r){
-      if(!byHM[r.hm]){byHM[r.hm]={hd:0,dt:0,dc:0,tt:0};ordH.push(r.hm);}
-      var H=byHM[r.hm];H.hd+=r.tienHD;H.dt+=r.tienDT;H.dc+=r.tienDC;H.tt+=r.tienTT;
+      r.pu.forEach(function(p){
+        if(p[7]!=='ok') return;
+        var mi=monthIdx(p[1]); if(mi<0) return;
+        var n=p[4]; nccSet[n]=(nccSet[n]||0)+p[8]*p[6];
+        byNM[n]=byNM[n]||[0,0,0,0,0,0];
+        byNM[n][mi]+=p[8]*p[6];
+      });
     });
-    ordH.sort();
+    var topN=Object.keys(nccSet).sort(function(a,b){return nccSet[b]-nccSet[a];}).slice(0,7);
+    var CC7=[T.deep,T.amber,T.teal,T.violet,T.aqua,'#7FCBD5','#B08A3E'];
     mk('hmChart',{
-      tooltip:tip,legend:{data:['Hợp đồng','Dự toán','Dự chi đã duyệt','Thực tế mua'],bottom:0,
-        itemWidth:11,itemHeight:11,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
-      grid:{left:8,right:16,top:20,bottom:46,containLabel:true},
-      xAxis:{type:'category',data:ordH,axisLine:{lineStyle:{color:T.line}},axisTick:{show:false},
-        axisLabel:{color:T.slate,fontSize:11.5,interval:0,fontFamily:FONT,triggerEvent:true}},
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#0A2430',borderWidth:0,
+        textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
+        formatter:function(ps){
+          var o='<b>'+ps[0].name+'</b>',t=0;
+          ps.slice().sort(function(x,y){return y.value-x.value;}).forEach(function(x){
+            if(x.value>0){o+='<br/>'+x.marker+x.seriesName+': '+fm(x.value)+' tr';t+=x.value;}});
+          return o+'<br/><b>Cộng: '+fm(t)+' tr đ</b>';}},
+      legend:{type:'scroll',bottom:0,itemWidth:11,itemHeight:11,
+        textStyle:{fontFamily:FONT,fontSize:11,color:T.slate}},
+      grid:{left:8,right:16,top:20,bottom:52,containLabel:true},
+      xAxis:Object.assign({type:'category',data:MO,
+        axisLabel:{color:T.slate,fontSize:11.5,fontFamily:FONT,triggerEvent:true}},axis),
       yAxis:Object.assign({type:'value',name:'tr đ',nameTextStyle:{color:T.slate2,fontSize:11}},axis),
-      series:[
-        {name:'Hợp đồng',type:'bar',barGap:'-100%',barWidth:'80%',itemStyle:{color:'#EEF4F2',borderRadius:[3,3,0,0]},
-         data:ordH.map(function(k){return Math.round(byHM[k].hd);})},
-        {name:'Dự toán',type:'bar',barGap:'-100%',barWidth:'58%',itemStyle:{color:'#DCE7EA',borderRadius:[3,3,0,0]},
-         data:ordH.map(function(k){return Math.round(byHM[k].dt);})},
-        {name:'Dự chi đã duyệt',type:'bar',barGap:'-100%',barWidth:'38%',itemStyle:{color:T.amber,borderRadius:[3,3,0,0]},
-         data:ordH.map(function(k){var d=byHM[k];return {value:Math.round(d.dc),
-           itemStyle:{color:d.dc>d.dt?T.red:T.amber}};})},
-        {name:'Thực tế mua',type:'bar',barWidth:'20%',itemStyle:{color:T.deep,borderRadius:[3,3,0,0]},
-         data:ordH.map(function(k){return Math.round(byHM[k].tt);})}
-      ]},function(i){setFilter('hm',ordH[i]);},ordH,'x');
+      series:topN.map(function(n,i){
+        return {name:n,type:'bar',stack:'ncc',barWidth:'52%',
+          itemStyle:{color:CC7[i%CC7.length],borderRadius:i===topN.length-1?[3,3,0,0]:0},
+          data:(byNM[n]||[0,0,0,0,0,0]).map(function(v){return Math.round(v);})};
+      })},function(i){setFilter('month',i);},MO,'x');
 
     /* ---- chênh lệch tiền tách theo nguyên nhân ---- */
     var gi=V.rows.map(function(r){
@@ -1060,7 +1057,7 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
   document.getElementById('fTo').addEventListener('change',function(){
     ST.m1=Math.max(dateToMonth(this.value,true),ST.m0);syncDates();renderAll();});
   document.getElementById('fReset').addEventListener('click',function(){
-    ST={proj:'all',hm:'all',loai:'all',dvt:'all',m0:0,m1:5,f:'all',q:'',qp:'',bud:'all'};
+    ST={proj:'all',hm:'all',loai:'all',dvt:'all',m0:0,m1:5,f:'all',q:'',qp:'',bud:'all',money:false};
     ['fProj','fHM','fLoai','fDvt'].forEach(function(id){document.getElementById(id).value='all';});
     document.getElementById('q').value='';document.getElementById('qp').value='';
     var c=document.querySelector('.pill[data-f].on');if(c)c.classList.remove('on');
@@ -1072,6 +1069,13 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
       var c=document.querySelector('.pill[data-f].on');if(c)c.classList.remove('on');
       this.classList.add('on');ST.f=this.getAttribute('data-f');renderAll();});
   }
+  document.getElementById('btnMoney').addEventListener('click',function(){
+    ST.money=!ST.money;
+    this.className='pill'+(ST.money?' on':'');
+    this.innerHTML='<i class="ti ti-currency-dong"></i> '+(ST.money?'Xem theo khối lượng':'Xem theo tiền');
+    var th=document.getElementById('thDvt'); if(th) th.textContent=ST.money?'Đơn vị':'ĐVT';
+    renderP2();
+  });
   document.getElementById('q').addEventListener('input',function(){ST.q=this.value.toLowerCase().trim();renderAll();});
   document.getElementById('qp').addEventListener('input',function(){ST.qp=this.value.toLowerCase().trim();renderP3();});
   var bp=document.querySelectorAll('.pill[data-b]');
