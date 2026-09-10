@@ -123,6 +123,8 @@ table{width:100%;border-collapse:collapse;font-size:12px}
 thead th{background:#F0F5F6;color:var(--slate);font-weight:500;text-align:right;padding:9px 10px;position:sticky;top:0;white-space:nowrap;border-bottom:1px solid var(--line);font-size:11px;z-index:3}
 thead th:first-child,thead th.l{text-align:left}
 thead th.gR{background:#E6EEE4}
+thead th.gK{background:#F1EFE6}
+body:not(.showq) .qcol{display:none}
 thead th.gA{background:#E4EFF0}thead th.gB{background:#FBF1DE}thead th.gC{background:#E9E6FA}
 tbody td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line-2);white-space:nowrap;font-variant-numeric:tabular-nums}
 tbody td:first-child,tbody td.l{text-align:left;white-space:normal}
@@ -136,6 +138,7 @@ tr.dim td b{color:var(--slate);font-weight:500}
   padding:2px 9px;border-radius:6px;font-size:11px}
 .dimicon{color:var(--violet);font-size:14px;margin-right:5px;vertical-align:-2px}
 tr.lv4 td{background:#FCFDFD;font-size:11.5px;color:var(--slate);border-bottom:1px dashed var(--line-2)}
+.detail{font-size:10.5px;color:var(--slate-2);padding-left:20px;margin-top:3px}
 tr.lv4 td:first-child{padding-left:16px}
 .vind{display:inline-block;width:34px}
 tr.tot td{background:var(--ink);color:#fff;font-weight:600;border:0}
@@ -257,30 +260,30 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
 <div class="page active" id="p1">
   <div class="grid g5" style="margin-bottom:16px">
     <div class="kpi k-green">
-      <div class="lbl"><i class="ti ti-file-dollar"></i> Giá trị hợp đồng</div>
+      <div class="lbl"><i class="ti ti-file-dollar"></i> Lớp 1 · Giá trị HĐ</div>
       <div class="val" id="k0">—</div><div class="sub" id="k0s">—</div>
     </div>
     <div class="kpi">
-      <div class="lbl"><i class="ti ti-target"></i> Dự toán</div>
+      <div class="lbl"><i class="ti ti-target"></i> Lớp 2 · Giá trị dự toán</div>
       <div class="val" id="k1">—</div><div class="sub" id="k1s">—</div>
     </div>
     <div class="kpi k-amber">
-      <div class="lbl"><i class="ti ti-stamp"></i> Dự chi đã duyệt</div>
+      <div class="lbl"><i class="ti ti-file-check"></i> Lớp 3 · GT đã thực hiện</div>
       <div class="val" id="k2">—</div><div class="sub" id="k2s">—</div>
     </div>
     <div class="kpi k-violet">
-      <div class="lbl"><i class="ti ti-cash"></i> Thực chi</div>
+      <div class="lbl"><i class="ti ti-hourglass"></i> Lớp 3 · GT chưa thực hiện</div>
       <div class="val" id="k3">—</div><div class="sub" id="k3s">—</div>
     </div>
     <div class="kpi k-red">
-      <div class="lbl"><i class="ti ti-trending-up"></i> Lãi/lỗ dự kiến</div>
+      <div class="lbl"><i class="ti ti-sum"></i> Tổng CP dự kiến &amp; lãi/lỗ</div>
       <div class="val" id="k5">—</div><div class="sub" id="k5s">—</div>
     </div>
   </div>
 
   <div class="grid g3a" style="margin-bottom:16px">
     <div class="card">
-      <div class="card-h"><div><h3><i class="ti ti-chart-bar"></i> Bốn lớp chi phí theo dự án</h3><p id="projNote">—</p></div></div>
+      <div class="card-h"><div><h3><i class="ti ti-chart-bar"></i> Ba lớp giá trị theo dự án</h3><p id="projNote">—</p></div></div>
       <div id="byProj" class="chart tall"></div>
     </div>
     <div class="card">
@@ -316,10 +319,37 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
     <p class="note">Khoảng trắng còn lại của thanh nền là dư địa còn được duyệt chi. Thanh dự chi chuyển đỏ khi đã vượt dự toán.</p>
   </div>
 
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-h">
+      <div><h3><i class="ti ti-file-dollar"></i> Bảng 1 — Doanh thu và dự toán dự án</h3>
+        <p>Lớp 1 và lớp 2 · quản lý ở cấp dự án</p></div>
+    </div>
+    <div class="tbl-scroll" style="max-height:420px">
+      <table>
+        <thead>
+          <tr>
+            <th class="l" rowspan="2">Mã</th><th class="l" rowspan="2">Dự án / hạng mục công việc</th>
+            <th class="gR" colspan="2">DOANH THU DỰ ÁN</th>
+            <th class="gA" colspan="3">DỰ TOÁN</th>
+          </tr>
+          <tr>
+            <th class="gR">HĐ ký với khách hàng</th><th class="gR">Giá trị quyết toán</th>
+            <th class="gA">Ban đầu</th><th class="gA">Điều chỉnh đã duyệt</th><th class="gA">Hiện hành</th>
+          </tr>
+        </thead>
+        <tbody id="revBody"></tbody>
+      </table>
+    </div>
+    <p class="note" id="revNote"></p>
+  </div>
+
   <div class="card">
     <div class="card-h">
-      <div><h3><i class="ti ti-table"></i> Bảng dự toán — dự chi — thực chi</h3><p>Theo khung báo cáo hệ số dự án. Bấm mũi tên để mở: nhóm → hạng mục → mã chi tiết → từng phiếu</p></div>
-      <div style="display:flex;gap:8px">
+      <div><h3><i class="ti ti-table"></i> Bảng 2 — Báo cáo hệ số dự án</h3>
+        <p>Lớp 2 và lớp 3 · mở theo: nhóm → hạng mục → mã dự toán → công việc</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="pill" id="btnPct"><i class="ti ti-percentage"></i> Xem theo tỷ lệ %</button>
+        <button class="pill" id="btnQty"><i class="ti ti-ruler-measure"></i> Xem khối lượng &amp; đơn giá</button>
         <button class="pill" id="expandAll"><i class="ti ti-chevrons-down"></i> Mở tất cả</button>
         <button class="pill" id="collapseAll"><i class="ti ti-chevrons-up"></i> Thu gọn</button>
       </div>
@@ -328,17 +358,22 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
       <table>
         <thead>
           <tr>
-            <th class="l" rowspan="2">Mã</th><th class="l" rowspan="2">Hạng mục</th>
-            <th class="gR" rowspan="2">HĐ ký với<br>khách hàng</th>
-            <th class="gA" colspan="3">DỰ TOÁN</th>
-            <th class="gB" colspan="3">DỰ CHI &amp; THỰC CHI</th>
-            <th class="gC" colspan="4">DỰ KIẾN HOÀN THÀNH</th>
-            <th class="l" rowspan="2">Trạng thái</th>
+            <th class="l" rowspan="2">TT</th><th class="l" rowspan="2">Hạng mục</th>
+            <th class="l" rowspan="2">Chi tiết</th>
+            <th class="gK qcol" colspan="5">KHỐI LƯỢNG &amp; ĐƠN GIÁ</th>
+            <th class="gA" rowspan="2">Dự toán<br>hiện hành</th>
+            <th class="gC" colspan="3">THỰC TẾ</th>
+            <th class="gB" colspan="3">THEO DÕI</th>
           </tr>
           <tr>
-            <th class="gA">Ban đầu</th><th class="gA">Điều chỉnh</th><th class="gA">Hiện hành</th>
-            <th class="gB">Dự chi đã duyệt</th><th class="gB">Đề xuất chờ duyệt</th><th class="gB">Thực chi</th>
-            <th class="gC">Tổng CP dự kiến</th><th class="gC">Còn lại</th><th class="gC">Vượt dự toán</th><th class="gC">% sử dụng</th>
+            <th class="gK qcol">ĐVT</th><th class="gK qcol">KL dự toán</th><th class="gK qcol">ĐG dự toán</th>
+            <th class="gK qcol">KL đã chốt</th><th class="gK qcol">ĐG đã chốt</th>
+            <th class="gC" title="Giá trị đã ký hợp đồng với nhà cung cấp hoặc nhà thầu phụ">GT đã thực hiện</th>
+            <th class="gC" title="Phần chưa ký hợp đồng NCC/NTP, tạm tính theo ngân sách">GT chưa thực hiện</th>
+            <th class="gC">Tổng chi phí</th>
+            <th class="gB" title="Chỉ phục vụ cảnh báo, không cộng vào tổng chi phí">Đề xuất chờ duyệt</th>
+            <th class="gB" title="Số dương là tiết kiệm, số âm là vượt ngân sách">Tiết kiệm / (Vượt)</th>
+            <th class="gB l">Trạng thái</th>
           </tr>
         </thead>
         <tbody id="treeBody"></tbody>
@@ -506,6 +541,7 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
     return c;}
   function resizeAll(){for(var k in charts){if(charts[k])charts[k].resize();}}
   function fm(v){return Math.round(v||0).toLocaleString('vi-VN');}
+  function fq(v){return (Math.round((v||0)*1000)/1000).toLocaleString('vi-VN',{maximumFractionDigits:3});}
   function fb(v){return ((v||0)/1000).toLocaleString('vi-VN',{minimumFractionDigits:2,maximumFractionDigits:2});}
   function fp(v,d){return (v||0).toLocaleString('vi-VN',{minimumFractionDigits:d,maximumFractionDigits:d});}
   var axis={axisLine:{lineStyle:{color:T.line}},axisTick:{show:false},
@@ -534,7 +570,51 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
     ['B4.1','Chi phí quản lý doanh nghiệp',3415,0,1981,1981],
     ['B5.1','Dự phòng phí',785,0,849,475]
   ];
-  var GN={A:'A. GIÁ GỐC',B:'B. CHI PHÍ CHUNG VÀ QUẢN LÝ',
+  /* Công việc/vật tư chi tiết dưới mỗi mã dự toán:
+     tên · ĐVT · khối lượng dự toán · đơn giá dự toán · khối lượng đã chốt · đơn giá đã chốt */
+  var SUB={
+    'A1.1':[["Ép cọc BTCT D300", "m", 3445.71, 0.7, 3445.71, 0.6755],["Bê tông, cốt thép đài giằng", "m³", 790.71, 1.83, 790.71, 1.8703],["Công trình tạm, lán trại", "khoản", 2.93, 179.8635, 2.93, 176.2662]],
+    'A1.2':[["Bê tông thương phẩm M300", "m³", 3113.66, 1.83, 2428.65, 1.8593],["Thép thanh vằn CB400", "tấn", 379.86, 20.9998, 288.69, 21.8398],["Ván khuôn thép định hình", "m²", 4901.61, 0.62, 4901.61, 0.6088],["Chống thấm, hoàn thiện bể", "m²", 3674.19, 0.62, 1396.19, 0.6615]],
+    'A1.3':[["Kết cấu và bao che nhà", "m²", 6427.42, 0.62, 4306.37, 0.6076],["Hoàn thiện, điện nước nhà", "m²", 3940.32, 0.62, 1497.32, 0.6312]],
+    'A1.4':[["Sân đường, hàng rào", "m²", 6511.29, 0.62, 3385.87, 0.607],["Cấp thoát nước ngoài nhà", "m", 4175.71, 0.7, 2254.88, 0.6867]],
+    'A2.1':[["Bơm và máy thổi khí", "bộ", 131.19, 52.0009, 131.19, 50.4409],["Thiết bị tách rác, ép bùn", "bộ", 43.73, 52.0009, 29.3, 54.2369],["Đường ống, van, phụ kiện", "bộ", 49.98, 52.0008, 32.99, 50.9088],["Điện, tủ điều khiển, cáp", "bộ", 87.44, 52.0014, 52.46, 52.9894]],
+    'A2.2':[["Nhân công lắp đặt cơ điện", "công", 6427.5, 0.8, 2828.1, 0.8136]],
+    'A2.3':[["Vận chuyển VTTB về công trường", "chuyến", 61.83, 14.2002, 61.83, 14.9102]],
+    'A3.1':[["Hồ sơ thiết kế bản vẽ thi công", "gói", 0.86, 497.6744, 0.86, 497.6744]],
+    'A3.2':[["Giấy phép môi trường, PCCC", "gói", 0.97, 501.0309, 0.97, 501.0309]],
+    'A3.3':[["Hoá chất, bùn giống, vận hành thử", "gói", 2.17, 499.5392, 0.61, 499.5392]],
+    'B1.1':[["Ban chỉ huy công trường", "tháng", 6.79, 319.8822, 4.62, 312.5249],["Văn phòng, container, VPP", "tháng", 3.19, 320.3762, 2.17, 313.0075]],
+    'B2.1':[["Chi phí bán hàng, tiếp thị", "gói", 2.14, 499.5327, 1.58, 499.5327]],
+    'B3.1':[["Chi phí bảo hành năm thứ nhất", "gói", 1.58, 500.6329, 0.0, 0]],
+    'B4.1':[["Phân bổ chi phí quản lý DN", "tháng", 10.67, 320.0562, 6.19, 320.0562]],
+    'B5.1':[["Dự phòng xử lý phát sinh", "gói", 1.57, 500.0, 1.57, 541.0]]
+  };
+  /* Giá trị quyết toán đã được hai bên xác nhận (null nếu chưa quyết toán) */
+  /* Quyết toán với chủ đầu tư — theo dự án, không phân bổ xuống hạng mục chi phí.
+     tăng: phát sinh tăng đã được duyệt · giảm: giảm trừ khi quyết toán · null = chưa quyết toán */
+  var QTP={KD:null,DH:{tang:620,giam:180},PH:null,TH:null};
+  function qtProject(){
+    var qt=0,dt=0,nQT=0,nAll=0;
+    for(var k in PROJ){
+      if(ST.proj!=='all'&&ST.proj!==k) continue;
+      nAll++;
+      var q=QTP[k];
+      if(q){nQT++;var v=PROJ[k].rev+q.tang-q.giam;qt+=v;dt+=v;}
+      else dt+=PROJ[k].rev;
+    }
+    return {qt:qt,dt:dt,nQT:nQT,nAll:nAll,full:nQT===nAll&&nAll>0};
+  }
+  var CT={A:'Toàn bộ chi phí trực tiếp của dự án',B:'Chi phí chung và quản lý phân bổ',
+    A1:'VT + NC phần xây dựng',A2:'VTTB, nhân công lắp đặt, vận chuyển',A3:'Thiết kế, giấy phép, vận hành thử',
+    'A1.1':'Cọc, móng, công trình tạm','A1.2':'Bê tông, thép, cốp pha, chống thấm',
+    'A1.3':'Kết cấu và hoàn thiện nhà','A1.4':'Sân đường, hạ tầng, hồ sự cố',
+    'A2.1':'Mua VTTB','A2.2':'Thi công lắp đặt VTTB','A2.3':'Vận chuyển VTTB về công trường',
+    'A3.1':'Hồ sơ thiết kế','A3.2':'Giấy phép môi trường, PCCC','A3.3':'Vận hành thử, chuyển giao',
+    B1:'Lương DA, container, VPP',B2:'Sale, marketing, quà tặng',B3:'Test định kỳ, bảo hành thiết bị',
+    B4:'Vận hành khối văn phòng',B5:'Dự phòng xử lý phát sinh',
+    'B1.1':'Lương DA, container, VPP','B2.1':'Sale, marketing, quà tặng',
+    'B3.1':'Test định kỳ, bảo hành thiết bị','B4.1':'Vận hành khối văn phòng','B5.1':'Dự phòng xử lý phát sinh'};
+  var GN={A:'A. GIÁ VỐN',B:'B. CHI PHÍ CHUNG VÀ QUẢN LÝ',
     A1:'Chi phí xây dựng (vật tư + nhân công)',A2:'Chi phí cơ điện (ME)',A3:'Chi phí khác',
     B1:'Chi phí quản lý tại dự án',B2:'Chi phí bán hàng',B3:'Chi phí bảo hành, sau bán',
     B4:'Chi phí quản lý doanh nghiệp',B5:'Dự phòng phí'};
@@ -620,7 +700,7 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
   var MFROM=['01/12/2024','01/01/2025','01/02/2025','01/03/2025','01/04/2025','01/05/2025'];
   var MTO=['31/12/2024','31/01/2025','28/02/2025','31/03/2025','30/04/2025','19/05/2025'];
 
-  var ST={proj:'all',cost:'all',grp:'all',stt:'all',m0:0,m1:5,pst:'all',pq:'',bud:'all'};
+  var ST={proj:'all',cost:'all',grp:'all',stt:'all',m0:0,m1:5,pst:'all',pq:'',bud:'all',showQ:false,showP:false};
   /* hệ số thời gian: dự chi và thực chi tính lũy kế đến hết tháng cuối của khoảng lọc */
   function tShare(f){
     if(f!=='du'&&f!=='tc') return 1;
@@ -731,6 +811,8 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
     });
     return v;
   }
+  var NSALL2=0,GALL=0,DCALL=0;
+  (function(){LEAF.forEach(function(r){GALL+=r[2];DCALL+=r[3];});NSALL2=GALL+DCALL;})();
   var VIEW=null,VIEWG=null;
   function agg(){
     var v=VIEW||buildView();
@@ -745,17 +827,19 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
   /* ===== TRANG 1 ===== */
   function renderP1(){
     var a=agg();
+    var L3=layer3();
     setHtml('k0',fb(a.rev)+' <span>tỷ đ</span>');
-    setTxt('k0s','Giá ký với chủ đầu tư, trước VAT');
+    setTxt('k0s','Giá trị đầu ra ký với chủ đầu tư, trước VAT');
     setHtml('k1',fb(a.ns)+' <span>tỷ đ</span>');
-    setHtml('k1s','Ban đầu '+fb(a.g)+' tỷ · điều chỉnh <b style="color:'+T.violet+'">+'+fm(a.dc)+' tr</b>');
-    setHtml('k2',fb(a.du)+' <span>tỷ đ</span>');
-    setHtml('k2s','<span class="delta d-warn">'+fp(a.du/a.ns*100,1)+'%</span> dự toán · chờ duyệt '+fm(a.pend)+' tr');
-    setHtml('k3',fb(a.tc)+' <span>tỷ đ</span>');
-    setHtml('k3s','<span class="delta d-up">'+fp(a.tc/a.ns*100,1)+'%</span> · đã duyệt nhưng chưa thực chi '+fb(a.du-a.tc)+' tỷ');
-    var pnl=a.rev-a.eac, pct=pnl/a.rev*100, tgt=a.rev-a.g, tpct=tgt/a.rev*100;
-    setHtml('k5',fb(pnl)+' <span>tỷ đ</span>');
-    setHtml('k5s','Tổng CP dự kiến <b>'+fb(a.eac)+' tỷ</b> · biên '+fp(pct,2)+'% vs mục tiêu '+fp(tpct,2)+'%');
+    setHtml('k1s','Ngân sách dự kiến · ban đầu '+fb(a.g)+' tỷ, điều chỉnh <b style="color:'+T.violet+'">+'+fm(a.dc)+' tr</b>');
+    setHtml('k2',fb(L3.ck)+' <span>tỷ đ</span>');
+    setHtml('k2s','Đã ký/chốt với NCC hoặc nhà thầu phụ · <span class="delta d-warn">'+
+      fp(L3.eac?L3.ck/L3.eac*100:0,1)+'%</span> tổng CP dự kiến');
+    setHtml('k3',fb(L3.cc)+' <span>tỷ đ</span>');
+    setHtml('k3s','Phần chưa ký NCC/NTP, tạm tính theo dự toán · chờ duyệt '+fm(a.pend)+' tr');
+    var pnl=a.rev-L3.eac, pct=a.rev?pnl/a.rev*100:0, tgt=a.rev-a.ns, tpct=a.rev?tgt/a.rev*100:0;
+    setHtml('k5',fb(L3.eac)+' <span>tỷ đ</span>');
+    setHtml('k5s','Lãi dự kiến <b>'+fb(pnl)+' tỷ ('+fp(pct,2)+'%)</b> · theo dự toán '+fb(tgt)+' tỷ ('+fp(tpct,2)+'%)');
 
     var pk=['KD','DH','PH','TH'];
     var PRT=portion();
@@ -764,47 +848,50 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
     var pNS=pk.map(function(k){return +((PROJ[k].g+PROJ[k].dc)*cn/1000).toFixed(2);});
     var pDU=pk.map(function(k){return +(PROJ[k].du*cd/1000).toFixed(2);});
     var pTC=pk.map(function(k){return +(PROJ[k].tc*ct/1000).toFixed(2);});
+    /* tách lớp 3 theo dự án: tỷ trọng đã ký lấy từ tổng thể, phần còn lại tính theo dự toán */
+    var L3p=layer3(), rCK=L3p.eac?L3p.ck/L3p.eac:0;
+    var pEAC=pk.map(function(k,ix){return +(pNS[ix]*(L3p.eac/(VIEW?VIEW.tot.ns:1))).toFixed(2);});
+    var pCK2=pEAC.map(function(v){return +(v*rCK).toFixed(2);});
+    var pCC=pEAC.map(function(v,ix){return +(v-pCK2[ix]).toFixed(2);});
     var nOverP=0;pDU.forEach(function(v,ix){if(v>pNS[ix])nOverP++;});
     mk('byProj',{
       tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#0A2430',borderWidth:0,
         textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
         formatter:function(ps){
-          var ix=ps[0].dataIndex,ns=pNS[ix],du=pDU[ix],tc=pTC[ix];
-          return '<b>'+PROJ[pk[ix]].n+'</b><br/>Hợp đồng: '+fp(pRV[ix],2)+' tỷ đ<br/>Dự toán: '+fp(ns,2)+' tỷ đ<br/>Dự chi: '+fp(du,2)+' tỷ ('+Math.round(du/ns*100)+'%)'+
-                 '<br/>Thực chi: '+fp(tc,2)+' tỷ ('+Math.round(tc/ns*100)+'%)'+
-                 (du>ns?'<br/><span style="color:#FF9E9E">Dự chi vượt dự toán '+fm((du-ns)*1000)+' tr đ</span>':'');}},
-      legend:{data:['Giá trị hợp đồng','Dự toán','Dự chi đã duyệt','Thực chi'],bottom:0,itemWidth:11,itemHeight:11,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
+          var ix=ps[0].dataIndex,ns=pNS[ix];
+          return '<b>'+PROJ[pk[ix]].n+'</b>'+
+                 '<br/>Lớp 1 · Giá trị HĐ: '+fp(pRV[ix],2)+' tỷ'+
+                 '<br/>Lớp 2 · Giá trị dự toán: '+fp(ns,2)+' tỷ'+
+                 '<br/>Lớp 3 · GT đã thực hiện: '+fp(pCK2[ix],2)+' tỷ'+
+                 '<br/>Lớp 3 · GT chưa thực hiện: '+fp(pCC[ix],2)+' tỷ'+
+                 '<br/><b>Tổng CP dự kiến: '+fp(pEAC[ix],2)+' tỷ</b>'+
+                 (pEAC[ix]>ns?('<br/><span style="color:#FF9E9E">Vượt dự toán '+fp(pEAC[ix]-ns,2)+' tỷ</span>')
+                             :('<br/>Tiết kiệm '+fp(ns-pEAC[ix],2)+' tỷ'));}},
+      legend:{data:['Lớp 1 · Giá trị HĐ','Lớp 2 · Giá trị dự toán','Lớp 3 · GT đã thực hiện','Lớp 3 · GT chưa thực hiện'],bottom:0,itemWidth:11,itemHeight:11,textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
       grid:{left:8,right:16,top:22,bottom:46,containLabel:true},
       xAxis:{type:'category',data:pk.map(function(k){return PROJ[k].n;}),
         axisLine:{lineStyle:{color:T.line}},axisTick:{show:false},
         axisLabel:{color:T.slate,fontSize:11.5,interval:0,fontFamily:FONT,triggerEvent:true}},
       yAxis:Object.assign({type:'value',name:'tỷ đ',nameTextStyle:{color:T.slate2,fontSize:11}},axis),
       series:[
-        {name:'Giá trị hợp đồng',type:'bar',barGap:'-100%',barWidth:'80%',
-         itemStyle:{color:'#EEF4F2',borderRadius:[3,3,0,0]},
+        {name:'Lớp 1 · Giá trị HĐ',type:'bar',barGap:'-100%',barWidth:'80%',
+         itemStyle:{color:'#EDF3F1',borderRadius:[3,3,0,0]},
          data:pRV.map(function(v,ix){return {value:v,itemStyle:{opacity:dimP(pk[ix])}};})},
-        {name:'Dự toán',type:'bar',barGap:'-100%',barWidth:'58%',
-         itemStyle:{color:'#DCE7EA',borderRadius:[3,3,0,0]},
+        {name:'Lớp 2 · Giá trị dự toán',type:'bar',barGap:'-100%',barWidth:'58%',
+         itemStyle:{color:'#C2D6DC',borderRadius:[3,3,0,0]},
          data:pNS.map(function(v,ix){return {value:v,itemStyle:{opacity:dimP(pk[ix])}};}),
-         markPoint:{silent:true,symbol:'rect',symbolSize:[40,3],itemStyle:{color:T.ink},
-           label:{show:false},
-           data:pNS.map(function(v,ix){return pDU[ix]>v?{coord:[ix,v]}:null;}).filter(Boolean)}},
-        {name:'Dự chi đã duyệt',type:'bar',barGap:'-100%',barWidth:'38%',
+         label:{show:true,position:'top',fontFamily:FONT,fontSize:10.5,color:T.slate2,
+           formatter:function(pp){return fp(pNS[pp.dataIndex],2);}}},
+        {name:'Lớp 3 · GT đã thực hiện',type:'bar',stack:'L3',barGap:'-100%',barWidth:'38%',
          itemStyle:{color:T.amber,borderRadius:[3,3,0,0]},
-         data:pDU.map(function(v,ix){
-           var over=v>pNS[ix];
-           return {value:v,itemStyle:{opacity:dimP(pk[ix]),color:over?T.red:T.amber}};}),
-         label:{show:true,position:'top',fontFamily:FONT,fontSize:11,fontWeight:600,color:T.red,
-           formatter:function(pp){var ix=pp.dataIndex;
-             if(pDU[ix]<=pNS[ix]) return '';
-             var d=pDU[ix]-pNS[ix];
-             return 'vượt '+(d<1?(fm(d*1000)+' tr'):(fp(d,2)+' tỷ'));}}},
-        {name:'Thực chi',type:'bar',barWidth:'20%',
-         itemStyle:{color:T.deep,borderRadius:[3,3,0,0]},
-         data:pTC.map(function(v,ix){return {value:v,itemStyle:{opacity:dimP(pk[ix])}};})}
+         data:pCK2.map(function(v,ix){return {value:v,itemStyle:{opacity:dimP(pk[ix])}};})},
+        {name:'Lớp 3 · GT chưa thực hiện',type:'bar',stack:'L3',barWidth:'38%',
+         itemStyle:{color:'#E3C08A',borderRadius:[3,3,0,0]},
+         data:pCC.map(function(v,ix){return {value:v,itemStyle:{opacity:dimP(pk[ix])}};})}
       ]},function(i){setFilter('proj',pk[i]);},pk.map(function(k){return PROJ[k].n;}),'x');
-    setHtml('projNote','Đơn vị: tỷ đồng · '+(ST.cost==='all'?'toàn bộ loại chi phí':'chỉ '+COST[ST.cost].n)+
-      (nOverP?' · <b style="color:'+T.red+'">'+nOverP+' dự án có dự chi vượt dự toán</b>':''));
+    setHtml('projNote','Đơn vị: tỷ đồng · thanh nhạt ngoài cùng là giá trị HĐ · thanh xanh là dự toán, ghi số phía trên · '+
+      'thanh cam lồng bên trong là chi phí dự kiến, gồm phần đã thực hiện (cam đậm) và phần chưa thực hiện (cam nhạt)'+
+      (ST.cost==='all'?'':' · chỉ '+COST[ST.cost].n));
 
     var pf=(ST.proj==='all')?1:PROJ[ST.proj].ns/TOT.ns;
     setTxt('costNote','Tổng '+fb(TOT.ns*pf)+' tỷ đ · '+(ST.proj==='all'?'toàn bộ 4 dự án':'dự án '+PROJ[ST.proj].n));
@@ -993,85 +1080,217 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
     if(du===0) return ['t-idle','Chưa dùng'];
     return ['t-ok','Trong dự toán'];
   }
-  function rowHtml(cls,code,name,g,dc,du,tc,tgKey,ind,rev,pend){
-    if(du<=0){cls+=' dim';name='<i class="ti ti-lock-open dimicon" title="Chưa có phiếu nào được duyệt"></i>'+name;}
-    var ns=g+dc, eac=Math.max(ns,du), over=Math.max(du-ns,0);
-    var pct=ns?Math.round(du/ns*100):0, st=statusOf(ns,du,pend);
-    var mc=du>ns?'max':(ns&&du/ns>=0.9?'hi':'');
+  /* tính chi phí dự kiến từ cấp công việc: phần đã chốt lấy giá thực tế,
+     phần chưa chốt lấy khối lượng còn lại nhân đơn giá dự toán hiện hành */
+  function eacOf(code,g,dc,f){
+    var ns=g+dc, items=SUB[code];
+    if(!items) return {ck:0,cc:ns,eac:ns};
+    var gRaw=0; items.forEach(function(x){gRaw+=x[2]*x[3];});
+    var sc=gRaw?ns/gRaw:0, ck=0, cc=0;
+    items.forEach(function(x){
+      var kl=x[2],dg=x[3]*sc,klc=Math.min(x[4]*(f===undefined?1:f),kl),dgc=x[5]*sc;
+      ck+=klc*dgc; cc+=(kl-klc)*dg;
+    });
+    return {ck:ck,cc:cc,eac:ck+cc};
+  }
+  /* Thứ tự xét trạng thái theo đúng quy tắc đã chốt */
+  function statusOf2(ns,eac,pend,ck){
+    if(eac-ns>0.5) return ['t-bad','Vượt dự toán'];
+    if(ck<=0) return ['t-idle','Chưa chốt NCC'];
+    if(pend>0&&eac+pend-ns>0.5) return ['t-warn','Có nguy cơ vượt'];
+    if(ns-eac>0.5) return ['t-ok','Tiết kiệm'];
+    return ['t-ok','Trong dự toán'];
+  }
+  /* hiển thị theo số tiền hoặc theo tỷ trọng, tuỳ nút chọn */
+  function val(v,base){
+    if(!ST.showP) return fm(v);
+    return base?fp(v/base*100,1)+'%':'—';
+  }
+  function rowHtml(cls,code,name,g,dc,ck,cc,tgKey,ind,pend,detail,q,tNS,tEAC){
+    var ns=g+dc, eac=ck+cc, ch=ns-eac;
+    if(ck<=0){cls+=' dim';}
+    var st=statusOf2(ns,eac,pend,ck);
+    var risk=(pend>0&&eac+pend-ns>0.5);
     var label=tgKey?('<span class="tg" data-tg="'+tgKey+'"><i class="ti ti-chevron-right"></i>'+name+'</span>')
                    :(ind?'<span class="ind"></span>'+name:name);
+    if(detail&&!ST.showQ) label+='<div class="detail">'+detail+'</div>';
+    var qc=q?('<td class="l qcol">'+q.dvt+'</td><td class="num qcol">'+fq(q.kl)+'</td><td class="num qcol">'+fq(q.dg)+'</td>'+
+              '<td class="num qcol">'+fq(q.klc)+'</td><td class="num qcol">'+(q.dgc?fq(q.dgc):'—')+'</td>')
+             :'<td class="l qcol">—</td><td class="num qcol">—</td><td class="num qcol">—</td><td class="num qcol">—</td><td class="num qcol">—</td>';
     return '<tr class="'+cls+'">'+
       '<td class="l code">'+code+'</td><td class="l">'+label+'</td>'+
-      '<td class="num" style="background:#F4F8F2;font-weight:600">'+(rev?fm(rev):'—')+'</td>'+
-      '<td class="num">'+fm(g)+'</td>'+
-      '<td class="num" style="color:'+(dc>0?T.violet:T.slate2)+'">'+(dc>0?'+'+fm(dc):'—')+'</td>'+
-      '<td class="num"><b>'+fm(ns)+'</b></td>'+
-      '<td class="num">'+(du>0?fm(du):'<span class="zchip">0</span>')+'</td>'+
-      '<td class="num" style="color:'+(pend>0?T.violet:T.slate2)+';font-style:'+(pend>0?'normal':'normal')+'">'+
+      '<td class="l" style="font-size:11px;color:'+T.slate2+'">'+(CT[code]||'—')+'</td>'+qc+
+      '<td class="num"><b>'+val(ns,tNS)+'</b></td>'+
+      '<td class="num">'+(ck>0?val(ck,tEAC):'<span class="zchip">0</span>')+'</td>'+
+      '<td class="num" style="color:'+T.slate+'">'+(cc>0.5?val(cc,tEAC):'—')+'</td>'+
+      '<td class="num"><b>'+val(eac,tEAC)+'</b></td>'+
+      '<td class="num" style="color:'+(pend<=0?T.slate2:(risk?T.red:T.violet))+';font-weight:'+(risk?600:400)+'"'+
+        ' title="Chỉ phục vụ cảnh báo, không cộng trực tiếp vào tổng chi phí.'+
+        (risk?' Nếu toàn bộ đề xuất được duyệt thì hạng mục này sẽ vượt ngân sách.':'')+'">'+
         (pend>0?('+'+fm(pend)):'—')+'</td>'+
-      '<td class="num">'+fm(tc)+'</td>'+
-      '<td class="num"><b>'+fm(eac)+'</b></td>'+
-      '<td class="num" style="color:'+(ns-du<0?T.red:T.ink)+'">'+fm(ns-du)+'</td>'+
-      '<td class="num" style="color:'+(over>0?T.red:T.slate2)+';font-weight:'+(over>0?700:400)+'">'+(over>0?fm(over):'—')+'</td>'+
-      '<td class="num"><div class="bar-cell"><span>'+pct+'%</span><span class="mini"><i class="'+mc+'" style="width:'+Math.min(pct,100)+'%"></i></span></div></td>'+
-      '<td class="l"><span class="tag '+st[0]+'">'+st[1]+'</span></td></tr>';
+      '<td class="num" title="Số dương là tiết kiệm, số âm là vượt ngân sách" style="color:'+
+        (ch<-0.5?T.red:(ch>0.5?T.green:T.slate2))+';font-weight:600">'+
+        (Math.abs(ch)<0.5?'—':((ch>0?'+':'')+fm(ch)))+'</td>'+
+      '<td class="l"><span class="tag '+st[0]+'">'+st[1]+'</span>'+
+        (risk&&st[1]==='Có nguy cơ vượt'?'<div class="detail" style="padding-left:0">nếu đề xuất chờ duyệt được phê duyệt</div>':'')+
+      '</td></tr>';
+  }
+
+  /* Lớp 3 — chi phí dự kiến: GT đã thực hiện + GT chưa thực hiện */
+  function layer3(){
+    var kf=kD(), ck=0, cc=0;
+    if(!VIEW) return {ck:0,cc:0,eac:0};
+    VIEW.leaves.forEach(function(x){var e=eacOf(x.code,x.g,x.dc,kf);ck+=e.ck;cc+=e.cc;});
+    return {ck:ck,cc:cc,eac:ck+cc};
+  }
+
+  /* ===== BẢNG 1 · doanh thu và dự toán ===== */
+  function renderRev(){
+    var v=VIEW,t=v.tot,h='';
+    var pk=Object.keys(PROJ).filter(function(k){return ST.proj==='all'||ST.proj===k;});
+    var nsPk=0; pk.forEach(function(k){nsPk+=PROJ[k].ns;});
+    /* tỷ lệ dự toán còn lại sau các bộ lọc KHÔNG phải dự án (hạng mục, loại chi phí, trạng thái) */
+    var sNS=nsPk?t.ns/nsPk:0;
+    var THD=0,TQT=0,TG=0,TDC=0,TNS=0;
+    pk.forEach(function(k){
+      var P=PROJ[k], q=QTP[k];
+      var g=P.g*sNS, dc=P.dc*sNS, ns=g+dc;
+      var qt=q?(P.rev+q.tang-q.giam):null;
+      THD+=P.rev;TG+=g;TDC+=dc;TNS+=ns; if(qt!=null)TQT+=qt;
+      h+='<tr class="lv1"><td class="l code">'+k+'</td>'+
+         '<td class="l"><span class="tg" data-tg="P'+k+'"><i class="ti ti-chevron-right"></i>'+P.n+'</span>'+
+           (q?('<div class="detail">HĐ '+fm(P.rev)+' + phát sinh tăng '+fm(q.tang)+' − giảm trừ '+fm(q.giam)+'</div>'):
+               '<div class="detail">Chưa quyết toán với chủ đầu tư</div>')+'</td>'+
+         '<td class="num" style="background:#F4F8F2;font-weight:600">'+fm(P.rev)+'</td>'+
+         '<td class="num" style="background:#F4F8F2;color:'+(qt!=null?T.green:T.slate2)+';font-weight:'+(qt!=null?600:400)+'">'+
+           (qt!=null?fm(qt):'—')+'</td>'+
+         '<td class="num">'+fm(g)+'</td>'+
+         '<td class="num" style="color:'+(dc>0?T.violet:T.slate2)+'">'+(dc>0?('+'+fm(dc)):'—')+'</td>'+
+         '<td class="num"><b>'+fm(ns)+'</b></td></tr>';
+      if(openSet['P'+k]===undefined) openSet['P'+k]=false;
+      v.ord1.forEach(function(k1){
+        var a=v.g1[k1], sh=P.ns/NSALL2*0+1; /* tỷ trọng dự án đã nằm trong sNS */
+        var gg=a.g*(P.g/GALL), dd=a.dc*(P.dc/DCALL||0);
+        h+='<tr class="lv3 cP'+k+'"><td class="l code"><span class="ind"></span>'+k1+'</td>'+
+           '<td class="l"><span class="ind"></span>'+GN[k1]+'</td>'+
+           '<td class="num">—</td><td class="num">—</td>'+
+           '<td class="num">'+fm(gg)+'</td>'+
+           '<td class="num" style="color:'+(dd>0?T.violet:T.slate2)+'">'+(dd>0?('+'+fm(dd)):'—')+'</td>'+
+           '<td class="num">'+fm(gg+dd)+'</td></tr>';
+      });
+    });
+    var qtp=qtProject();
+    h+='<tr class="tot"><td class="l">Σ</td><td class="l">TOÀN BỘ '+pk.length+' DỰ ÁN</td>'+
+       '<td class="num">'+fm(THD)+'</td>'+
+       '<td class="num">'+(qtp.full?fm(qtp.qt):'—')+'</td>'+
+       '<td class="num">'+fm(TG)+'</td><td class="num">+'+fm(TDC)+'</td><td class="num">'+fm(TNS)+'</td></tr>';
+    document.getElementById('revBody').innerHTML=h;
+    setHtml('revNote','<b>Giá trị quyết toán</b> = HĐ + phát sinh tăng − giảm trừ, chỉ điền khi dự án đã quyết toán · '+
+      '<b>Dự toán hiện hành</b> = ban đầu + điều chỉnh đã duyệt.');
+    /* mở/đóng theo dự án */
+    var tgs=document.querySelectorAll('#revBody .tg');
+    for(var i2=0;i2<tgs.length;i2++) tgs[i2].onclick=function(){
+      var k=this.getAttribute('data-tg'); openSet[k]=!openSet[k]; applyRev();};
+    applyRev();
+  }
+  function applyRev(){
+    var tgs=document.querySelectorAll('#revBody .tg');
+    for(var i=0;i<tgs.length;i++){
+      var k=tgs[i].getAttribute('data-tg');
+      if(openSet[k]) tgs[i].classList.add('open'); else tgs[i].classList.remove('open');
+    }
+    var rows=document.querySelectorAll('#revBody tr');
+    for(var j=0;j<rows.length;j++){
+      var m=(rows[j].className||'').match(/cP([A-Z]{2})/);
+      rows[j].style.display=(m&&!openSet['P'+m[1]])?'none':'';
+    }
   }
   function renderTree(){
-    var v=VIEW, h='', e0=0;
+    var v=VIEW, h='';
+    var kFac=kD();
+    var TCK=0,TCC=0;
+    /* tổng để tính hai cột tỷ lệ % như mẫu của khách */
+    var TNSb=v.tot.ns, TEACb=0;
+    v.leaves.forEach(function(x){var e=eacOf(x.code,x.g,x.dc,kFac);TEACb+=e.eac;});
+    function agg2(codes){
+      var ck=0,cc=0; codes.forEach(function(c){var e=eacOf(c.code,c.g,c.dc,kFac);ck+=e.ck;cc+=e.cc;});
+      return {ck:ck,cc:cc};
+    }
+    var qtp=qtProject();
     v.ord1.forEach(function(k1){
-      var a=v.g1[k1];
-      h+=rowHtml('lv1',k1,GN[k1],a.g,a.dc,a.du,a.tc,'g'+k1,false,a.rev,a.pend);
+      var a=v.g1[k1], la=[];
+      a.kids.forEach(function(k2){v.g2[k2].kids.forEach(function(x){la.push(x);});});
+      var ea=agg2(la);
+      h+=rowHtml('lv1',k1,GN[k1],a.g,a.dc,ea.ck,ea.cc,'g'+k1,false,a.pend,null,null,TNSb,TEACb);
       a.kids.forEach(function(k2){
-        var b=v.g2[k2];
-        h+=rowHtml('lv2 c-'+k1,k2,GN[k2]||k2,b.g,b.dc,b.du,b.tc,'g'+k2,false,b.rev,b.pend);
+        var b=v.g2[k2], eb=agg2(b.kids);
+
+        h+=rowHtml('lv2 c-'+k1,k2,GN[k2]||k2,b.g,b.dc,eb.ck,eb.cc,'g'+k2,false,b.pend,null,null,TNSb,TEACb);
         b.kids.forEach(function(x){
-          var vs=vouchersOf(x.code,x.du);
-          h+=rowHtml('lv3 c-'+k1+' c-'+k2,x.code,x.name,x.g,x.dc,x.du,x.tc,vs.length?('g'+x.code):null,!vs.length,x.rev,x.pend);
+          var items=SUB[x.code]||[], ex=eacOf(x.code,x.g,x.dc,kFac);
+          TCK+=ex.ck;TCC+=ex.cc;
           if(openSet[x.code]===undefined) openSet[x.code]=false;
-          vs.forEach(function(vo){
-            var m2=PST[vo.tt]||['t-idle','—',T.slate];
-            var isOk=vo.tt==='ok', isWait=(vo.tt==='wait'||vo.tt==='adj');
-            var vName='<span class="vind"></span><a class="lnk" href="#" title="Mở phiếu trên Base Service">'+
-                 vo.nd+' <i class="ti ti-external-link"></i></a>';
-            h+='<tr class="lv4 c-'+k1+' c-'+k2+' c-'+x.code+'">'+
-               '<td class="l code"><span class="vind"></span><a class="lnk" href="#">'+vo.ma+'</a></td>'+
-               '<td class="l">'+vName+
-                 '<span style="color:'+T.slate2+'"> · '+vo.ncc+' · '+vo.thang+'</span></td>'+
-               '<td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td>'+
-               '<td class="num">'+(isOk?fm(vo.tien):'—')+'</td>'+
-               '<td class="num" style="color:'+T.violet+'">'+(isWait?('+'+fm(vo.tien)):'—')+'</td>'+
-               '<td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td>'+
-               '<td class="l"><span class="tag '+m2[0]+'">'+m2[1]+'</span></td></tr>';
+          h+=rowHtml('lv3 c-'+k1+' c-'+k2,x.code,x.name,x.g,x.dc,ex.ck,ex.cc,
+                     items.length?('g'+x.code):null,!items.length,x.pend,null,null,TNSb,TEACb);
+          if(!items.length) return;
+          var ns=x.g+x.dc, gRaw=0; items.forEach(function(y){gRaw+=y[2]*y[3];});
+          var sc=gRaw?ns/gRaw:0;
+          items.forEach(function(y,ix){
+            var kl=y[2],dg=y[3]*sc,klc=Math.min(y[4]*kFac,kl),dgc=y[5]*sc;
+            var ck=klc*dgc, cc=(kl-klc)*dg, gg=kl*dg;
+            var det=y[1]+' · dự toán '+fq(kl)+' × '+fq(dg)+
+                    '  ·  đã chốt '+fq(klc)+(dgc?(' × '+fq(dgc)):'')+
+                    '  ·  còn lại '+fq(kl-klc);
+            h+=rowHtml('lv4 c-'+k1+' c-'+k2+' c-'+x.code,x.code+'.'+(ix+1),y[0],
+                       gg,0,ck,cc,null,true,0,det,{dvt:y[1],kl:kl,dg:dg,klc:klc,dgc:dgc},TNSb,TEACb);
           });
         });
       });
     });
-    var g0=v.tot.g,d0=v.tot.dc,u0=v.tot.du,t0=v.tot.tc,ns0=v.tot.ns,e0=v.tot.eac,p0=v.tot.pend;
-    var over=v.tot.nOver,near=v.tot.nNear,overSum=v.tot.over,nLeaf=v.tot.nLeaf,nGrp=v.tot.nGrp;
-    if(!nLeaf) h='<tr><td class="l" colspan="14" style="text-align:center;color:'+T.slate2+';padding:18px">Không có mã dự toán nào khớp bộ lọc</td></tr>';
-    h+='<tr class="tot"><td class="l">C</td><td class="l">GIÁ THÀNH (A + B)</td><td class="num">'+fm(v.tot.rev)+'</td><td class="num">'+fm(g0)+'</td><td class="num">+'+fm(d0)+'</td>'+
-       '<td class="num">'+fm(ns0)+'</td><td class="num">'+fm(u0)+'</td><td class="num">+'+fm(p0)+'</td><td class="num">'+fm(t0)+'</td><td class="num">'+fm(e0)+'</td>'+
-       '<td class="num">'+fm(ns0-u0)+'</td><td class="num">'+fm(v.tot.over)+'</td><td class="num">'+Math.round(u0/ns0*100)+'%</td><td class="l">—</td></tr>';
-    var rev=v.tot.rev;
-    var pnlT=rev-g0, pnlE=rev-e0;
-    h+='<tr class="pnl"><td class="l">D</td><td class="l">LÃI/LỖ — mục tiêu vs dự kiến</td><td class="num">'+fm(rev)+'</td><td class="num">'+fm(pnlT)+'</td><td class="num">—</td>'+
-       '<td class="num">'+fm(rev-ns0)+'</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">'+fm(pnlE)+'</td>'+
-       '<td class="num">—</td><td class="num">−'+fm(v.tot.over)+'</td><td class="num">'+fp(pnlE/rev*100,2)+'%</td>'+
-       '<td class="l"><span class="tag '+(pnlE<pnlT?'t-warn':'t-ok')+'">'+(pnlE<0?'Lỗ dự kiến':(pnlE<pnlT?'Thấp hơn mục tiêu':'Đạt mục tiêu'))+'</span></td></tr>';
+    var t=v.tot, ns0=t.ns, e0=TCK+TCC, ch0=ns0-e0;
+    if(!t.nLeaf) h='<tr><td class="l" colspan="15" style="text-align:center;color:'+T.slate2+';padding:18px">Không có mã dự toán nào khớp bộ lọc</td></tr>';
+    else{
+      var Q5='<td class="l qcol">—</td><td class="num qcol">—</td><td class="num qcol">—</td><td class="num qcol">—</td><td class="num qcol">—</td>';
+      h+='<tr class="tot"><td class="l">C</td><td class="l">GIÁ THÀNH (A + B)</td>'+
+         '<td class="l">Tổng chi phí dự kiến hoàn thành</td>'+Q5+
+         '<td class="num">'+val(ns0,ns0)+'</td>'+
+         '<td class="num">'+val(TCK,e0)+'</td><td class="num">'+val(TCC,e0)+'</td>'+
+         '<td class="num">'+val(e0,e0)+'</td>'+
+         '<td class="num">+'+fm(t.pend)+'</td>'+
+         '<td class="num">'+(ch0>0?'+':'')+fm(ch0)+'</td><td class="l">—</td></tr>';
+    }
     document.getElementById('treeBody').innerHTML=h;
 
-    setTxt('m1',String(nGrp));
-    setTxt('m1s',nLeaf+' mã dự toán chi tiết'+(ST.grp==='all'?' · toàn bộ cây dự toán':' · đã lọc '+ST.grp));
-    setTxt('m2',String(over));
-    setHtml('m2s','Dự chi vượt <b style="color:'+T.red+'">'+fm(overSum)+' tr đ</b> so với dự toán đã duyệt');
-    setTxt('m3',String(near));
-    setTxt('m3s','Dự chi đã dùng ≥ 90% dự toán, dư địa rất mỏng');
-    setHtml('m4',fb(ns0-u0)+' <span>tỷ đ</span>');
-    setTxt('m4s','Chiếm '+Math.round((ns0-u0)/ns0*100)+'% dự toán hiện hành · chờ duyệt '+fm(p0)+' tr');
-    setTxt('treeNote','Tổng CP dự kiến tính theo từng phần của mã: phần đã có dự chi được duyệt lấy số dự chi, phần chưa có dự chi lấy theo dự toán đã duyệt. '+
-      'Cột "Đề xuất chờ duyệt" là tiền chưa được duyệt nên không tính vào dự chi và không vào tổng chi phí dự kiến; dòng mã chưa có phiếu nào được duyệt để dự chi bằng 0 và làm mờ cả hàng. '+
-      'Mở đến cấp thứ tư để xem từng phiếu của mã. '+
-      (ST.cost==='all'?'':'Đang lọc '+COST[ST.cost].n+': mã hỗn hợp như cụm bể chỉ tính phần thuộc loại chi phí này.'));
+    var dtx=qtp.dt;
+    setHtml('r1',fb(dtx-ns0)+' <span>tỷ đ</span>');
+    setHtml('r2',fb(dtx-e0)+' <span>tỷ đ</span>');
+    setHtml('r3',fp(dtx?(dtx-e0)/dtx*100:0,2)+' <span>%</span>');
+    setHtml('r3s','Doanh thu dự kiến '+fb(dtx)+' tỷ · chênh với LN theo dự toán '+
+      fp(dtx?(ns0-e0)/dtx*100:0,2)+' điểm');
+
+    var nOver=0,nRisk=0,nSub=0;
+    v.leaves.forEach(function(x){
+      var e=eacOf(x.code,x.g,x.dc,kFac), ns=x.g+x.dc, c=ns-e.eac;
+      nSub+=(SUB[x.code]||[]).length;
+
+      if(e.ck<=0) return;
+      if(c<-0.5)nOver++; else if(ns&&e.eac/ns>=0.99)nRisk++;
+    });
+    setTxt('m1',String(t.nGrp));
+    setTxt('m1s',t.nLeaf+' mã dự toán · '+nSub+' công việc chi tiết');
+    setTxt('m2',String(nOver));
+    setHtml('m2s','Tổng CP dự kiến đã vượt dự toán hiện hành');
+    setTxt('m3',String(nRisk));
+    setTxt('m3s','Đã dùng từ 99% dự toán hiện hành, có nguy cơ vượt');
+    setHtml('m4',qtp.nQT?fb(qtp.qt)+' <span>tỷ đ</span>':'—');
+    setHtml('m4s',qtp.nQT?(qtp.nQT+'/'+qtp.nAll+' dự án đã quyết toán · HĐ ký của các dự án đó '+
+        fb(qtp.qt-(qtp.qt-qtp.qt))+' tỷ').replace(/ · HĐ.*/,' · giá trị đã xác nhận với chủ đầu tư')
+      :'Chưa dự án nào quyết toán trong phạm vi lọc');
+    setHtml('treeNote','<b>GT đã thực hiện</b>: đã ký HĐ với NCC/NTP · '+
+      '<b>GT chưa thực hiện</b>: phần chưa ký, tính theo dự toán · '+
+      '<b>Tổng CP dự kiến</b> = hai cột trên cộng lại · '+
+      '<b>Tiết kiệm/(Vượt)</b> = dự toán hiện hành − tổng CP dự kiến · '+
+      '<b>Đề xuất chờ duyệt</b>: chỉ cảnh báo, không cộng vào tổng.');
     bindToggles();applyCollapse();
   }
   function bindToggles(){
@@ -1091,7 +1310,7 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
     }
     var rows=document.querySelectorAll('#treeBody tr');
     for(var j=0;j<rows.length;j++){
-      var m=(rows[j].className||'').match(/c-([AB][0-9]?(?:\.[0-9])?)/g),show=true;
+      var m=(rows[j].className||'').match(/c-([AB][0-9]?(?:\.[0-9]+)?)/g),show=true;
       if(m){for(var x=0;x<m.length;x++){if(!openSet[m[x].substring(2)]){show=false;break;}}}
       rows[j].style.display=show?'':'none';
     }
@@ -1419,7 +1638,8 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
     recalcCost();
     VIEW=buildView(false);VIEWG=buildView(true);
     safe('tổng quan',renderP1);
-    safe('bảng dự toán',renderTree);
+    safe('bảng doanh thu',renderRev);
+    safe('bảng chi phí',renderTree);
     safe('chart hạng mục',renderP2Charts);
     safe('đề xuất',renderP3);
     safe('điều chỉnh dự toán',renderP4);
@@ -1455,6 +1675,19 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
       syncDates();renderAll();
     });
   }
+  document.getElementById('btnPct').addEventListener('click',function(){
+    ST.showP=!ST.showP;
+    this.className='pill'+(ST.showP?' on':'');
+    this.innerHTML='<i class="ti ti-percentage"></i> '+(ST.showP?'Xem theo số tiền':'Xem theo tỷ lệ %');
+    renderTree();
+  });
+  document.getElementById('btnQty').addEventListener('click',function(){
+    ST.showQ=!ST.showQ;
+    if(ST.showQ) document.body.classList.add('showq'); else document.body.classList.remove('showq');
+    this.className='pill'+(ST.showQ?' on':'');
+    this.innerHTML='<i class="ti ti-ruler-measure"></i> '+(ST.showQ?'Ẩn khối lượng & đơn giá':'Xem khối lượng & đơn giá');
+    renderTree();
+  });
   document.getElementById('expandAll').addEventListener('click',function(){
     for(var k in openSet) openSet[k]=true; applyCollapse();
   });
