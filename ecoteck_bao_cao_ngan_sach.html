@@ -124,6 +124,7 @@ thead th{background:#F0F5F6;color:var(--slate);font-weight:500;text-align:right;
 thead th:first-child,thead th.l{text-align:left}
 thead th.gR{background:#E6EEE4}
 thead th.gK{background:#F1EFE6}
+.u{display:block;font-weight:400;font-size:10px;color:var(--slate-2);letter-spacing:.02em;margin-top:1px}
 body:not(.showq) .qcol{display:none}
 thead th.gA{background:#E4EFF0}thead th.gB{background:#FBF1DE}thead th.gC{background:#E9E6FA}
 tbody td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line-2);white-space:nowrap;font-variant-numeric:tabular-nums}
@@ -197,6 +198,7 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
       <button class="tab active" data-p="p1"><i class="ti ti-layout-dashboard"></i> Tổng quan</button>
       <button class="tab" data-p="p2"><i class="ti ti-list-tree"></i> Chi tiết hạng mục</button>
       <button class="tab" data-p="p3"><i class="ti ti-file-check"></i> Đề xuất &amp; phê duyệt <span style="background:#D98A16;color:#fff;border-radius:99px;padding:1px 7px;font-size:10.5px">41</span></button>
+      <button class="tab" data-p="p4"><i class="ti ti-receipt-2"></i> Thanh toán &amp; công nợ NCC</button>
     </div>
   </div>
 </div>
@@ -333,8 +335,11 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
             <th class="gA" colspan="3">DỰ TOÁN</th>
           </tr>
           <tr>
-            <th class="gR">HĐ ký với khách hàng</th><th class="gR">Giá trị quyết toán</th>
-            <th class="gA">Ban đầu</th><th class="gA">Điều chỉnh đã duyệt</th><th class="gA">Hiện hành</th>
+            <th class="gR">HĐ ký với khách hàng<span class="u">tr đ</span></th>
+            <th class="gR">Giá trị quyết toán<span class="u">tr đ</span></th>
+            <th class="gA">Ban đầu<span class="u">tr đ</span></th>
+            <th class="gA">Điều chỉnh đã duyệt<span class="u">tr đ</span></th>
+            <th class="gA">Hiện hành<span class="u">tr đ</span></th>
           </tr>
         </thead>
         <tbody id="revBody"></tbody>
@@ -349,30 +354,31 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
         <p>Lớp 2 và lớp 3 · mở theo: nhóm → hạng mục → mã dự toán → công việc</p></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="pill" id="btnPct"><i class="ti ti-percentage"></i> Xem theo tỷ lệ %</button>
-        <button class="pill" id="btnQty"><i class="ti ti-ruler-measure"></i> Xem khối lượng &amp; đơn giá</button>
+        <button class="pill" id="btnQty"><i class="ti ti-ruler-measure"></i> Xem cách tính</button>
         <button class="pill" id="expandAll"><i class="ti ti-chevrons-down"></i> Mở tất cả</button>
         <button class="pill" id="collapseAll"><i class="ti ti-chevrons-up"></i> Thu gọn</button>
       </div>
     </div>
     <div class="tbl-scroll" style="max-height:680px">
-      <table>
+      <table id="tbl2">
         <thead>
           <tr>
             <th class="l" rowspan="2">TT</th><th class="l" rowspan="2">Hạng mục</th>
-            <th class="l" rowspan="2">Chi tiết</th>
-            <th class="gK qcol" colspan="5">KHỐI LƯỢNG &amp; ĐƠN GIÁ</th>
-            <th class="gA" rowspan="2">Dự toán<br>hiện hành</th>
-            <th class="gC" colspan="3">THỰC TẾ</th>
+            <th class="gA" rowspan="2">Dự toán hiện hành<span class="u">tr đ</span></th>
+            <th class="gC" id="thTT" colspan="3">CHI PHÍ DỰ KIẾN HOÀN THÀNH</th>
             <th class="gB" colspan="3">THEO DÕI</th>
           </tr>
           <tr>
-            <th class="gK qcol">ĐVT</th><th class="gK qcol">KL dự toán</th><th class="gK qcol">ĐG dự toán</th>
-            <th class="gK qcol">KL đã chốt</th><th class="gK qcol">ĐG đã chốt</th>
-            <th class="gC" title="Giá trị đã ký hợp đồng với nhà cung cấp hoặc nhà thầu phụ">GT đã thực hiện</th>
-            <th class="gC" title="Phần chưa ký hợp đồng NCC/NTP, tạm tính theo ngân sách">GT chưa thực hiện</th>
-            <th class="gC">Tổng chi phí</th>
-            <th class="gB" title="Chỉ phục vụ cảnh báo, không cộng vào tổng chi phí">Đề xuất chờ duyệt</th>
-            <th class="gB" title="Số dương là tiết kiệm, số âm là vượt ngân sách">Tiết kiệm / (Vượt)</th>
+            <th class="gC qcol">ĐVT</th>
+            <th class="gC qcol" title="Sản lượng đã mua, đã chốt với NCC">KL đã mua</th>
+            <th class="gC qcol" title="Đơn giá trên hợp đồng hoặc PO đã ký">× ĐG đã ký<span class="u" data-fix="1">tr / ĐVT</span></th>
+            <th class="gC" title="Sản lượng đã mua nhân đơn giá đã ký">= GT đã thực hiện<span class="u">tr đ</span></th>
+            <th class="gC qcol" title="Sản lượng chưa mua">KL chưa mua</th>
+            <th class="gC qcol" title="Đơn giá dự toán ban đầu">× ĐG dự toán ban đầu<span class="u" data-fix="1">tr / ĐVT</span></th>
+            <th class="gC" title="Sản lượng chưa mua nhân đơn giá dự toán ban đầu">= GT chưa thực hiện<span class="u">tr đ</span></th>
+            <th class="gC">Tổng chi phí<span class="u">tr đ</span></th>
+            <th class="gB" title="Chỉ phục vụ cảnh báo, không cộng vào tổng chi phí">Đề xuất chờ duyệt<span class="u" data-fix="1">tr đ</span></th>
+            <th class="gB" title="Số dương là tiết kiệm, số âm là vượt ngân sách">Tiết kiệm / (Vượt)<span class="u" data-fix="1">tr đ</span></th>
             <th class="gB l">Trạng thái</th>
           </tr>
         </thead>
@@ -421,7 +427,7 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
       <table>
         <thead><tr>
           <th class="l">Mã phiếu</th><th class="l">Nội dung</th><th class="l">Dự án</th><th class="l">Mã dự toán</th>
-          <th>Dự toán hiện hành</th><th>Dự chi đã duyệt</th><th>Còn lại</th><th>Số tiền đề xuất</th><th>Còn lại sau duyệt</th>
+          <th>Dự toán hiện hành<span class="u">tr đ</span></th><th>Đã chốt với NCC<span class="u">tr đ</span></th><th>Còn lại<span class="u">tr đ</span></th><th>Số tiền đề xuất<span class="u">tr đ</span></th><th>Còn lại sau duyệt<span class="u">tr đ</span></th>
           <th class="l">Kết luận</th><th class="l">Hành động</th>
         </tr></thead>
         <tbody id="pendBody"></tbody>
@@ -446,7 +452,7 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
       <table>
         <thead><tr>
           <th class="l">Mã phiếu</th><th class="l">Nội dung</th><th class="l">Dự án</th><th class="l">Mã dự toán</th>
-          <th class="l">Loại chi phí</th><th class="l">Nhà cung cấp</th><th class="l">Tháng</th><th>Số tiền</th><th class="l">Kết quả</th>
+          <th class="l">Loại chi phí</th><th class="l">Nhà cung cấp</th><th class="l">Tháng</th><th>Số tiền<span class="u">tr đ</span></th><th class="l">Kết quả</th>
         </tr></thead>
         <tbody id="phieuBody"></tbody>
       </table>
@@ -464,12 +470,65 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
       <table>
         <thead><tr>
           <th class="l">Phiên bản</th><th class="l">Phiếu điều chỉnh</th><th class="l">Ngày duyệt</th><th class="l">Dự án</th>
-          <th class="l">Mã dự toán</th><th class="l">Lý do</th><th>Giá trị</th><th>Dự toán sau ĐC</th><th>Lãi trước</th><th>Lãi sau</th><th class="l">Người duyệt</th>
+          <th class="l">Mã dự toán</th><th class="l">Lý do</th><th>Giá trị<span class="u">tr đ</span></th><th>Dự toán sau ĐC<span class="u">tr đ</span></th><th>Lãi trước<span class="u">%</span></th><th>Lãi sau<span class="u">%</span></th><th class="l">Người duyệt</th>
         </tr></thead>
         <tbody id="adjBody"></tbody>
       </table>
     </div>
     <p class="note">Nguyên tắc kiểm soát: nếu lãi dự kiến sau điều chỉnh thấp hơn mục tiêu ban đầu của dự án, phiếu điều chỉnh phải do Ban giám đốc duyệt và kèm phương án bù từ hạng mục khác.</p>
+  </div>
+</div>
+
+<!-- ============ P4 · THANH TOÁN & CÔNG NỢ NCC ============ -->
+<div class="page" id="p4">
+  <div class="grid g5" style="margin-bottom:16px">
+    <div class="kpi k-amber"><div class="lbl"><i class="ti ti-file-check"></i> Giá trị đã ký với NCC</div>
+      <div class="val" id="n1">—</div><div class="sub" id="n1s">—</div></div>
+    <div class="kpi"><div class="lbl"><i class="ti ti-clipboard-check"></i> Đã nghiệm thu</div>
+      <div class="val" id="n2">—</div><div class="sub" id="n2s">—</div></div>
+    <div class="kpi k-violet"><div class="lbl"><i class="ti ti-file-invoice"></i> Đã nhận hoá đơn</div>
+      <div class="val" id="n3">—</div><div class="sub" id="n3s">—</div></div>
+    <div class="kpi k-green"><div class="lbl"><i class="ti ti-cash"></i> Đã thanh toán</div>
+      <div class="val" id="n4">—</div><div class="sub" id="n4s">—</div></div>
+    <div class="kpi k-red"><div class="lbl"><i class="ti ti-scale"></i> Công nợ còn lại</div>
+      <div class="val" id="n5">—</div><div class="sub" id="n5s">—</div></div>
+  </div>
+
+  <div class="grid g23" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-h"><div><h3><i class="ti ti-building-store"></i> Công nợ theo nhà cung cấp</h3>
+        <p>Đã thanh toán và phần còn phải trả · đơn vị: triệu đồng</p></div></div>
+      <div id="nccChart" class="chart tall"></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><h3><i class="ti ti-timeline-event"></i> Bốn mốc của một hợp đồng</h3>
+        <p>Đã ký → nghiệm thu → nhận hoá đơn → thanh toán</p></div></div>
+      <div id="stepChart" class="chart tall"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h">
+      <div><h3><i class="ti ti-receipt-2"></i> Theo dõi thanh toán và công nợ nhà cung cấp</h3>
+        <p>Nguồn: hợp đồng và PO từ quy trình mua hàng · hồ sơ nghiệm thu và đề nghị thanh toán từ Base · hoá đơn và số đã trả từ MISA</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button class="pill on" data-d="all">Tất cả</button>
+        <button class="pill" data-d="debt">Còn phải trả</button>
+        <button class="pill" data-d="late">Quá hạn</button>
+        <div class="inp"><i class="ti ti-search"></i><input type="text" id="qn" placeholder="Tìm NCC, số HĐ, mã dự toán…" style="min-width:190px"></div>
+      </div>
+    </div>
+    <div class="tbl-scroll" style="max-height:600px">
+      <table>
+        <thead><tr>
+          <th class="l">Nhà cung cấp</th><th class="l">Hợp đồng / PO</th><th class="l">Dự án</th><th class="l">Mã dự toán</th>
+          <th>Giá trị đã ký<span class="u">tr đ</span></th><th>Đã nghiệm thu<span class="u">tr đ</span></th><th>Đã nhận hoá đơn<span class="u">tr đ</span></th><th>Đã thanh toán<span class="u">tr đ</span></th>
+          <th>Công nợ còn lại<span class="u">tr đ</span></th><th class="l">Hạn thanh toán</th><th class="l">Trạng thái</th>
+        </tr></thead>
+        <tbody id="payBody"></tbody>
+      </table>
+    </div>
+    <p class="note" id="payNote"></p>
   </div>
 </div>
 </div>
@@ -620,6 +679,30 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
     B4:'Chi phí quản lý doanh nghiệp',B5:'Dự phòng phí'};
 
   /* doanh thu = giá ký hợp đồng với chủ đầu tư */
+  /* Hợp đồng và PO với NCC/NTP: NCC · số HĐ/PO · nội dung · dự án · mã dự toán ·
+     giá trị đã ký · tỷ lệ nghiệm thu · tỷ lệ hoá đơn trên phần nghiệm thu · tỷ lệ đã trả trên hoá đơn · hạn */
+  var CTR=[
+    ["Cọc Hà Nội", "HD-2024-118", "Ép cọc BTCT D300", "KD", "A1.1", 4180, 1.0, 1.0, 1.0, "20/03/2025"],
+    ["Bê tông Hưng Yên", "HD-2024-126", "Bê tông thương phẩm M300", "KD", "A1.2", 5240, 0.92, 0.88, 0.95, "25/04/2025"],
+    ["Hoà Phát", "HD-2025-004", "Thép thanh vằn CB400", "PH", "A1.2", 5321, 0.86, 0.8, 0.72, "30/05/2025"],
+    ["Cốp pha Tân Á", "PO-2025-031", "Ván khuôn thép định hình", "KD", "A1.2", 1780, 1.0, 1.0, 1.0, "12/04/2025"],
+    ["Jotun", "PO-2025-047", "Sơn epoxy chống thấm bể", "KD", "A1.2", 880, 0.7, 0.55, 0.0, "05/05/2025"],
+    ["Xây lắp Đại Phong", "HD-2024-131", "Kết cấu và bao che nhà điều hành", "DH", "A1.3", 2810, 0.78, 0.72, 0.66, "18/05/2025"],
+    ["Nội thất Minh Long", "PO-2025-052", "Hoàn thiện, điện nước nhà", "DH", "A1.3", 820, 0.55, 0.4, 0.3, "10/06/2025"],
+    ["Khang Thịnh", "HD-2024-140", "Sân đường, hàng rào, cây xanh", "DH", "A1.4", 2190, 0.84, 0.8, 0.8, "28/05/2025"],
+    ["Cấp nước Sông Đà", "PO-2025-019", "Cấp thoát nước ngoài nhà", "PH", "A1.4", 1320, 0.62, 0.6, 0.55, "02/06/2025"],
+    ["Shinmaywa", "HD-2024-097", "Bơm chìm nước thải 18 bộ", "KD", "A2.1", 7420, 1.0, 1.0, 1.0, "20/04/2025"],
+    ["Longtech", "HD-2025-011", "Máy thổi khí Root 9 bộ", "PH", "A2.1", 3180, 0.9, 0.85, 0.62, "10/06/2025"],
+    ["Huber", "HD-2025-016", "Thiết bị tách rác, ép bùn", "PH", "A2.1", 2460, 0.74, 0.7, 0.45, "22/06/2025"],
+    ["LS Vina", "PO-2025-024", "Cáp điện động lực Cu/XLPE", "DH", "A2.1", 1960, 0.88, 0.82, 0.5, "25/05/2025"],
+    ["3CIE", "HD-2025-020", "Tủ điện điều khiển 12 bộ", "PH", "A2.1", 2310, 0.65, 0.6, 0.0, "10/05/2025"],
+    ["Nhà thầu phụ XYZ", "HD-2024-145", "Nhân công lắp đặt cơ điện", "KD", "A2.2", 2280, 0.8, 0.76, 0.74, "15/05/2025"],
+    ["Vận tải Minh Hậu", "PO-2025-008", "Vận chuyển VTTB về công trường", "PH", "A2.3", 970, 0.95, 0.9, 0.55, "02/06/2025"],
+    ["Tư vấn HTP", "HD-2024-088", "Hồ sơ thiết kế bản vẽ thi công", "PH", "A3.1", 428, 1.0, 1.0, 1.0, "—"],
+    ["Môi trường Xanh", "HD-2024-092", "Giấy phép môi trường, PCCC", "KD", "A3.2", 486, 1.0, 1.0, 1.0, "—"],
+    ["Nội bộ", "HD-2025-001", "Chi phí ban chỉ huy công trường", "DH", "B1.1", 1560, 1.0, 1.0, 0.9, "—"],
+    ["Nội bộ", "HD-2025-002", "Chi phí bán hàng, tiếp thị", "KD", "B2.1", 790, 1.0, 1.0, 1.0, "—"]
+  ];
   var PROJ={
     KD:{n:'Kim Động',rev:32100,g:27810,dc:400,du:19846,tc:16124,ov:60},
     DH:{n:'Đồng Hướng',rev:16450,g:14260,dc:180,du:10286,tc:8462,ov:0},
@@ -700,7 +783,7 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
   var MFROM=['01/12/2024','01/01/2025','01/02/2025','01/03/2025','01/04/2025','01/05/2025'];
   var MTO=['31/12/2024','31/01/2025','28/02/2025','31/03/2025','30/04/2025','19/05/2025'];
 
-  var ST={proj:'all',cost:'all',grp:'all',stt:'all',m0:0,m1:5,pst:'all',pq:'',bud:'all',showQ:false,showP:false};
+  var ST={proj:'all',cost:'all',grp:'all',stt:'all',m0:0,m1:5,pst:'all',pq:'',bud:'all',showQ:false,showP:false,debt:'all',qn:''};
   /* hệ số thời gian: dự chi và thực chi tính lũy kế đến hết tháng cuối của khoảng lọc */
   function tShare(f){
     if(f!=='du'&&f!=='tc') return 1;
@@ -1082,15 +1165,38 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
   }
   /* tính chi phí dự kiến từ cấp công việc: phần đã chốt lấy giá thực tế,
      phần chưa chốt lấy khối lượng còn lại nhân đơn giá dự toán hiện hành */
-  function eacOf(code,g,dc,f){
-    var ns=g+dc, items=SUB[code];
-    if(!items) return {ck:0,cc:ns,eac:ns};
+  /* GT đã thực hiện = sản lượng đã mua × đơn giá thực mua
+     GT chưa thực hiện = sản lượng chưa mua × đơn giá dự toán BAN ĐẦU
+     Điều chỉnh dự toán chỉ dịch mốc so sánh, không làm đổi chi phí dự kiến của phần chưa mua. */
+  function itemsOf(code,g,f){
+    var items=SUB[code]; if(!items) return null;
     var gRaw=0; items.forEach(function(x){gRaw+=x[2]*x[3];});
-    var sc=gRaw?ns/gRaw:0, ck=0, cc=0;
-    items.forEach(function(x){
-      var kl=x[2],dg=x[3]*sc,klc=Math.min(x[4]*(f===undefined?1:f),kl),dgc=x[5]*sc;
-      ck+=klc*dgc; cc+=(kl-klc)*dg;
+    var sc=gRaw?g/gRaw:0;                 /* quy về dự toán ban đầu, không gồm điều chỉnh */
+    return items.map(function(x){
+      var kl=x[2], dg0=x[3]*sc;
+      var klMua=Math.min(x[4]*(f===undefined?1:f),kl);
+      return {ten:x[0],dvt:x[1],kl:kl,klMua:klMua,klCon:kl-klMua,
+              dg0:dg0,dgMua:x[5]*sc,
+              gtDa:klMua*x[5]*sc, gtChua:(kl-klMua)*dg0, gDT:kl*dg0};
     });
+  }
+  /* gộp sản lượng cho dòng nhóm: chỉ cộng được khi các công việc con cùng đơn vị tính */
+  function qAgg(list){
+    if(!list||!list.length) return null;
+    var dvt=list[0].dvt, kl=0, klMua=0, klCon=0, gDa=0, gCh=0, gDT=0;
+    for(var i=0;i<list.length;i++){
+      if(list[i].dvt!==dvt) return null;
+      kl+=list[i].kl; klMua+=list[i].klMua; klCon+=list[i].klCon;
+      gDa+=list[i].gtDa; gCh+=list[i].gtChua; gDT+=list[i].gDT;
+    }
+    return {dvt:dvt,kl:kl,klMua:klMua,klCon:klCon,
+            dgMua:klMua?gDa/klMua:0, dg0:kl?gDT/kl:0};
+  }
+  function eacOf(code,g,dc,f){
+    var rows=itemsOf(code,g,f);
+    if(!rows) return {ck:0,cc:g+dc,eac:g+dc};
+    var ck=0,cc=0;
+    rows.forEach(function(r){ck+=r.gtDa;cc+=r.gtChua;});
     return {ck:ck,cc:cc,eac:ck+cc};
   }
   /* Thứ tự xét trạng thái theo đúng quy tắc đã chốt */
@@ -1106,23 +1212,29 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
     if(!ST.showP) return fm(v);
     return base?fp(v/base*100,1)+'%':'—';
   }
-  function rowHtml(cls,code,name,g,dc,ck,cc,tgKey,ind,pend,detail,q,tNS,tEAC){
+  function rowHtml(cls,code,name,g,dc,ck,cc,tgKey,ind,pend,q,tNS,tEAC){
     var ns=g+dc, eac=ck+cc, ch=ns-eac;
     if(ck<=0){cls+=' dim';}
     var st=statusOf2(ns,eac,pend,ck);
     var risk=(pend>0&&eac+pend-ns>0.5);
     var label=tgKey?('<span class="tg" data-tg="'+tgKey+'"><i class="ti ti-chevron-right"></i>'+name+'</span>')
                    :(ind?'<span class="ind"></span>'+name:name);
-    if(detail&&!ST.showQ) label+='<div class="detail">'+detail+'</div>';
-    var qc=q?('<td class="l qcol">'+q.dvt+'</td><td class="num qcol">'+fq(q.kl)+'</td><td class="num qcol">'+fq(q.dg)+'</td>'+
-              '<td class="num qcol">'+fq(q.klc)+'</td><td class="num qcol">'+(q.dgc?fq(q.dgc):'—')+'</td>')
-             :'<td class="l qcol">—</td><td class="num qcol">—</td><td class="num qcol">—</td><td class="num qcol">—</td><td class="num qcol">—</td>';
+    var qDa = q?('<td class="l qcol">'+q.dvt+'</td>'+
+                 '<td class="num qcol">'+fq(q.klMua)+'</td>'+
+                 '<td class="num qcol" style="color:'+(q.dgMua>q.dg0?T.red:(q.dgMua?T.green:T.slate2))+';font-weight:600">'+
+                   (q.dgMua?fq(q.dgMua):'—')+'</td>')
+               :'<td class="l qcol" title="Các công việc con khác đơn vị tính nên không cộng được sản lượng">—</td>'+
+                '<td class="num qcol">—</td><td class="num qcol">—</td>';
+    var qCh = q?('<td class="num qcol">'+fq(q.klCon)+'</td>'+
+                 '<td class="num qcol">'+fq(q.dg0)+'</td>')
+               :'<td class="num qcol">—</td><td class="num qcol">—</td>';
     return '<tr class="'+cls+'">'+
       '<td class="l code">'+code+'</td><td class="l">'+label+'</td>'+
-      '<td class="l" style="font-size:11px;color:'+T.slate2+'">'+(CT[code]||'—')+'</td>'+qc+
       '<td class="num"><b>'+val(ns,tNS)+'</b></td>'+
+      qDa+
       '<td class="num">'+(ck>0?val(ck,tEAC):'<span class="zchip">0</span>')+'</td>'+
-      '<td class="num" style="color:'+T.slate+'">'+(cc>0.5?val(cc,tEAC):'—')+'</td>'+
+      qCh+
+      '<td class="num" style="color:'+(cc>0.5?T.slate:T.slate2)+'">'+val(cc,tEAC)+'</td>'+
       '<td class="num"><b>'+val(eac,tEAC)+'</b></td>'+
       '<td class="num" style="color:'+(pend<=0?T.slate2:(risk?T.red:T.violet))+';font-weight:'+(risk?600:400)+'"'+
         ' title="Chỉ phục vụ cảnh báo, không cộng trực tiếp vào tổng chi phí.'+
@@ -1217,44 +1329,46 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
       return {ck:ck,cc:cc};
     }
     var qtp=qtProject();
+    function itemsOfList(codes){
+      var all=[];
+      codes.forEach(function(c){var r=itemsOf(c.code,c.g,kFac); if(r) all=all.concat(r);});
+      return all;
+    }
     v.ord1.forEach(function(k1){
       var a=v.g1[k1], la=[];
       a.kids.forEach(function(k2){v.g2[k2].kids.forEach(function(x){la.push(x);});});
       var ea=agg2(la);
-      h+=rowHtml('lv1',k1,GN[k1],a.g,a.dc,ea.ck,ea.cc,'g'+k1,false,a.pend,null,null,TNSb,TEACb);
+      h+=rowHtml('lv1',k1,GN[k1],a.g,a.dc,ea.ck,ea.cc,'g'+k1,false,a.pend,
+                 qAgg(itemsOfList(la)),TNSb,TEACb);
       a.kids.forEach(function(k2){
         var b=v.g2[k2], eb=agg2(b.kids);
-
-        h+=rowHtml('lv2 c-'+k1,k2,GN[k2]||k2,b.g,b.dc,eb.ck,eb.cc,'g'+k2,false,b.pend,null,null,TNSb,TEACb);
+        h+=rowHtml('lv2 c-'+k1,k2,GN[k2]||k2,b.g,b.dc,eb.ck,eb.cc,'g'+k2,false,b.pend,
+                   qAgg(itemsOfList(b.kids)),TNSb,TEACb);
         b.kids.forEach(function(x){
           var items=SUB[x.code]||[], ex=eacOf(x.code,x.g,x.dc,kFac);
           TCK+=ex.ck;TCC+=ex.cc;
           if(openSet[x.code]===undefined) openSet[x.code]=false;
+          var det3=itemsOf(x.code,x.g,kFac)||[];
           h+=rowHtml('lv3 c-'+k1+' c-'+k2,x.code,x.name,x.g,x.dc,ex.ck,ex.cc,
-                     items.length?('g'+x.code):null,!items.length,x.pend,null,null,TNSb,TEACb);
+                     items.length?('g'+x.code):null,!items.length,x.pend,
+                     qAgg(det3),TNSb,TEACb);
           if(!items.length) return;
-          var ns=x.g+x.dc, gRaw=0; items.forEach(function(y){gRaw+=y[2]*y[3];});
-          var sc=gRaw?ns/gRaw:0;
-          items.forEach(function(y,ix){
-            var kl=y[2],dg=y[3]*sc,klc=Math.min(y[4]*kFac,kl),dgc=y[5]*sc;
-            var ck=klc*dgc, cc=(kl-klc)*dg, gg=kl*dg;
-            var det=y[1]+' · dự toán '+fq(kl)+' × '+fq(dg)+
-                    '  ·  đã chốt '+fq(klc)+(dgc?(' × '+fq(dgc)):'')+
-                    '  ·  còn lại '+fq(kl-klc);
-            h+=rowHtml('lv4 c-'+k1+' c-'+k2+' c-'+x.code,x.code+'.'+(ix+1),y[0],
-                       gg,0,ck,cc,null,true,0,det,{dvt:y[1],kl:kl,dg:dg,klc:klc,dgc:dgc},TNSb,TEACb);
+          det3.forEach(function(y,ix){
+            h+=rowHtml('lv4 c-'+k1+' c-'+k2+' c-'+x.code,x.code+'.'+(ix+1),y.ten,
+                       y.gDT,0,y.gtDa,y.gtChua,null,true,0,y,TNSb,TEACb);
           });
         });
       });
     });
     var t=v.tot, ns0=t.ns, e0=TCK+TCC, ch0=ns0-e0;
-    if(!t.nLeaf) h='<tr><td class="l" colspan="15" style="text-align:center;color:'+T.slate2+';padding:18px">Không có mã dự toán nào khớp bộ lọc</td></tr>';
+    if(!t.nLeaf) h='<tr><td class="l" colspan="14" style="text-align:center;color:'+T.slate2+';padding:18px">Không có mã dự toán nào khớp bộ lọc</td></tr>';
     else{
-      var Q5='<td class="l qcol">—</td><td class="num qcol">—</td><td class="num qcol">—</td><td class="num qcol">—</td><td class="num qcol">—</td>';
+      var Q3='<td class="l qcol">—</td><td class="num qcol">—</td><td class="num qcol">—</td>';
+      var QN='<td class="num qcol">—</td><td class="num qcol">—</td>';
       h+='<tr class="tot"><td class="l">C</td><td class="l">GIÁ THÀNH (A + B)</td>'+
-         '<td class="l">Tổng chi phí dự kiến hoàn thành</td>'+Q5+
-         '<td class="num">'+val(ns0,ns0)+'</td>'+
-         '<td class="num">'+val(TCK,e0)+'</td><td class="num">'+val(TCC,e0)+'</td>'+
+         '<td class="num">'+val(ns0,ns0)+'</td>'+Q3+
+         '<td class="num">'+val(TCK,e0)+'</td>'+QN+
+         '<td class="num">'+val(TCC,e0)+'</td>'+
          '<td class="num">'+val(e0,e0)+'</td>'+
          '<td class="num">+'+fm(t.pend)+'</td>'+
          '<td class="num">'+(ch0>0?'+':'')+fm(ch0)+'</td><td class="l">—</td></tr>';
@@ -1286,11 +1400,13 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
     setHtml('m4s',qtp.nQT?(qtp.nQT+'/'+qtp.nAll+' dự án đã quyết toán · HĐ ký của các dự án đó '+
         fb(qtp.qt-(qtp.qt-qtp.qt))+' tỷ').replace(/ · HĐ.*/,' · giá trị đã xác nhận với chủ đầu tư')
       :'Chưa dự án nào quyết toán trong phạm vi lọc');
-    setHtml('treeNote','<b>GT đã thực hiện</b>: đã ký HĐ với NCC/NTP · '+
-      '<b>GT chưa thực hiện</b>: phần chưa ký, tính theo dự toán · '+
+    setHtml('treeNote','<b>GT đã thực hiện</b> = sản lượng đã mua × đơn giá thực mua · '+
+      '<b>GT chưa thực hiện</b> = sản lượng chưa mua × đơn giá dự toán ban đầu · '+
       '<b>Tổng CP dự kiến</b> = hai cột trên cộng lại · '+
       '<b>Tiết kiệm/(Vượt)</b> = dự toán hiện hành − tổng CP dự kiến · '+
-      '<b>Đề xuất chờ duyệt</b>: chỉ cảnh báo, không cộng vào tổng.');
+      '<b>Đề xuất chờ duyệt</b>: chỉ cảnh báo, không cộng vào tổng. '+
+      'Bấm nút Xem cách tính để mở sản lượng và đơn giá của hai cột giá trị. '+
+      'Dòng nhóm chỉ cộng được sản lượng khi các công việc con cùng đơn vị tính, khác đơn vị thì để dấu gạch.');
     bindToggles();applyCollapse();
   }
   function bindToggles(){
@@ -1634,6 +1750,115 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
   /* ===== INIT ===== */
   /* một chart lỗi không được phép làm đứng cả trang: mỗi phần render tách riêng */
   function safe(name,fn){try{fn();}catch(err){if(window.console)console.error('Lỗi khi vẽ '+name+':',err);}}
+  /* ===== TRANG 4 · thanh toán và công nợ nhà cung cấp ===== */
+  function cmpD(a,b){
+    if(a==='—') return -1; if(b==='—') return 1;
+    var x=a.slice(6)+a.slice(3,5)+a.slice(0,2), y=b.slice(6)+b.slice(3,5)+b.slice(0,2);
+    return x<y?-1:(x>y?1:0);
+  }
+  function renderNCC(){
+    var HOM='19/05/2025';
+    var rows=[],byN={},tKy=0,tNT=0,tHD=0,tTra=0,tNo=0,tLate=0,nLate=0;
+    CTR.forEach(function(r){
+      if(ST.proj!=='all'&&r[3]!==ST.proj) return;
+      if(ST.grp!=='all'&&r[4].split('.')[0]!==ST.grp) return;
+      var q=ST.qn;
+      if(q&&(r[0]+' '+r[1]+' '+r[2]+' '+r[4]).toLowerCase().indexOf(q)<0) return;
+      var ky=r[5], nt=Math.round(ky*r[6]), hd=Math.round(nt*r[7]), tra=Math.round(hd*r[8]);
+      var no=hd-tra, late=(no>0&&r[9]!=='—'&&cmpD(r[9],HOM)<0);
+      rows.push({r:r,ky:ky,nt:nt,hd:hd,tra:tra,no:no,late:late});
+      tKy+=ky;tNT+=nt;tHD+=hd;tTra+=tra;tNo+=no;
+      if(late){tLate+=no;nLate++;}
+      var b=byN[r[0]]||(byN[r[0]]={ky:0,tra:0,no:0});b.ky+=ky;b.tra+=tra;b.no+=no;
+    });
+    var view=rows.filter(function(x){
+      if(ST.debt==='debt') return x.no>0;
+      if(ST.debt==='late') return x.late;
+      return true;
+    });
+    view.sort(function(a,b){return b.no-a.no;});
+    var h='';
+    view.forEach(function(x){
+      var r=x.r;
+      var tg=x.no<=0?['t-ok','Đã thanh toán đủ']:(x.late?['t-bad','Quá hạn']:['t-warn','Còn phải trả']);
+      h+='<tr'+(x.late?' class="dim"':'')+'>'+
+         '<td class="l">'+r[0]+'</td>'+
+         '<td class="l"><a class="lnk" href="#">'+r[1]+' <i class="ti ti-external-link"></i></a>'+
+           '<div class="detail">'+r[2]+'</div></td>'+
+         '<td class="l">'+PROJ[r[3]].n+'</td><td class="l code">'+r[4]+'</td>'+
+         '<td class="num"><b>'+fm(x.ky)+'</b></td>'+
+         '<td class="num">'+fm(x.nt)+'</td>'+
+         '<td class="num">'+fm(x.hd)+'</td>'+
+         '<td class="num">'+fm(x.tra)+'</td>'+
+         '<td class="num" style="font-weight:600;color:'+(x.no>0?(x.late?T.red:T.amber):T.green)+'">'+fm(x.no)+'</td>'+
+         '<td class="l code">'+r[9]+'</td>'+
+         '<td class="l"><span class="tag '+tg[0]+'">'+tg[1]+'</span></td></tr>';
+    });
+    if(!view.length) h='<tr><td class="l" colspan="11" style="text-align:center;color:'+T.slate2+';padding:18px">Không có hợp đồng nào khớp bộ lọc</td></tr>';
+    else h+='<tr class="tot"><td class="l">Σ</td><td class="l">'+view.length+' hợp đồng / PO</td>'+
+       '<td class="l">—</td><td class="l">—</td>'+
+       '<td class="num">'+fm(view.reduce(function(a,x){return a+x.ky;},0))+'</td>'+
+       '<td class="num">'+fm(view.reduce(function(a,x){return a+x.nt;},0))+'</td>'+
+       '<td class="num">'+fm(view.reduce(function(a,x){return a+x.hd;},0))+'</td>'+
+       '<td class="num">'+fm(view.reduce(function(a,x){return a+x.tra;},0))+'</td>'+
+       '<td class="num">'+fm(view.reduce(function(a,x){return a+x.no;},0))+'</td>'+
+       '<td class="l">—</td><td class="l">—</td></tr>';
+    document.getElementById('payBody').innerHTML=h;
+
+    setHtml('n1',fb(tKy)+' <span>tỷ đ</span>');
+    setTxt('n1s',rows.length+' hợp đồng và PO · bằng cột GT đã thực hiện ở Bảng 2');
+    setHtml('n2',fb(tNT)+' <span>tỷ đ</span>');
+    setHtml('n2s','<span class="delta d-up">'+fp(tKy?tNT/tKy*100:0,1)+'%</span> giá trị đã ký');
+    setHtml('n3',fb(tHD)+' <span>tỷ đ</span>');
+    setHtml('n3s','<span class="delta d-warn">'+fp(tNT?tHD/tNT*100:0,1)+'%</span> phần đã nghiệm thu · đây là số phải thanh toán');
+    setHtml('n4',fb(tTra)+' <span>tỷ đ</span>');
+    setHtml('n4s','<span class="delta d-up">'+fp(tHD?tTra/tHD*100:0,1)+'%</span> hoá đơn đã nhận');
+    setHtml('n5',fm(tNo)+' <span>tr đ</span>');
+    setHtml('n5s','Quá hạn <b style="color:'+T.red+'">'+fm(tLate)+' tr</b> ở '+nLate+' hợp đồng');
+    setHtml('payNote','<b>Công nợ còn lại</b> = đã nhận hoá đơn − đã thanh toán. '+
+      'Bốn mốc của một hợp đồng: đã ký → nghiệm thu → nhận hoá đơn → thanh toán; chỉ phần đã có hoá đơn mới là nghĩa vụ phải trả. '+
+      'Tổng giá trị đã ký khớp với cột GT đã thực hiện ở Bảng 2.');
+
+    var nk=Object.keys(byN).sort(function(a,b){return byN[a].ky-byN[b].ky;}).slice(-10);
+    mk('nccChart',{
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#0A2430',borderWidth:0,
+        textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
+        formatter:function(ps){var k=nk[ps[0].dataIndex],b=byN[k];
+          return '<b>'+k+'</b><br/>Đã ký: '+fm(b.ky)+' tr<br/>Đã thanh toán: '+fm(b.tra)+
+                 ' tr<br/>Còn phải trả: '+fm(b.no)+' tr';}},
+      legend:{data:['Đã thanh toán','Còn phải trả'],bottom:0,itemWidth:11,itemHeight:11,
+        textStyle:{fontFamily:FONT,fontSize:11.5,color:T.slate}},
+      grid:{left:8,right:56,top:12,bottom:46,containLabel:true},
+      xAxis:Object.assign({type:'value',name:'tr đ',nameTextStyle:{color:T.slate2,fontSize:11}},axis),
+      yAxis:Object.assign({type:'category',data:nk,axisLabel:{fontSize:11,color:T.ink,fontFamily:FONT}},axis),
+      series:[
+        {name:'Đã thanh toán',type:'bar',stack:'n',barWidth:'58%',itemStyle:{color:T.deep}},
+        {name:'Còn phải trả',type:'bar',stack:'n',itemStyle:{color:T.amber,borderRadius:[0,3,3,0]},
+         label:{show:true,position:'right',fontFamily:FONT,fontSize:11,color:T.slate,
+           formatter:function(pp){return fm(byN[nk[pp.dataIndex]].ky);}}}
+      ].map(function(se,ix){
+        se.data=nk.map(function(k){return Math.round(ix?byN[k].no:byN[k].tra);});return se;})
+    });
+
+    var LB=['Đã ký','Đã nghiệm thu','Đã nhận hoá đơn','Đã thanh toán'];
+    var VL=[tKy,tNT,tHD,tTra];
+    mk('stepChart',{
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#0A2430',borderWidth:0,
+        textStyle:{color:'#fff',fontFamily:FONT,fontSize:12.5},
+        formatter:function(ps){var i=ps[0].dataIndex;
+          return '<b>'+LB[i]+'</b><br/>'+fm(VL[i])+' tr đ'+
+                 (i?('<br/>còn '+fp(VL[0]?VL[i]/VL[0]*100:0,1)+'% so với đã ký'):'');}},
+      grid:{left:8,right:24,top:24,bottom:30,containLabel:true},
+      xAxis:Object.assign({type:'category',data:LB,
+        axisLabel:{color:T.slate,fontSize:11.5,fontFamily:FONT,interval:0}},axis),
+      yAxis:Object.assign({type:'value',name:'tr đ',nameTextStyle:{color:T.slate2,fontSize:11}},axis),
+      series:[{type:'bar',barWidth:'52%',
+        data:VL.map(function(v,i){return {value:Math.round(v),
+          itemStyle:{color:[T.amber,'#4FA3AE',T.violet,T.deep][i],borderRadius:[4,4,0,0]}};}),
+        label:{show:true,position:'top',fontFamily:FONT,fontSize:11,color:T.slate,
+          formatter:function(pp){return fm(pp.value);}}}]});
+  }
+
   function renderAll(){
     recalcCost();
     VIEW=buildView(false);VIEWG=buildView(true);
@@ -1644,6 +1869,7 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
     safe('đề xuất',renderP3);
     safe('điều chỉnh dự toán',renderP4);
     safe('danh sách phiếu',renderPhieu);
+    safe('công nợ NCC',renderNCC);
   }
   renderAll();
 
@@ -1675,8 +1901,21 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
       syncDates();renderAll();
     });
   }
+  var dp=document.querySelectorAll('.pill[data-d]');
+  for(var di=0;di<dp.length;di++) dp[di].addEventListener('click',function(){
+    var c=document.querySelector('.pill[data-d].on'); if(c) c.classList.remove('on');
+    this.classList.add('on'); ST.debt=this.getAttribute('data-d'); renderNCC();
+  });
+  document.getElementById('qn').addEventListener('input',function(){
+    ST.qn=this.value.toLowerCase().trim(); renderNCC();
+  });
   document.getElementById('btnPct').addEventListener('click',function(){
     ST.showP=!ST.showP;
+    var us=document.querySelectorAll('#tbl2 .u');
+    for(var ui=0;ui<us.length;ui++){
+      if(us[ui].getAttribute('data-fix')) continue;
+      us[ui].textContent=ST.showP?'%':'tr đ';
+    }
     this.className='pill'+(ST.showP?' on':'');
     this.innerHTML='<i class="ti ti-percentage"></i> '+(ST.showP?'Xem theo số tiền':'Xem theo tỷ lệ %');
     renderTree();
@@ -1684,8 +1923,9 @@ tr.pnl td{background:#0E5765;color:#fff;font-weight:600;border:0}
   document.getElementById('btnQty').addEventListener('click',function(){
     ST.showQ=!ST.showQ;
     if(ST.showQ) document.body.classList.add('showq'); else document.body.classList.remove('showq');
+    var thB=document.getElementById('thTT'); if(thB) thB.setAttribute('colspan',ST.showQ?8:3);
     this.className='pill'+(ST.showQ?' on':'');
-    this.innerHTML='<i class="ti ti-ruler-measure"></i> '+(ST.showQ?'Ẩn khối lượng & đơn giá':'Xem khối lượng & đơn giá');
+    this.innerHTML='<i class="ti ti-ruler-measure"></i> '+(ST.showQ?'Ẩn cách tính':'Xem cách tính');
     renderTree();
   });
   document.getElementById('expandAll').addEventListener('click',function(){
