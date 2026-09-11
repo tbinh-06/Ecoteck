@@ -78,6 +78,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--i
 table{width:100%;border-collapse:collapse;font-size:12px}
 thead th{background:#F0F5F6;color:var(--slate);font-weight:500;text-align:right;padding:9px 10px;position:sticky;top:0;white-space:nowrap;border-bottom:1px solid var(--line);font-size:11px;z-index:3}
 thead th:first-child,thead th.l{text-align:left}
+.u{display:block;font-weight:400;font-size:10px;color:var(--slate-2);letter-spacing:.02em;margin-top:1px}
 thead th.gK{background:#E4EFF0}thead th.gM{background:#FBF1DE}thead th.gT{background:#E9E6FA}
 tbody td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line-2);white-space:nowrap;font-variant-numeric:tabular-nums}
 tbody td:first-child,tbody td.l{text-align:left;white-space:normal}
@@ -256,17 +257,17 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
       </div>
     </div>
     <div class="tbl-scroll" style="max-height:680px">
-      <table>
+      <table id="tblVT">
         <thead>
           <tr>
             <th class="l">Mã</th><th class="l">Dự án / nhóm vật tư / mã vật tư</th>
             <th class="l">Hạng mục</th><th class="l" id="thDvt">ĐVT</th>
-            <th class="gK">Dự toán</th>
-            <th class="gK" title="Khối lượng đã order, đã chốt với NCC">Đã order</th>
-            <th class="gK" title="Đã giao đến công trình">Đã nhận</th>
-            <th class="gK" title="Dự toán trừ đã order">Còn lại</th>
-            <th class="gB" title="Đơn chờ duyệt, chưa tính vào đã order">Chờ duyệt</th>
-            <th>% order</th><th class="l">Trạng thái</th>
+            <th class="gK">Dự toán<span class="u">KL</span></th>
+            <th class="gK" title="Khối lượng đã order, đã chốt với NCC">Đã order<span class="u">KL</span></th>
+            <th class="gK" title="Đã giao đến công trình">Đã nhận<span class="u">KL</span></th>
+            <th class="gK" title="Dự toán trừ đã order">Còn lại<span class="u">KL</span></th>
+            <th class="gB" title="Đơn chờ duyệt, chưa tính vào đã order">Chờ duyệt<span class="u">KL</span></th>
+            <th>% order<span class="u" data-fix="1">%</span></th><th class="l">Trạng thái</th>
           </tr>
         </thead>
         <tbody id="matBody"></tbody>
@@ -313,8 +314,10 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
         <thead><tr>
           <th class="l">Đơn mua</th><th class="l">Ngày</th><th class="l">Vật tư</th><th class="l">Dự án</th>
           <th class="l">Mã dự toán</th><th class="l">Nhà cung cấp</th><th class="l">ĐVT</th>
-          <th>KL dự toán</th><th>Đã duyệt</th><th>Còn lại</th><th>SL đề xuất</th><th>Còn lại sau duyệt</th>
-          <th>Thành tiền</th><th class="l">Kết luận</th><th class="l">Hành động</th>
+          <th>KL dự toán<span class="u">KL</span></th><th>Đã duyệt<span class="u">KL</span></th>
+          <th>Còn lại<span class="u">KL</span></th><th>SL đề xuất<span class="u">KL</span></th>
+          <th>Còn lại sau duyệt<span class="u">KL</span></th>
+          <th>Thành tiền<span class="u">tr đ</span></th><th class="l">Kết luận</th><th class="l">Hành động</th>
         </tr></thead>
         <tbody id="pendBody"></tbody>
       </table>
@@ -333,7 +336,9 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
         <thead><tr>
           <th class="l">Đơn mua</th><th class="l">Ngày</th><th class="l">Vật tư</th><th class="l">Dự án</th>
           <th class="l">Mã dự toán</th><th class="l">Nhà cung cấp</th><th class="l">ĐVT</th>
-          <th>SL đặt</th><th>Đơn giá</th><th>Thành tiền</th><th>Đã giao</th><th>Lũy kế / định mức</th><th class="l">Ghi nhận</th>
+          <th>SL đặt<span class="u">KL</span></th><th>Đơn giá<span class="u">tr / ĐVT</span></th>
+          <th>Thành tiền<span class="u">tr đ</span></th><th>Đã giao<span class="u">KL</span></th>
+          <th>Lũy kế / định mức<span class="u">%</span></th><th class="l">Ghi nhận</th>
         </tr></thead>
         <tbody id="purBody"></tbody>
       </table>
@@ -1071,6 +1076,11 @@ tr.dim td:first-child{box-shadow:inset 3px 0 0 var(--violet)}
   }
   document.getElementById('btnMoney').addEventListener('click',function(){
     ST.money=!ST.money;
+    var us=document.querySelectorAll('#tblVT .u');
+    for(var ui=0;ui<us.length;ui++){
+      if(us[ui].getAttribute('data-fix')) continue;
+      us[ui].textContent=ST.money?'tr đ':'KL';
+    }
     this.className='pill'+(ST.money?' on':'');
     this.innerHTML='<i class="ti ti-currency-dong"></i> '+(ST.money?'Xem theo khối lượng':'Xem theo tiền');
     var th=document.getElementById('thDvt'); if(th) th.textContent=ST.money?'Đơn vị':'ĐVT';
