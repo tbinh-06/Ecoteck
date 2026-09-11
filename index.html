@@ -152,7 +152,7 @@ svg.stage-svg{display:block;width:100%;height:auto}
 
   <div class="tabs" role="tablist">
     <button class="tab on" data-p="p1" role="tab"><span class="no">01</span> Sơ đồ giải pháp</button>
-    <button class="tab" data-p="p4" role="tab"><span class="no">02</span> Hợp đồng → Dự toán → Dự chi → Thực chi</button>
+    <button class="tab" data-p="p4" role="tab"><span class="no">02</span> Ba lớp giá trị của dự án</button>
     <button class="tab" data-p="p6" role="tab"><span class="no">03</span> Sản lượng &amp; vật tư thiết bị</button>
     <button class="tab" data-p="p2" role="tab"><span class="no">04</span> Luồng mua hàng · check dự toán</button>
     <button class="tab" data-p="p5" role="tab"><span class="no">05</span> Báo cáo</button>
@@ -252,7 +252,7 @@ svg.stage-svg{display:block;width:100%;height:auto}
       </div>
       <div class="oc-tx">
         <h2>Báo cáo Ngân sách</h2>
-        <p>Bốn lớp hợp đồng – dự toán – dự chi – thực chi theo dự án và hạng mục · ngân sách còn lại · số vượt · lãi/lỗ dự kiến · đề xuất đang chờ duyệt</p>
+        <p>Ba lớp hợp đồng – dự toán – chi phí dự kiến hoàn thành · tiết kiệm hay vượt · lãi dự kiến · đề xuất chờ duyệt · thanh toán và công nợ nhà cung cấp</p>
       </div>
       <div class="oc-go">Mở báo cáo  ↗</div>
     </a>
@@ -266,7 +266,7 @@ svg.stage-svg{display:block;width:100%;height:auto}
       </div>
       <div class="oc-tx">
         <h2>Báo cáo Sản lượng &amp; Vật tư thiết bị</h2>
-        <p>Khối lượng và tiền chạy song song theo dự án, hạng mục, loại vật tư và đơn vị tính · khối lượng dự toán, đã duyệt mua, đã giao · cảnh báo vượt định mức · duyệt đề xuất mua hàng</p>
+        <p>Theo dõi sản lượng theo dự án, nhóm vật tư và mã vật tư · định mức, đã order, đã nhận, còn lại · đổi qua lại giữa sản lượng và tiền · cảnh báo vượt định mức · duyệt đề xuất mua hàng</p>
       </div>
       <div class="oc-go">Mở báo cáo  ↗</div>
     </a>
@@ -385,7 +385,7 @@ const OPS=[
  ['lock','Phân quyền','Theo vai trò · theo dự án'],
 ];
 const MARTS=[
- {n:['Dự toán · dự chi','thực chi'],s:'Ngân sách còn lại · vượt',c:'var(--k-gold)'},
+ {n:['Dự toán · chi phí','dự kiến hoàn thành'],s:'Tiết kiệm hay vượt · lãi dự kiến',c:'var(--k-gold)'},
  {n:['Mua hàng &','nhà cung cấp'], s:'Đề xuất · giá · order',    c:'var(--k-aqua)'},
  {n:['Vật tư & thiết bị'],         s:'Nhập · xuất · tồn · giao', c:'var(--k-cyan)'},
  {n:['Tài chính & dòng tiền'],     s:'Doanh thu · chi phí · nợ', c:'var(--k-eco)'},
@@ -393,10 +393,10 @@ const MARTS=[
 ];
 const UCG=[
  {t:'BÁO CÁO ĐIỀU HÀNH',c:'var(--k-gold)',u:[
-   ['UC1','Dự toán – dự chi – thực chi'],['UC2','Ngân sách còn lại & % dùng'],
+   ['UC1','Dự toán – chi phí dự kiến'],['UC2','Ngân sách còn lại & % dùng'],
    ['UC3','Lãi/lỗ dự kiến từng dự án'],['UC4','Phiếu đang chờ duyệt']]},
  {t:'CẢNH BÁO TỰ ĐỘNG',c:'var(--k-red)',u:[
-   ['UC5','Đề xuất vượt dự toán'],['UC6','Tổng dự chi vượt dự án'],
+   ['UC5','Đề xuất vượt dự toán'],['UC6','Công nợ nhà cung cấp'],
    ['UC7','Vật tư sắp thiếu'],['UC8','Công nợ đến hạn']]},
  {t:'TRÊN ĐIỆN THOẠI',c:'var(--k-aqua)',u:[
    ['UC9','Bản rút gọn để duyệt nhanh'],['UC10','Nhúng XSpace · XPay']]},
@@ -537,7 +537,7 @@ function flow1Tick(){
 const CAPS=[
  ['1|nguồn dữ liệu','<b>Excel dự toán · Google Sheet · Base · MISA</b> — kết nối về một chỗ, <i>khách không phải đổi cách làm</i>.'],
  ['2|xử lý & lưu trữ','Làm sạch và <b>kiểm tra chất lượng</b> trước khi vào kho: chặn #REF!, đề xuất trùng, dự toán chưa duyệt. Lưu trên <i>Google BigQuery</i>.'],
- ['3|phân phối','<b>5 Data Mart</b> theo đúng nhóm nghiệp vụ: dự toán–dự chi–thực chi · mua hàng · vật tư · tài chính · nhân sự & tiến độ.'],
+ ['3|phân phối','<b>5 Data Mart</b> theo đúng nhóm nghiệp vụ: dự toán–chi phí dự kiến · mua hàng · vật tư · công nợ & tài chính · nhân sự & tiến độ.'],
  ['4|sử dụng','<b>12 use-case</b>: báo cáo điều hành, cảnh báo vượt dự toán, bản duyệt trên điện thoại, AI hỏi đáp số liệu.'],
 ];
 let ci=0,ct=99;
@@ -605,7 +605,7 @@ function buildPage2(){
     'var(--st3)',11,600,'middle'));
   g.appendChild(el('rect',{x:298,y:418,width:276,height:326,rx:13,fill:'var(--ssoft2)',stroke:'var(--sl)',
     'stroke-width':1,'stroke-dasharray':'6 6'}));
-  sub(322,446,228,68,'2.1  Kéo dữ liệu','Dự toán · dự chi · thực chi — cả tiền lẫn KL','var(--k-gold)');
+  sub(322,446,228,68,'2.1  Kéo dữ liệu','Dự toán · đã ký NCC · đã nhận — cả tiền lẫn sản lượng','var(--k-gold)');
   sub(322,546,228,68,'2.2  Đối chiếu dự toán','Theo mã hạng mục và theo mã vật tư','var(--k-gold)');
   sub(322,646,228,68,'2.3  So sánh','Tiền còn lại  ·  khối lượng còn lại','var(--k-gold)');
 
@@ -621,7 +621,7 @@ function buildPage2(){
   g.appendChild(T(dcx,dcy+32,'tiền · khối lượng','var(--st3)',9.4,600,'middle'));
 
   subproc(975,112,250,88,'QT mua hàng','Đặt hàng · nhận · thanh toán',AQ);
-  g.appendChild(T(1100,222,'Đơn duyệt → ghi dự chi (tiền + KL đặt)','var(--k-cyan)',9.6,700,'middle'));
+  g.appendChild(T(1100,222,'Đơn duyệt → GT đã thực hiện (tiền + sản lượng)','var(--k-cyan)',9.6,700,'middle'));
   g.appendChild(T(1100,238,'Hàng về công trình → ghi thực tế (KL đã giao)','var(--st3)',9.2,600,'middle'));
   subproc(975,474,250,96,'QT điều chỉnh dự toán','Chốt: LN dự kiến ≥ mục tiêu',EC);
   sub(985,636,230,76,'Cập nhật dự toán','Khoá bản mới · lưu lịch sử',EC);
@@ -657,7 +657,7 @@ function buildPage2(){
     g.appendChild(T(cx,cy+15,t2,'var(--st1)',13,700,'middle'));
   };
   termP(152,1010,'BƯỚC 1','Mở báo cáo');
-  proc(320,970,232,80,'BƯỚC 2','Xem báo cáo ngân sách','Dự toán · dự chi · thực chi',PU);
+  proc(320,970,232,80,'BƯỚC 2','Xem báo cáo ngân sách','Dự toán · chi phí dự kiến',PU);
   proc(660,970,232,80,'BƯỚC 3','Lọc phiếu chờ duyệt','Kèm số vượt từng hạng mục',PU);
   const d3x=1120, d3y=1010;
   g.appendChild(el('path',{d:`M${d3x},${d3y-62} L${d3x+120},${d3y} L${d3x},${d3y+62} L${d3x-120},${d3y} Z`,
@@ -717,7 +717,7 @@ const STEPS=[
   p:'Bộ phận mua hàng / dự án tạo đề xuất trên Base: mã dự án, hạng mục, hàng hoá, số lượng, giá dự kiến.',
   c:[['Base Request','aqua'],['1 form · 1 mã dự án','']]},
  {n:'BƯỚC 2',h:'Kiểm tra dự toán',
-  p:'2.1 kéo dự toán đã duyệt + dự chi + thực chi · 2.2 đối chiếu theo mã dự án và hạng mục · 2.3 so phần còn lại với giá trị đề xuất.',
+  p:'2.1 kéo dự toán đã duyệt + giá trị đã ký với NCC · 2.2 đối chiếu theo mã dự án và hạng mục · 2.3 so phần còn lại với giá trị đề xuất.',
   c:[['Data Center','eco'],['tự động, không nhập tay','eco']]},
  {n:'BƯỚC 3',h:'Thông báo kết quả',
   p:'Trả về ngay trên đề xuất: ngân sách hạng mục, đã chi, còn lại, phần vượt — kèm cảnh báo nếu vượt.',
@@ -746,42 +746,41 @@ const STEPS=[
 const LAYERS=[
  {no:'LỚP 1',t:'HỢP ĐỒNG',s:'Nguồn: hợp đồng ký với chủ đầu tư',c:'var(--k-purple)',
   cards:[
-   {t:'Giá trị hợp đồng của dự án',l:['Giá ký với chủ đầu tư, trước VAT','Là mốc doanh thu để tính lãi/lỗ']},
-   {t:'Bóc về từng hạng mục',l:['Mỗi hạng mục mang một phần doanh thu','Có hạng mục nào bán dưới giá vốn không']},
+   {t:'Giá trị hợp đồng của dự án',l:['Giá ký với chủ đầu tư, trước VAT','Quản lý ở cấp dự án, không bóc xuống hạng mục']},
+   {t:'Giá trị quyết toán',l:['= HĐ + phát sinh tăng − giảm trừ','Chỉ điền khi đã quyết toán xong với chủ đầu tư']},
    {t:'Phụ lục và điều chỉnh hợp đồng',l:['Thay đổi giá trị thì cập nhật lại mốc','Lưu lịch sử để biết mốc đã đổi mấy lần']},
-   {t:'Chốt: mọi lãi/lỗ so về mốc này',hl:1,
-    l:['Lãi mục tiêu = hợp đồng − dự toán ban đầu','Lãi dự kiến = hợp đồng − tổng CP dự kiến']},
+   {t:'Chốt: đây là doanh thu dự kiến',hl:1,
+    l:['Đã quyết toán thì lấy giá trị quyết toán','Chưa quyết toán thì tạm lấy giá trị hợp đồng']},
   ]},
  {no:'LỚP 2',t:'DỰ TOÁN',s:'Nguồn: file Excel dự toán đã duyệt & khoá',c:'var(--k-gold)',
   cards:[
-   {t:'Lập ngay sau khi trúng thầu',l:['Theo từng dự án và từng hạng mục','Doanh thu hợp đồng là mốc tính lợi nhuận']},
+   {t:'Lập ngay sau khi trúng thầu',l:['Theo từng hạng mục, tới tận công việc chi tiết','Mỗi công việc có khối lượng và đơn giá riêng']},
    {t:'Phê duyệt rồi khoá',l:['Đã khoá thì không sửa tuỳ tiện','Bản khoá trở thành dữ liệu gốc của hệ thống']},
-   {t:'Điều chỉnh phải qua duyệt',l:['Tạo đề xuất điều chỉnh trên Base','Lưu lịch sử: ai sửa, sửa gì, sửa khi nào']},
-   {t:'Chốt: lợi nhuận không được tụt',hl:1,
-    l:['LN dự kiến sau điều chỉnh ≥ mục tiêu ban đầu','Không đạt thì không cho duyệt điều chỉnh']},
+   {t:'Điều chỉnh phải qua duyệt',l:['Ban đầu + điều chỉnh đã duyệt = hiện hành','Đề xuất đang chờ duyệt không được tính vào']},
+   {t:'Chốt: đây là mốc so sánh',hl:1,
+    l:['Mọi chi phí đều đối chiếu về dự toán hiện hành','Đơn giá ban đầu dùng để tính phần chưa mua']},
   ]},
- {no:'LỚP 3',t:'DỰ CHI',s:'Nguồn: đề xuất mua & thanh toán trên Base',c:'var(--k-aqua)',
+ {no:'LỚP 3',t:'CHI PHÍ DỰ KIẾN HOÀN THÀNH',s:'Nguồn: hợp đồng NCC, PO, đơn mua trên Base',c:'var(--k-aqua)',
   cards:[
-   {t:'Nhân sự gửi đề xuất',l:['Đề xuất mua hàng hoặc đề nghị thanh toán','Bắt buộc gắn mã dự án + hạng mục']},
-   {t:'Đối chiếu dự toán đã duyệt',l:['Hệ thống tự so đúng hạng mục tương ứng','Người duyệt không phải mở file Excel']},
-   {t:'Hiện ngay ba số',l:['Đã sử dụng · còn lại · % sử dụng ngân sách','Xem được cả hạng mục và tổng dự án']},
-   {t:'Cảnh báo khi vượt',hl:1,c:'var(--k-red)',
-    l:['Vượt hạng mục hoặc vượt tổng dự toán dự án','Là căn cứ để lãnh đạo duyệt hoặc từ chối']},
+   {t:'GT đã thực hiện',l:['= sản lượng đã mua × đơn giá đã ký','Căn cứ: hợp đồng NCC, PO, báo giá đã chốt']},
+   {t:'GT chưa thực hiện',l:['= sản lượng chưa mua × đơn giá dự toán ban đầu','Tính theo từng công việc, không lấy hiệu ở cấp tổng']},
+   {t:'Tổng chi phí dự kiến',l:['= hai giá trị trên cộng lại','Trả lời: dự án cuối cùng dự kiến tốn bao nhiêu']},
+   {t:'Tiết kiệm hay vượt',hl:1,c:'var(--k-red)',
+    l:['= dự toán hiện hành − tổng CP dự kiến','Dương là tiết kiệm, âm là vượt dự toán']},
   ]},
- {no:'LỚP 4',t:'THỰC CHI & DỰ BÁO',s:'Nguồn: dòng tiền thực tế · MISA',c:'var(--k-eco)',
+ {no:'LỚP 4',t:'THANH TOÁN & CÔNG NỢ',s:'Nguồn: nghiệm thu trên Base · hoá đơn, chi tiền từ MISA',c:'var(--k-eco)',
   cards:[
-   {t:'Thực chi theo dòng tiền',l:['Số tiền đã thanh toán thực tế','Đối chiếu lại với dự chi đã duyệt']},
-   {t:'Chưa phát sinh → tạm tính',
-    l:['Lấy dự chi đã duyệt, hoặc lấy dự toán ban đầu','Cùng một dự án, hai cách cho hai con số']},
-   {t:'Tổng chi phí dự kiến cả dự án',l:['= thực chi + tạm tính phần chưa phát sinh','Gồm cả hạng mục chưa thanh toán đồng nào']},
-   {t:'Còn lại · vượt · lãi/lỗ',hl:1,
-    l:['Biết sớm để cân đối lại các hạng mục khác','Không đợi quyết toán mới biết lỗ']},
+   {t:'Bốn mốc của một hợp đồng',l:['Đã ký → nghiệm thu → nhận hoá đơn → thanh toán','Mỗi mốc là một con số riêng, không gộp']},
+   {t:'Công nợ phải trả nhà cung cấp',l:['= đã nhận hoá đơn − đã thanh toán','Phần chưa có hoá đơn chưa phải nghĩa vụ trả']},
+   {t:'Cảnh báo quá hạn',l:['So hạn thanh toán trên hợp đồng','Xem được theo từng nhà cung cấp']},
+   {t:'Tách khỏi bảng chi phí',hl:1,
+    l:['Bảng chi phí: dự án tốn bao nhiêu','Bảng công nợ: đã trả bao nhiêu, còn nợ bao nhiêu']},
   ]},
 ];
 const F4=[
- ['Ngân sách còn lại','= Dự toán  −  (Thực chi  +  Dự chi đã duyệt)'],
- ['Tổng chi phí dự kiến','= Thực chi  +  Tạm tính phần chưa phát sinh'],
- ['Lãi/lỗ dự kiến','= Giá trị hợp đồng  −  Tổng chi phí dự kiến'],
+ ['Tổng CP dự kiến','= GT đã thực hiện  +  GT chưa thực hiện'],
+ ['Tiết kiệm / (Vượt)','= Dự toán hiện hành  −  Tổng CP dự kiến'],
+ ['Lợi nhuận dự kiến','= Doanh thu dự kiến  −  Tổng CP dự kiến'],
 ];
 let built4=false, F4W=[], f4i=0, f4busy=0, f4cool=0;
 function buildPage4(){
@@ -818,7 +817,7 @@ function buildPage4(){
   /* băng kết quả */
   g.appendChild(el('rect',{x:40,y:690,width:1720,height:112,rx:14,fill:'var(--ssoft)',
     stroke:'var(--k-eco)','stroke-width':1.4}));
-  g.appendChild(T(60,718,'KẾT QUẢ NGÂN SÁCH — biết trước trong lúc chạy dự án, không đợi quyết toán',
+  g.appendChild(T(60,718,'CÁCH TÍNH — biết trước dự án sẽ tốn bao nhiêu, không đợi quyết toán',
     'var(--k-eco)',12.5,800));
   F4.forEach((f,i)=>{
     const x=60+i*572;
@@ -845,44 +844,43 @@ function flow4Tick(){
 
 /* ===================== TRANG · SẢN LƯỢNG & VẬT TƯ THIẾT BỊ ===================== */
 const LAYERS6=[
- {no:'LỚP 1',t:'HỢP ĐỒNG',s:'Nguồn: BOQ ký với chủ đầu tư',c:'var(--k-gold)',
-  cards:[
-   {t:'Khối lượng và đơn giá bán',l:['Bóc từ BOQ của hợp đồng','KL hợp đồng × đơn giá bán = doanh thu vật tư']},
-   {t:'Gắn về dự án và hạng mục',l:['Mỗi đầu mục thuộc đúng hạng mục thi công','Cùng cây hạng mục với báo cáo ngân sách']},
-   {t:'Đơn vị tính chốt từ đầu',l:['Tấn, m³, m, bộ, thùng — không đổi giữa chừng','Khối lượng chỉ cộng trong cùng đơn vị']},
-   {t:'Chốt: đây là mốc doanh thu',hl:1,
-    l:['Bán bao nhiêu khối lượng thì thu bấy nhiêu','Mọi lớp sau đều so ngược về mốc này']},
-  ]},
  {no:'LỚP 2',t:'DỰ TOÁN — ĐỊNH MỨC',s:'Nguồn: Excel dự toán đã duyệt & khoá',c:'var(--k-cyan)',
   cards:[
-   {t:'Khối lượng định mức',l:['Định mức từng đầu mục vật tư','Có thể lệch BOQ do hao hụt, biện pháp thi công']},
-   {t:'Đơn giá dự toán đi kèm',l:['Giá dự kiến mua vào của từng đầu mục','Chênh với đơn giá bán chính là biên vật tư']},
+   {t:'Khối lượng định mức',l:['Định mức từng đầu mục vật tư','Danh mục lấy tự động từ bảng dự toán']},
+   {t:'Đơn giá dự toán ban đầu',l:['Giá dự kiến mua vào của từng đầu mục','Dùng để tính giá trị phần chưa order']},
    {t:'Khoá cùng lúc với dự toán tiền',l:['Đã khoá thì không sửa tuỳ tiện','Muốn đổi định mức phải qua phiếu điều chỉnh']},
    {t:'Chốt: định mức là mốc chặn mua',hl:1,
-    l:['Mua vượt định mức là phải có người chịu trách nhiệm','Không đợi hết tiền mới biết đã mua dư']},
+    l:['Mua vượt định mức phải có người chịu trách nhiệm','Không đợi hết tiền mới biết đã mua dư']},
   ]},
- {no:'LỚP 3',t:'DỰ CHI — ĐƠN ĐÃ DUYỆT',s:'Nguồn: đơn mua trên Base',c:'var(--k-aqua)',
+ {no:'LỚP 3',t:'ĐÃ ORDER — GT ĐÃ THỰC HIỆN',s:'Nguồn: đơn mua đã duyệt trên Base',c:'var(--k-gold)',
   cards:[
    {t:'Mỗi đơn nhập SL × đơn giá',l:['Thành tiền tự tính, không gõ tay','Bắt buộc gắn mã dự án · hạng mục · mã vật tư']},
-   {t:'Cộng dồn khối lượng lũy kế',l:['Lũy kế theo từng đầu mục vật tư','So ngay với định mức: còn lại bao nhiêu']},
-   {t:'Đơn chờ duyệt để riêng',l:['Chưa duyệt thì chưa tính vào lũy kế','Báo trước: duyệt đơn này xong sẽ vượt định mức']},
+   {t:'Cộng dồn sản lượng đã order',l:['Lũy kế theo từng mã vật tư','So ngay với định mức: còn lại bao nhiêu']},
+   {t:'Đơn chờ duyệt để riêng',l:['Chưa duyệt thì chưa tính vào đã order','Báo trước: duyệt đơn này xong sẽ vượt định mức']},
    {t:'Cảnh báo vượt định mức',hl:1,c:'var(--k-red)',
-    l:['Vượt khối lượng hoặc vượt tiền đều chặn','Là căn cứ để duyệt, từ chối hay xin điều chỉnh']},
+    l:['Vượt sản lượng hoặc vượt tiền đều chặn','Là căn cứ để duyệt, từ chối hay xin điều chỉnh']},
   ]},
- {no:'LỚP 4',t:'THỰC TẾ MUA HÀNG',s:'Nguồn: phiếu giao hàng · MISA',c:'var(--k-eco)',
+ {no:'LỚP 3',t:'CHƯA ORDER — GT CHƯA THỰC HIỆN',s:'Phần còn lại của định mức',c:'var(--k-purple)',
   cards:[
-   {t:'Khối lượng đã giao công trình',l:['Mua là giao thẳng, không qua kho','Không có nhập – xuất – tồn để theo dõi']},
-   {t:'Đã duyệt nhưng chưa giao',l:['Biết hàng đang trên đường là bao nhiêu','Chênh giữa lớp 3 và lớp 4 chính là phần này']},
-   {t:'Tách nguyên nhân chênh lệch',
-    l:['Do khối lượng: (KL mua − KL định mức) × ĐG dự toán','Do đơn giá: KL mua × (ĐG mua − ĐG dự toán)']},
-   {t:'Lãi vật tư dự kiến',hl:1,
-    l:['= Giá trị hợp đồng − tổng CP vật tư dự kiến','Biết sớm phần vật tư đang lãi hay lỗ']},
+   {t:'Sản lượng còn phải mua',l:['= định mức − sản lượng đã order','Tính theo từng mã vật tư, không lấy hiệu cấp tổng']},
+   {t:'Tạm tính theo đơn giá ban đầu',l:['Chưa order thì chưa có giá thật','Lấy đơn giá dự toán ban đầu làm giá tạm']},
+   {t:'Cộng với phần đã order',l:['= tổng chi phí vật tư dự kiến','So với định mức ra số tiết kiệm hoặc vượt']},
+   {t:'Chốt: biết trước sẽ tốn bao nhiêu',hl:1,
+    l:['Không đợi mua hết mới biết vượt định mức','Cung ứng chủ động đàm phán lại giá phần còn lại']},
+  ]},
+ {no:'GIAO NHẬN',t:'ĐÃ NHẬN TẠI CÔNG TRÌNH',s:'Nguồn: phiếu giao hàng · MISA',c:'var(--k-eco)',
+  cards:[
+   {t:'Sản lượng đã giao công trình',l:['Mua là giao thẳng, không qua kho','Không có nhập – xuất – tồn để theo dõi']},
+   {t:'Đã order nhưng chưa giao',l:['Biết hàng đang trên đường là bao nhiêu','Chênh giữa đã order và đã nhận chính là phần này']},
+   {t:'Sản lượng theo nhà cung cấp',l:['Ai giao nhiều, giao vào tháng nào','Căn cứ đánh giá và đàm phán lại hợp đồng']},
+   {t:'Không đụng vào chi phí dự kiến',hl:1,
+    l:['Đã order là đã cam kết, dù chưa giao','Đã nhận chỉ phục vụ theo dõi tiến độ giao hàng']},
   ]},
 ];
 const F6=[
- ['Khối lượng còn được mua','= KL định mức  −  KL trên các đơn đã duyệt'],
- ['Chênh lệch do khối lượng','= (KL đã mua  −  KL định mức)  ×  Đơn giá dự toán'],
- ['Chênh lệch do đơn giá','= KL đã mua  ×  (Đơn giá mua  −  Đơn giá dự toán)'],
+ ['Sản lượng còn phải order','= Định mức  −  Sản lượng đã order'],
+ ['GT đã thực hiện','= Sản lượng đã order  ×  Đơn giá đã ký'],
+ ['GT chưa thực hiện','= Sản lượng chưa order  ×  Đơn giá dự toán ban đầu'],
 ];
 let built6=false, F6W=[], f6i=0, f6busy=0, f6cool=0;
 function buildPage6(){
@@ -918,7 +916,7 @@ function buildPage6(){
   /* băng kết quả */
   g.appendChild(el('rect',{x:40,y:690,width:1720,height:112,rx:14,fill:'var(--ssoft)',
     stroke:'var(--k-cyan)','stroke-width':1.4}));
-  g.appendChild(T(60,718,'KẾT QUẢ VẬT TƯ — mỗi lớp giữ cả khối lượng và đơn giá, nên chặn được cả mua dư lẫn mua đắt',
+  g.appendChild(T(60,718,'CÁCH TÍNH — sản lượng và đơn giá đi liền nhau, nên chặn được cả mua dư lẫn mua đắt',
     'var(--k-cyan)',12.5,800));
   F6.forEach((f,i)=>{
     const x=60+i*572;
@@ -1092,12 +1090,12 @@ function tick(ts){
 
 
 const TITLES={
- p1:['Kiểm soát <em>dự toán → dự chi → thực chi</em> trên một nền tảng',
-     'Dự toán duyệt &amp; khoá làm dữ liệu gốc · Base giữ dự chi · MISA giữ thực chi → Data Center → báo cáo ngân sách để duyệt'],
- p4:['Bốn lớp số phải <em>khớp nhau</em>: hợp đồng · dự toán · dự chi · thực chi',
-     'Hợp đồng là mốc doanh thu → dự toán khoá → mọi đề xuất trừ vào dự toán → phần chưa phát sinh được tạm tính để biết trước lãi/lỗ'],
- p6:['Vật tư cũng chạy <em>bốn lớp</em>: hợp đồng · dự toán · dự chi · thực tế',
-     'Khác ở chỗ mỗi lớp giữ cả khối lượng lẫn đơn giá · không quản kho vì mua giao thẳng công trình'],
+ p1:['Kiểm soát <em>dự toán → chi phí dự kiến → công nợ</em> trên một nền tảng',
+     'Dự toán duyệt &amp; khoá làm dữ liệu gốc · Base giữ hợp đồng NCC và nghiệm thu · MISA giữ hoá đơn và chi tiền → Data Center → báo cáo để duyệt'],
+ p4:['Ba lớp giá trị và <em>một lớp thanh toán</em> chạy song song',
+     'Hợp đồng là doanh thu → dự toán là mốc so sánh → chi phí dự kiến gồm phần đã mua và phần chưa mua → công nợ theo dõi riêng'],
+ p6:['Vật tư bắt đầu từ <em>dự toán</em>, không xem giá bán cho khách',
+     'Cung ứng theo sản lượng: dự toán → đã order → đã nhận → còn lại · không quản kho vì mua giao thẳng công trình'],
  p2:['Mua hàng <em>không vượt dự toán</em> mà không ai biết',
      'Đề xuất mua trên Base → Data Center tự đối chiếu dự toán đã duyệt → duyệt, từ chối, hoặc trình điều chỉnh dự toán'],
  p5:['Báo cáo để <em>ra quyết định duyệt</em>',
